@@ -23,7 +23,7 @@ time, each with its own Change Note.
 In Claude Code or Cowork:
 
 ```
-/plugin marketplace add BDMANAGEMENT/bdm-skills
+/plugin marketplace add BentleyDevMngt/bdm-skills
 /plugin install bdm-standards@bdm
 ```
 

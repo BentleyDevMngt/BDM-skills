@@ -24,13 +24,27 @@ Three things follow from that, and they are the whole of this document:
 
 | Role | Who | May |
 |---|---|---|
-| **Repository owner** | BDM (organisation account) | Everything. Holds the account, not an individual. |
+| **Repository owner** | `BentleyDevMngt` (BDM-controlled account) | Everything. |
 | **Director** | Andrew Bentley | Approve and merge any change. Approve new skills, revisions and retirements. Sole approver for GOVERNANCE.md, CHANGELOG.md, the marketplace manifest and CI. |
 | **Maintainer** | Nominated Senior PM | Raise pull requests, review others' work, run verification. Cannot merge their own work. |
 | **Contributor** | Any BDM staff member | Raise pull requests and report defects. |
 
-No individual's personal account holds the repository. If a maintainer leaves
-BDM, access is removed; the repository is unaffected.
+The repository does not sit on any individual employee's personal account. If a
+maintainer leaves BDM their collaborator access is removed and the repository is
+unaffected.
+
+**Known limitation.** `BentleyDevMngt` is a GitHub *user* account, not an
+organisation. Three consequences, recorded here rather than glossed over:
+
+- There is one set of account credentials, held by BDM. Continuity depends on
+  those credentials being recorded in BDM's password management, not on a
+  second owner (§7).
+- Teams do not exist, so CODEOWNERS can only name individual usernames.
+- Protected branches on private repositories require a paid plan on a user
+  account.
+
+Converting the account to an organisation removes all three and is the intended
+end state. Until then, this section describes what is actually in force.
 
 ---
 
@@ -117,9 +131,13 @@ copy.
 
 ## 7. Access and continuity
 
-- The repository is owned by the BDM organisation account, not a person.
-- At least two people hold owner-level access at all times.
-- Access is reviewed when anyone joins or leaves.
+- The repository is owned by `BentleyDevMngt`, a BDM-controlled account.
+- The account credentials and its recovery method are recorded in BDM's
+  password management, accessible to at least two Directors. On a user account
+  this replaces the two-owners rule, which GitHub does not support here.
+- Two-factor authentication is enabled, and the recovery codes are stored with
+  the credentials — not on one person's phone.
+- Collaborator access is reviewed when anyone joins or leaves.
 - `main` is protected: no direct pushes, pull request and Code Owner review
   required, CI must pass.
 

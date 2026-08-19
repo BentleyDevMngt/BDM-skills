@@ -16,7 +16,7 @@ anything under `plugins/` does; a typo in this file does not.
 ## Setting up
 
 ```bash
-git clone https://github.com/BDMANAGEMENT/bdm-skills.git
+git clone https://github.com/BentleyDevMngt/bdm-skills.git
 cd bdm-skills
 git checkout -b cn-2026-0NN-short-description
 ```

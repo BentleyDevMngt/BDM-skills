@@ -3,7 +3,7 @@
   "description": "Bentley Development Management — controlled Claude skills for development management, contract administration, quantity surveying and BDM document standards.",
   "owner": {
     "name": "Bentley Development Management",
-    "url": "https://github.com/BDMANAGEMENT/bdm-skills"
+    "url": "https://github.com/BentleyDevMngt/bdm-skills"
   },
   "plugins": []
 }

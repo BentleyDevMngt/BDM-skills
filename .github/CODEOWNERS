@@ -1,11 +1,16 @@
 # Every change to this repository requires Director review before merge.
-# Enforce with branch protection: Settings > Branches > main >
+# Enforce with branch protection: Settings > Rules > Rulesets > main >
 # "Require a pull request" + "Require review from Code Owners".
+#
+# BentleyDevMngt is a personal user account, not an organisation, so team
+# references (@owner/team) are not available — only individual usernames work.
+# If the account is later converted to an organisation, replace these with
+# @BentleyDevMngt/directors and add the other Director-level reviewers.
 
-*                       @BDMANAGEMENT/directors
+*                       @BentleyDevMngt
 
 # Governance and release control — Director only, no delegation.
-/GOVERNANCE.md          @BDMANAGEMENT/directors
-/CHANGELOG.md           @BDMANAGEMENT/directors
-/.claude-plugin/        @BDMANAGEMENT/directors
-/.github/               @BDMANAGEMENT/directors
+/GOVERNANCE.md          @BentleyDevMngt
+/CHANGELOG.md           @BentleyDevMngt
+/.claude-plugin/        @BentleyDevMngt
+/.github/               @BentleyDevMngt

@@ -4,8 +4,15 @@ Controlled Claude skills for Bentley Development Management — development
 management, contract administration, quantity surveying and BDM document
 standards.
 
-This repository is the **single source of truth** for BDM skills. A skill that
-is not here is not controlled, and its output must not be issued.
+> **This repository sits outside the BDM QA system.** Director decision,
+> 2026-08-20. It raises no Change Notices, and the controlled location of record
+> for skills remains the SharePoint library, `_AI Directory\2.0_Skills`, as
+> registered in Form 007. See [GOVERNANCE.md](GOVERNANCE.md) §1 — that is the
+> first thing to read here. Controlled **forms** are unaffected and remain under
+> full change control in `BDM TEMPLATES`.
+
+The intent is that this repository becomes the single source of truth for BDM
+skills on adoption. It is not that yet.
 
 ---
 
@@ -19,11 +26,12 @@ control and reviewable, not because they have been reviewed.
 Still outstanding, deliberately:
 
 - Director review and sign-off of each skill, after which the plugins go to
-  1.0.0 and normal Change Note control begins.
+  1.0.0 and normal Change Note control begins — see GOVERNANCE §1 for what applies
+  until then.
 - **Merging the legacy `JamesBDM/bdm-plugins` repository** — 15 skills, of which
   10 have no counterpart here and five overlap. On some of the overlaps the
   legacy copy is the newer one. Direction of merge is decided per skill, not per
-  repository, and with its author in the room. Next Change Note.
+  repository, and with its author in the room.
 
 ---
 
@@ -87,15 +95,14 @@ bdm-skills/
 │       ├── README.md             what the plugin covers
 │       └── skills/
 │           └── <skill-name>/
-│               ├── SKILL.md      frontmatter + instructions
+│               ├── SKILL.md      frontmatter + instructions, + template_revision
 │               ├── references/   detail Claude loads only when needed
-│               ├── scripts/      deterministic work, not left to the model
-│               └── templates/    the controlled BDM form the skill fills
+│               └── scripts/      deterministic work, not left to the model
 ├── templates/skill-template/     copy this to start a new skill
 ├── scripts/validate_marketplace.py
 ├── GOVERNANCE.md                 who may change what, and how
 ├── CONTRIBUTING.md               how to add or revise a skill
-└── CHANGELOG.md                  every release, by Change Note
+└── CHANGELOG.md                  every release
 ```
 
 Two names must agree or Claude will not load the skill: the folder name under
@@ -111,17 +118,22 @@ These are not style preferences. They are why the skills can be trusted.
 or the Principal under contract, or determines a variation, EOT or payment.
 Everything is held as a DRAFT for Director or Senior PM sign-off.
 
-**Templates come from the controlled library.** A skill fills the current
-controlled BDM form. It does not invent a layout, re-type a form from memory,
-or silently update to a newer revision without a Change Note.
+**Templates come from the controlled library, and never live here.** A skill
+resolves the highest revision of its form from `BDM TEMPLATES\Working Copy` at
+run time, ignoring `_Superseded`. It does not invent a layout, re-type a form
+from memory, or carry its own copy. It records in `template_revision` the form
+revision it was last verified against, and says so when it resolves a newer one
+rather than picking it up silently.
 
 **No invented figures.** A skill reports what the source documents say. Where a
 figure, name or date cannot be verified, the skill flags it for input rather
 than guessing.
 
-**No client data in this repository.** Skills carry templates and logic only.
-Project files, claims, drawings and correspondence stay in the job folder. CI
-rejects stray `.docx`, `.xlsx` and `.pdf` outside a `templates/` folder.
+**No client data, and no controlled forms, in this repository.** Skills carry
+logic only. Forms live in the library; project files, claims, drawings and
+correspondence stay in the job folder. CI rejects stray `.docx`, `.xlsx` and
+`.pdf`, and there is no longer any folder in the repository where one is
+permitted to sit.
 
 ---
 
@@ -142,10 +154,14 @@ checks.
 
 ## Change control
 
-Every change to a controlled skill carries a Change Note number from the
-MasterRegister and is recorded in [CHANGELOG.md](CHANGELOG.md). See
-[GOVERNANCE.md](GOVERNANCE.md) for who may approve what, and
-[CONTRIBUTING.md](CONTRIBUTING.md) for how to make the change.
+**No Change Notice is raised for work in this repository** while it sits outside
+the QA system. Changes are recorded in [CHANGELOG.md](CHANGELOG.md) and in the
+git history. See [GOVERNANCE.md](GOVERNANCE.md) §1 for what that means and §4
+for the process that applies from adoption, and
+[CONTRIBUTING.md](CONTRIBUTING.md) for how to make a change.
+
+A change that touches the **controlled estate** — a BDM form, the forms register,
+the index — is a different matter and always carries a CN.
 
 ---
 

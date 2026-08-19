@@ -18,6 +18,27 @@ Three things follow from that, and they are the whole of this document:
 2. There is one controlled copy, and it is this repository.
 3. Every change is traceable to a Change Note and a named approver.
 
+### Status of this repository — read this first
+
+**This repository and the plugin distribution layer sit OUTSIDE the BDM QA
+system.** Director decision, 2026-08-20. Until it is formally adopted:
+
+- **No Change Notice is raised for work in here.** Not for restructuring, not
+  for a plugin, not for a skill edit. Changes are recorded in `CHANGELOG.md` and
+  in the commit history, and nowhere in the controlled estate.
+- **The controlled location of record remains the SharePoint library**,
+  `Standard - Documents\_AI Directory\2.0_Skills\`. That is what Form 007 AI
+  Skills Register registers, and what the register's revisions describe. Where a
+  skill here is ahead of the library, the library is what is controlled and this
+  copy is not.
+- **Controlled forms are unaffected.** Forms remain under full change control in
+  `BDM TEMPLATES`, and skills resolve them from there (§5). Nothing in this
+  decision loosens control over a BDM form.
+
+This section is the first thing to change on adoption. Everything below it
+describes the regime intended to apply from that point; §4 in particular is
+written in the present tense but is not yet in force.
+
 ---
 
 ## 2. Roles
@@ -100,6 +121,12 @@ This constraint is stated in every SKILL.md, not just here.
 
 ## 4. Change control
 
+> **Not yet in force.** See §1 — this repository sits outside the QA system by
+> Director decision of 2026-08-20, and raises no Change Notices. The process
+> below is what applies from adoption. Until then, steps 1, 3, 4, 5 and 7 are
+> good practice and are followed; step 2 is suspended and step 6 cannot be
+> enforced (§7).
+
 Every change to a controlled skill follows the same path.
 
 1. **Raise.** A defect, request or Director ruling is recorded.
@@ -164,11 +191,12 @@ run, and it does not proceed silently. When a form is revised, the template CN
 names the affected skills; each is re-tested and its `template_revision` bumped
 under its own CN.
 
-**The one exception**, recorded so it is not mistaken for the rule:
-`bdm-project-delivery/skills/bdm-monthly-project-report` carries an embedded
-master document, because that form is not in the library — it has no form number
-and no register entry. It is to be issued a number, filed, and the skill
-converted. Until then it is the only controlled binary in this repository.
+**No exceptions remain.** The last one — an embedded master in
+`bdm-monthly-project-report` — closed on 2026-08-20 when the form was issued as
+**Form 260 Monthly Project Report R1** under CN-2026-033. No skill in this
+repository carries a controlled artefact. CI enforces it: a binary anywhere
+other than a skill's `templates/` or `assets/` folder fails the build, and there
+are now no such folders in the repository at all.
 
 ---
 

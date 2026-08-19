@@ -17,7 +17,7 @@ becomes an action in Annexure B. Conflicts between sources are reported, not res
 | File | Purpose |
 |---|---|
 | `SKILL.md` | The skill |
-| `assets/BDM_Monthly_Project_Report_MASTER_R1_2026-08.docx` | Placeholder master, built from the pilot project v0.4 |
+| Form 260 (in `BDM TEMPLATES\Working Copy\200 Project Management - Pre-Contract\`) | The controlled master. Resolved at run time, never carried here. |
 | `references/source-to-section-map.md` | Intake checklist — which document feeds which section |
 | `references/template_map.md` | Word structure, tables, placeholders, typography |
 | `scripts/tracked_changes.py` | lxml helper for tracked-change insert/delete pairs |

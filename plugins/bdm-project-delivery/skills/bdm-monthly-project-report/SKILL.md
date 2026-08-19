@@ -14,6 +14,7 @@ description: >
   review; never issues. NOT the financier's monthly report to a lender
   (that is monthly-report-update), NOT for QS lender reports (Forms 424/425),
   Progress Certificates (Form 335) or meeting minutes.
+template_revision: R1
 ---
 
 # BDM Monthly Project Report
@@ -32,8 +33,23 @@ The client-side monthly report to the Principal. Six pages:
 | 5 | Annexure A — Critical risk register |
 | 6 | Annexure B — Outstanding actions |
 
-Numbering runs 1.0 to 7.0 with 4.1–4.3 beneath, per Form 425. Master template:
-`assets/BDM_Monthly_Project_Report_MASTER_R1_2026-08.docx`.
+Numbering runs 1.0 to 7.0 with 4.1–4.3 beneath, per Form 425.
+
+**The template is Form 260, and it is not in this skill.** Take the highest
+revision of `260-Monthly_Project_Report_R*.docx` from
+`Standard - Documents\BDM TEMPLATES\Working Copy\200 Project Management - Pre-Contract\`.
+Highest revision wins; ignore `_Superseded`. Never carry a copy — the form is
+controlled in the library, and a second master in here is how the two drift
+apart.
+
+This skill was last verified against **R1**. If the resolved template is a
+higher revision, say so and ask for a check before the output is relied on;
+do not proceed silently, and do not refuse to run.
+
+**Cloud-only trap:** a newly-revised template often arrives as a OneDrive
+placeholder that will not open from the sandbox (BadZipFile / wrong size). If
+that happens, ask for the template to be dragged into the chat — uploaded files
+read cleanly.
 
 ---
 
@@ -88,7 +104,7 @@ team, it is not this skill.
 2. Confirm the report number (`No. NN`) and reference (`<project no> · MR-NN · R<n>`).
 3. Read `00_ai_sandbox\Project_Summary_*.md` as a state primer — **treat as potentially
    stale**; the job folder wins.
-4. Find the previous report. If none, start from the master template in `assets/`.
+4. Find the previous report. If none, start from Form 260 in the controlled library (above).
 
 ## Phase 1 — Harvest the sources
 

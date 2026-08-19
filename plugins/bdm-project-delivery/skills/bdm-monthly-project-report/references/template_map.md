@@ -1,6 +1,8 @@
 # Template map — BDM Monthly Project Report master
 
-Master: `assets/BDM_Monthly_Project_Report_MASTER_R1_2026-08.docx`
+Master: Form 260 Monthly Project Report, highest revision from
+`Standard - Documents\BDM TEMPLATES\Working Copy\200 Project Management - Pre-Contract\`.
+Verified against R1. Never carried in this skill.
 Built from the pilot project's Monthly Project Report No. 01 DRAFT v0.4 (7 August 2026), the
 settled form. All project content stripped; every field bracketed.
 

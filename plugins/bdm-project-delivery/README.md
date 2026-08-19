@@ -23,15 +23,12 @@ See [GOVERNANCE.md](../../GOVERNANCE.md) §4.
 
 ## Open items
 
-**`bdm-monthly-project-report` carries an embedded master document.**
-`assets/BDM_Monthly_Project_Report_MASTER_R1_2026-08.docx` is the one skill in
-the repository that does not resolve its template from the controlled library at
-run time, because the form is not in the library — it has no form number and no
-entry in the register. Under the template policy adopted 2026-08-20
-([GOVERNANCE.md](../../GOVERNANCE.md) §5) it should be issued a form number,
-filed into `BDM TEMPLATES\Working Copy`, and the skill converted to resolve it
-like every other. **Director action** — allocating a form number is a controlled
-act, not a repository edit.
+**~~`bdm-monthly-project-report` carries an embedded master document.~~
+CLOSED 2026-08-20.** The master is now **Form 260 Monthly Project Report R1**,
+issued into `BDM TEMPLATES\Working Copy\200 Project Management - Pre-Contract\`
+under CN-2026-033 on Director instruction. The embedded copy is deleted and the
+skill resolves the form at run time like every other, pinned to R1. No skill in
+this repository now carries a controlled artefact.
 
 **Two copies of the minutes skills exist.** The legacy `JamesBDM/bdm-plugins`
 repository holds `meeting-minutes-update` at **R3 · 2026-08-18**; the copy here is

@@ -1,15 +1,26 @@
 # Changelog
 
-Every release of a BDM skill or plugin, newest first. Each entry carries its
-Change Note number. See [GOVERNANCE.md](GOVERNANCE.md) for the change process.
+Every release of a BDM skill or plugin, newest first.
 
-Format: `## CN-YYYY-NNN — YYYY-MM-DD` then Added / Changed / Fixed / Retired.
+**This repository sits outside the BDM QA system** by Director decision of
+2026-08-20 and raises no Change Notices — see [GOVERNANCE.md](GOVERNANCE.md) §1.
+Until it is adopted, this file and the git history are the whole record. A CN
+number appears here only where a change touched the controlled estate, which is
+a different thing from changing this repository.
+
+Format from adoption: `## CN-YYYY-NNN — YYYY-MM-DD` then Added / Changed /
+Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ---
 
 ## Unreleased
 
-### Changed — CN-2026-034 (draft), repository restructured into four plugins
+### Changed — repository restructured into four plugins
+
+**No Change Notice.** Director decision of 2026-08-20 places this repository and the
+plugin layer outside the QA system until formally adopted, so work here is recorded
+in this file and in git, and nowhere in the controlled estate. The CN-2026-034 draft
+raised for this work was withdrawn; the number returns to the pool.
 
 Director decisions of 2026-08-20. The single `bdm-skills` plugin is retired as a
 container; its 14 skills are redistributed, unchanged, across four plugins split
@@ -39,6 +50,13 @@ by change cadence and custodian rather than by subject:
   at run time, ignoring `_Superseded`. Added revision pinning: a skill records
   the revision it was last verified against and says so when it resolves a newer
   one, rather than picking it up silently.
+- **The last embedded master is gone.** `bdm-monthly-project-report` carried
+  `assets/BDM_Monthly_Project_Report_MASTER_R1_2026-08.docx` because the form had
+  no number. It was issued into the controlled library as **Form 260 Monthly
+  Project Report R1** under CN-2026-033 on 2026-08-20; the copy here is deleted
+  and the skill resolves Form 260 at run time, pinned to R1 in its frontmatter.
+  No skill in this repository now carries a controlled artefact, and there is no
+  `assets/` or `templates/` folder left for one to hide in.
 - **GOVERNANCE §7 corrected.** It claimed `main` was protected by pull request
   and Code Owner review. It is not — branch protection on a private repository
   needs a paid plan, and the account is on none by decision. The section now
@@ -57,8 +75,7 @@ by change cadence and custodian rather than by subject:
 - `.gitattributes` normalising line endings, which the legacy repository lacked.
 - `bdm-skills` plugin at 0.1.0 — the 14 skills from `_AI Directory/2.0_Skills`,
   staged under version control ahead of Director review.
-- `plugins/bdm-skills/README.md` — what the plugin covers, and the defects
-  blocking 1.0.0.
+- A README per plugin — what it covers, its custodian, and what is outstanding.
 - `scripts/build_plugin.sh` — builds a distributable `.plugin` bundle, with the
   structural checks the Claude CLI validator makes. Bundles go to `dist/`, which
   is ignored; release bundles are built from the release tag.
@@ -68,7 +85,8 @@ by change cadence and custodian rather than by subject:
 ### Notes
 
 - **0.1.0 means staged, not signed off.** No skill in this release has been
-  reviewed. Change Note control begins at 1.0.0.
+  reviewed. Change Note control begins when the repository is adopted into the
+  QA system, and the plugins go to 1.0.0.
 - Skill folders take their name from the SKILL.md frontmatter, not the source
   folder, because Claude requires the two to match. Source revision numbers
   (`_R2_2026-08`) are therefore not in the paths; git history carries them
@@ -80,7 +98,7 @@ by change cadence and custodian rather than by subject:
 - Deferred to the review phase: reconciliation with `JamesBDM/bdm-plugins`,
   inconsistent `bdm-` prefixing across skill names, and whether these 14 stay as
   one plugin or split by domain.
-- `plugins/bdm-skills/skills/progress-claim-update/projects/` carries a config
+- `plugins/bdm-quantity-surveying/skills/progress-claim-update/projects/` carries a config
   file for a named live job (202415 South Pine Rd). Retained so the skill still
   works; flagged for a decision on whether per-project config belongs in a
   skills repository at all.

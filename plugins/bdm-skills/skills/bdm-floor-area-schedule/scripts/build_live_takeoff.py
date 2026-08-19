@@ -1,43 +1,67 @@
 #!/usr/bin/env python3
 """Build the interactive area-correction tool - one self-contained HTML file.
 
-Each level carries the plan raster, the measured GBA polygon, and the drawing's
-own wall linework as snap targets.  Drag a corner, it snaps to the nearest wall
-face or grid line, and the area, the totals and the $/m2 rates update live.
-Save writes a corrected take-off config that re-runs Form 405, the markups and
-the Form 413 rates.
+    python3 build_live_takeoff.py  takeoff.json  <Project>_Area_Takeoff_LIVE_DRAFT_<yyyymmdd>.html
+
+Every project figure comes from the take-off config. Nothing about a particular
+job is compiled in.
+
+Each level carries the plan raster, the measured plate as a draggable polygon,
+and the drawing's own axis-aligned linework as snap targets. Drag a corner, it
+snaps to the nearest wall face or grid line, and the area, the totals and the
+$/m2 rates update live. Save writes a corrected take-off config that re-runs
+Form 405, the markups and the Form 413 rates.
+
+The config is the one build_markups.py reads, plus a "live" block carrying the
+raster inputs - source PDF, page and plate mask per level. See
+references/config_schema.md.
 """
-import base64, io, json, os, sys
-sys.path.insert(0, '/sessions/eloquent-awesome-heisenberg/mnt/.claude/skills/bdm-floor-area-schedule/scripts')
-import numpy as np, cv2, pymupdf
-from takeoff import PROJECT, LEVELS, totals
-from dawson_lines import total as dawson_total
+import argparse
+import base64
+import json
+import os
+import sys
 
-PDF = ('/sessions/eloquent-awesome-heisenberg/mnt/Projects - Documents/'
-       '_Project Opportunities/79 Seagull Ave, Mermaid beach/Source Documents/'
-       '575100_79 Seagull Avenue TENDER 010726.pdf')
-OUT = ('/sessions/eloquent-awesome-heisenberg/mnt/Projects - Documents/_Project Opportunities/'
-       '79 Seagull Ave, Mermaid beach/00_ai_sandbox/'
-       '79_Seagull_Ave_Area_Takeoff_LIVE_DRAFT_2026-08-17.html')
+try:
+    import numpy as np
+    import cv2
+    import pymupdf
+except ImportError as exc:                                    # pragma: no cover
+    sys.exit(f"missing dependency: {exc.name}\n"
+             "pip install numpy opencv-python-headless pymupdf --break-system-packages")
 
-DPI = 220                                  # render dpi - high enough to zoom into
-CLIP300 = (2150, 6250, 2500, 4300)
-CLIP = tuple(v * DPI // 300 for v in CLIP300)          # x0, x1, y0, y1 at DPI
-PX_PER_M = 1000.0 / 100 / 25.4 * 72.0 * DPI / 72.0     # 86.61 at 220 dpi
-MASK = {'Basement': 'plates/basement_gba.npy', 'Ground': 'plates/ground_encl3.npy',
-        'Level 1': 'plates/first_gba.npy', 'Level 2': 'plates/second_gba.npy',
-        'Level 3': 'plates/roof_terrace_gba.npy'}
-PAGE = {'Basement': 4, 'Ground': 5, 'Level 1': 6, 'Level 2': 7, 'Level 3': 8}
-MIN_SEG_M = 0.30                           # ignore linework shorter than this
+MASK_DPI = 300               # plate masks are cut at 300 dpi unless the config says otherwise
+DEFAULT_DPI = 220            # render dpi - high enough to zoom into a wall face
+DEFAULT_SCALE = 100          # drawing scale 1:100
+DEFAULT_MIN_SEG_M = 0.30     # ignore linework shorter than this
+DEFAULT_MAX_VERTICES = 48    # keep the polygon draggable
+DEFAULT_TOL_PCT = 0.12       # open within this % of the measured plate
 
 
-def snap_lines(doc, pi):
+def px_per_m(scale, dpi):
+    """Raster pixels per metre on the ground, for a 1:scale drawing at dpi."""
+    return 1000.0 / scale / 25.4 * dpi
+
+
+def resolve(base, path):
+    """Config paths are relative to the config file, so a job folder can move."""
+    return path if os.path.isabs(path) else os.path.normpath(os.path.join(base, path))
+
+
+def dedupe(vals, tol=1.0):
+    out = []
+    for v in vals:
+        if not out or v - out[-1] > tol:
+            out.append(v)
+    return out
+
+
+def snap_lines(page, clip, dpi, min_seg_m, ppm):
     """Axis-aligned wall and grid linework, as candidate snap coordinates."""
-    page = doc[pi]
-    s = DPI / 72.0
-    x0, x1, y0, y1 = CLIP
+    x0, x1, y0, y1 = clip
+    s = dpi / 72.0
     xs, ys = set(), set()
-    minlen = MIN_SEG_M * PX_PER_M
+    minlen = min_seg_m * ppm
 
     def seg(p, q):
         ax, ay, bx, by = p[0] * s, p[1] * s, q[0] * s, q[1] * s
@@ -63,29 +87,34 @@ def snap_lines(doc, pi):
     return dedupe(xs), dedupe(ys)
 
 
-def dedupe(vals, tol=1.0):
-    out = []
-    for v in vals:
-        if not out or v - out[-1] > tol:
-            out.append(v)
-    return out
+def load_mask(path):
+    """The measured plate, as a boolean raster cut at MASK_DPI."""
+    if path.lower().endswith('.npy'):
+        return np.load(path)
+    img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    if img is None:
+        raise SystemExit(f'cannot read plate mask: {path}')
+    return img > 0
 
 
-def polygon(mask, target_area, max_v=48, tol_pct=0.12):
+def polygon(mask, target_area, clip_mask, dpi, ppm_mask,
+            max_v=DEFAULT_MAX_VERTICES, tol_pct=DEFAULT_TOL_PCT):
     """Outline of the measured plate, simplified to a draggable vertex count.
 
     Simplification loses area, so the tolerance is walked up only as far as it
     has to go: the coarsest polygon that stays inside max_v vertices AND holds
-    the measured area to tol_pct.  Whichever binds, the area wins.
+    the measured area to tol_pct.  Whichever binds, the area wins - a polygon
+    that opens off the measured figure makes every later delta a lie.
     """
     m = mask.astype(np.uint8)
     cs, _ = cv2.findContours(m, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    if not cs:
+        raise SystemExit('plate mask is empty - nothing to outline')
     c = max(cs, key=cv2.contourArea)
-    ppm300 = 118.11023622047244
-    x0, x1, y0, y1 = CLIP300
+    x0, _x1, y0, _y1 = clip_mask
     cands = []
     for eps_m in [0.02 * 1.22 ** i for i in range(32)]:
-        approx = cv2.approxPolyDP(c, eps_m * ppm300, True)
+        approx = cv2.approxPolyDP(c, eps_m * ppm_mask, True)
         pts = approx.reshape(-1, 2).astype(float)
         if len(pts) < 4:
             continue
@@ -93,77 +122,182 @@ def polygon(mask, target_area, max_v=48, tol_pct=0.12):
         for i in range(len(pts)):
             j = (i + 1) % len(pts)
             a += pts[i][0] * pts[j][1] - pts[j][0] * pts[i][1]
-        a = abs(a) / 2 / ppm300 ** 2
+        a = abs(a) / 2 / ppm_mask ** 2
         cands.append((pts, a, abs(a - target_area) / target_area * 100, len(pts)))
-    # coarsest polygon inside the vertex budget that still holds the area;
-    # if nothing does, the closest on area wins and the variance is reported
-    # inside the vertex budget, take the closest on area - a polygon that opens
-    # off the measured figure makes every later delta a lie
     ok = [c_ for c_ in cands if c_[3] <= max_v]
     pool = [c_ for c_ in ok if c_[2] <= tol_pct] or ok or cands
-    pts, a, err, n = min(pool, key=lambda c_: (c_[2], c_[3]))
-    out = [[round((p[0] - x0) * DPI / 300, 1), round((p[1] - y0) * DPI / 300, 1)]
-           for p in pts]
+    pts, a, err, _n = min(pool, key=lambda c_: (c_[2], c_[3]))
+    scale = dpi / MASK_DPI
+    out = [[round((p[0] - x0) * scale, 1), round((p[1] - y0) * scale, 1)] for p in pts]
     return out, a, err
 
 
+def require(d, key, where):
+    if key not in d:
+        raise SystemExit(f'config: "{where}" needs a "{key}"')
+    return d[key]
+
+
 def main():
-    doc = pymupdf.open(PDF)
-    T = totals()
-    x0, x1, y0, y1 = CLIP
+    ap = argparse.ArgumentParser(
+        description='Build the live area-correction tool from a take-off config.')
+    ap.add_argument('config', help='<project>_takeoff.json')
+    ap.add_argument('out', help='<Project>_Area_Takeoff_LIVE_DRAFT_<yyyymmdd>.html')
+    ap.add_argument('--dpi', type=int, default=None, help='override the render dpi')
+    ap.add_argument('--quiet', action='store_true')
+    args = ap.parse_args()
+
+    with open(args.config, encoding='utf-8') as f:
+        cfg = json.load(f)
+    base = os.path.dirname(os.path.abspath(args.config))
+
+    live = cfg.get('live')
+    if not live:
+        raise SystemExit(
+            'config has no "live" block - the tool needs the source PDF, and a page '
+            'and plate mask for each level. See references/config_schema.md.')
+
+    dpi = args.dpi or int(live.get('dpi', DEFAULT_DPI))
+    scale = float(live.get('scale', DEFAULT_SCALE))
+    mask_dpi = int(live.get('mask_dpi', MASK_DPI))
+    min_seg_m = float(live.get('min_seg_m', DEFAULT_MIN_SEG_M))
+    max_v = int(live.get('max_vertices', DEFAULT_MAX_VERTICES))
+    tol_pct = float(live.get('tol_pct', DEFAULT_TOL_PCT))
+    ppm = px_per_m(scale, dpi)
+    ppm_mask = px_per_m(scale, mask_dpi)
+
+    pdf_path = resolve(base, require(live, 'pdf', 'live'))
+    if not os.path.isfile(pdf_path):
+        raise SystemExit(f'source PDF not found: {pdf_path}')
+    doc = pymupdf.open(pdf_path)
+
+    lv_live = live.get('levels') or {}
+    by_name = {lv['name']: lv for lv in cfg.get('levels', [])}
+    if not by_name:
+        raise SystemExit('config has no "levels"')
+
+    # NSA and apartment counts per level, so the print cover reconciles to the
+    # workbook rather than printing dashes.
+    nsa, apts = {}, {}
+    for a in cfg.get('apartments', []) or []:
+        k = a.get('level')
+        nsa[k] = round(nsa.get(k, 0.0) + float(a.get('internal', 0)) + float(a.get('balcony', 0)), 1)
+        apts[k] = apts.get(k, 0) + 1
+
     levels = []
-    for lv in LEVELS:
-        k = lv['key']
-        if k not in MASK:
-            continue
-        pm = doc[PAGE[k]].get_pixmap(dpi=DPI)
+    for name, spec in lv_live.items():
+        if name not in by_name:
+            raise SystemExit(f'live.levels has "{name}", which is not in levels[]')
+        lv = by_name[name]
+        page_no = int(require(spec, 'page', f'live.levels.{name}'))
+        if not 0 <= page_no < doc.page_count:
+            raise SystemExit(f'live.levels.{name}.page {page_no} is outside the PDF '
+                             f'(0-{doc.page_count - 1})')
+        page = doc[page_no]
+
+        pm = page.get_pixmap(dpi=dpi)
         img = np.frombuffer(pm.samples, np.uint8).reshape(pm.height, pm.width, pm.n)[:, :, :3]
+
+        clip300 = spec.get('clip') or live.get('clip')
+        if clip300:
+            cx0, cx1, cy0, cy1 = [int(v) for v in clip300]
+        else:
+            cx0, cy0 = 0, 0
+            cx1 = int(pm.width * mask_dpi / dpi)
+            cy1 = int(pm.height * mask_dpi / dpi)
+        clip_mask = (cx0, cx1, cy0, cy1)
+        clip = tuple(int(v * dpi // mask_dpi) for v in (cx0, cx1, cy0, cy1))
+        x0, x1, y0, y1 = clip
         crop = img[y0:y1, x0:x1]
+        if crop.size == 0:
+            raise SystemExit(f'live.levels.{name}: clip {clip300} falls outside the page')
+
         ok, buf = cv2.imencode('.png', cv2.cvtColor(crop, cv2.COLOR_RGB2BGR),
                                [cv2.IMWRITE_PNG_COMPRESSION, 9])
+        if not ok:
+            raise SystemExit(f'live.levels.{name}: could not encode the plan raster')
         b64 = base64.b64encode(buf.tobytes()).decode()
-        sx, sy = snap_lines(doc, PAGE[k])
+
+        sx, sy = snap_lines(page, clip, dpi, min_seg_m, ppm)
+
         # The polygon is the plate as drawn on that sheet.  GBA is then
-        #   plate - deductions (ramp at grade, voids) + UCA measured off-plate.
-        # Only the ground sheet carries UCA outside its plate (the covered east
-        # terrace sits beyond the enclosed envelope that was cut).
-        mask = np.load(MASK[k])
-        plate = float(np.count_nonzero(mask)) / 118.11023622047244 ** 2
-        add_uca = lv['uca'] if k == 'Ground' else 0.0
-        deduct = round(plate - (lv['gba'] - add_uca), 1)
-        poly, poly_a, err = polygon(mask, plate)
+        #   plate - deductions (ramp at grade, light wells, voids) + UCA measured
+        # off-plate, where a level carries roofed-but-unenclosed area outside the
+        # envelope that was cut.
+        mask = load_mask(resolve(base, require(spec, 'mask', f'live.levels.{name}')))
+        plate = float(np.count_nonzero(mask)) / ppm_mask ** 2
+        gba = float(require(lv, 'gba', f'levels.{name}'))
+        feca = float(lv.get('feca', 0.0))
+        uca = float(lv.get('uca', 0.0))
+        unroof = float(lv.get('unroof', 0.0))
+        add_uca = float(spec.get('uca_offplate', 0.0))
+        deduct = round(plate - (gba - add_uca), 1)
+        # band is the GBA that sits outside FECA - wall thickness, balustrades,
+        # supports.  Derived so it can never disagree with the workbook.
+        band = round(gba - feca - uca - unroof, 1)
+
+        poly, poly_a, err = polygon(mask, plate, clip_mask, dpi, ppm_mask, max_v, tol_pct)
         levels.append({
-            'key': k, 'label': lv['label'], 'sheet': f'A2.10{PAGE[k]-3}',
+            'key': name, 'label': lv.get('label', name),
+            'sheet': spec.get('sheet', ''),
             'img': b64, 'w': int(x1 - x0), 'h': int(y1 - y0),
             'poly': poly, 'plate': round(plate, 1),
             'deduct': deduct, 'addUCA': round(add_uca, 1),
             'snapX': sx, 'snapY': sy,
-            'measuredGBA': lv['gba'], 'band': lv['band'],
-            'uca': lv['uca'], 'unroof': lv['unroof'], 'note': lv['note'],
+            'measuredGBA': gba, 'band': band,
+            'uca': uca, 'unroof': unroof, 'note': lv.get('note', ''),
+            'nsa': nsa.get(name, 0.0), 'apts': apts.get(name, 0),
         })
-        chk = poly_a - deduct + add_uca
-        print(f'{k:10s} {len(poly):3d} vtx  plate {plate:7.1f}  poly {poly_a:7.1f} '
-              f'({err:+.2f}%)  less {deduct:5.1f} plus {add_uca:5.1f}  -> GBA {chk:7.1f} '
-              f'v {lv["gba"]:7.1f}   {len(sx)}x/{len(sy)}y snaps  {len(b64)//1024} KB')
+        if not args.quiet:
+            chk = poly_a - deduct + add_uca
+            print(f'{name:12s} {len(poly):3d} vtx  plate {plate:8.1f}  poly {poly_a:8.1f} '
+                  f'({err:+.2f}%)  less {deduct:6.1f} plus {add_uca:5.1f}  -> GBA {chk:8.1f} '
+                  f'v {gba:8.1f}   {len(sx)}x/{len(sy)}y snaps  {len(b64) // 1024} KB')
 
-    data = {
-        'project': PROJECT['name'], 'address': PROJECT['address'],
-        'lot': PROJECT['lot_plan'], 'site': PROJECT['site_area_figured'],
-        'pxPerM': PX_PER_M, 'issue': '17 August 2026',
-        'drawings': PROJECT['drawing_set'],
-        'dawsonEx': round(dawson_total(), 2), 'dawsonInc': 9893411.38,
-        'bdmRate': 6900.0, 'levels': levels,
-        'workbook': '405-79_Seagull_Ave_Floor_Area_Schedule_DRAFT_2026-08-16.xlsx',
-        'scheme': 'Gold Coast City Plan', 'architect': PROJECT['architect'],
-        'baseline': {'gba': T['gba'], 'gfa': T['gfa'], 'feca': T['feca'],
-                     'uca': T['uca'], 'unroof': T['unroof'], 'band': T['band']},
+    if not levels:
+        raise SystemExit('live.levels is empty - nothing to build')
+
+    order = [lv['name'] for lv in cfg.get('levels', [])]
+    levels.sort(key=lambda l: order.index(l['key']) if l['key'] in order else 999)
+
+    baseline = {
+        'gba': round(sum(l['measuredGBA'] for l in levels), 1),
+        'feca': round(sum(l['measuredGBA'] - l['band'] - l['uca'] - l['unroof'] for l in levels), 1),
+        'uca': round(sum(l['uca'] for l in levels), 1),
+        'unroof': round(sum(l['unroof'] for l in levels), 1),
+        'band': round(sum(l['band'] for l in levels), 1),
     }
-    html = TEMPLATE.replace('/*__DATA__*/', json.dumps(data))
-    os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    with open(OUT, 'w', encoding='utf-8') as f:
-        f.write(html)
-    print(f'\nwritten: {OUT}\n{os.path.getsize(OUT)/1048576:.2f} MB')
+    baseline['gfa'] = round(baseline['feca'] + baseline['uca'], 1)
 
+    rates = cfg.get('rates') or {}
+    data = {
+        'project': cfg.get('project', ''),
+        'address': cfg.get('address', ''),
+        'lot': cfg.get('lot_plan', ''),
+        'site': cfg.get('site_area', ''),
+        'pxPerM': ppm,
+        'issue': cfg.get('issue_date', ''),
+        'drawings': cfg.get('drawing_set', ''),
+        'architect': cfg.get('architect', 'architect'),
+        'workbook': cfg.get('workbook', ''),
+        'scheme': cfg.get('planning_scheme', 'the planning scheme'),
+        'tenderLabel': rates.get('label', 'Tender'),
+        'tenderEx': rates.get('ex_gst'),
+        'tenderInc': rates.get('inc_gst'),
+        'benchRate': rates.get('benchmark_rate'),
+        'openItems': cfg.get('open_items') or [],
+        'levels': levels,
+        'baseline': baseline,
+    }
+
+    html = TEMPLATE.replace('/*__DATA__*/', json.dumps(data))
+    out_dir = os.path.dirname(os.path.abspath(args.out))
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
+    with open(args.out, 'w', encoding='utf-8') as f:
+        f.write(html)
+    if not args.quiet:
+        print(f'\nwritten: {args.out}\n{os.path.getsize(args.out) / 1048576:.2f} MB')
 
 TEMPLATE = r'''<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
@@ -320,7 +454,7 @@ canvas{cursor:crosshair}
       <table id="tot"></table>
     </div>
     <div class="card">
-      <h2>Rate impact — Dawson tender</h2>
+      <h2 id="ratehd">Rate impact</h2>
       <div class="rate" id="rate"></div>
       <div class="hint" id="rated"></div>
       <table id="ratetab" style="margin-top:8px"></table>
@@ -648,24 +782,32 @@ function panel(){
       <td class="delta ${Math.abs(d)<0.05?'':(d>0?'up':'dn')}">${Math.abs(d)<0.05?'—':(d>0?'+':'')+fmt(d)}</td></tr>`;}).join('')+
     `<tr class="tot"><td>TOTAL</td><td>${fmt(t.gba)}</td><td>${fmt(t.gfa)}</td>
       <td>${fmt(t.feca)}</td><td class="delta">${(t.gba-t.base)>=0?'+':''}${fmt(t.gba-t.base)}</td></tr>`;
-  const rG=D.dawsonEx/t.gba, rF=D.dawsonEx/t.gfa, rE=D.dawsonEx/t.feca;
-  const bG=D.dawsonEx/D.baseline.gba;
-  document.getElementById('rate').textContent=money(rG)+' /m² GBA';
-  document.getElementById('rated').textContent=
-    `Dawson ${money(D.dawsonEx)} ex GST ÷ ${fmt(t.gba)} m² · was ${money(bG)}/m² at the `+
-    `measured ${fmt(D.baseline.gba)} m²`;
+  /* Rates are shown only where the config carries a tender or budget figure.
+     Without one the panel says so rather than printing $Infinity/m². */
+  const TX=Number(D.tenderEx), BR=Number(D.benchRate), SITE=Number(D.site);
+  const hasT=isFinite(TX)&&TX>0, hasB=isFinite(BR)&&BR>0, hasS=isFinite(SITE)&&SITE>0;
+  const rate=v=>hasT&&isFinite(v)?money(v):'—', bench=v=>hasB&&isFinite(v)?money(v):'—';
+  const rG=hasT?TX/t.gba:NaN, rF=hasT?TX/t.gfa:NaN, rE=hasT?TX/t.feca:NaN;
+  document.getElementById('ratehd').textContent=
+    hasT?`Rate impact — ${D.tenderLabel}`:'Rate impact';
+  document.getElementById('rate').textContent=hasT?money(rG)+' /m² GBA':'—';
+  document.getElementById('rated').textContent=hasT
+    ? `${D.tenderLabel} ${money(TX)} ex GST ÷ ${fmt(t.gba)} m² · was `+
+      `${money(TX/D.baseline.gba)}/m² at the measured ${fmt(D.baseline.gba)} m²`
+    : 'No tender or budget figure in the take-off config — rates are not shown.';
   document.getElementById('ratetab').innerHTML=
-    `<tr><th>Basis</th><th>Area</th><th>Dawson $/m²</th><th>BDM $/m²</th></tr>
-     <tr><td>GBA</td><td>${fmt(t.gba)}</td><td>${money(rG)}</td><td>${money(D.bdmRate)}</td></tr>
-     <tr><td>GFA (AIQS)</td><td>${fmt(t.gfa)}</td><td>${money(rF)}</td>
-         <td>${money(D.bdmRate*t.gba/t.gfa)}</td></tr>
-     <tr><td>FECA enclosed</td><td>${fmt(t.feca)}</td><td>${money(rE)}</td>
-         <td>${money(D.bdmRate*t.gba/t.feca)}</td></tr>
-     <tr><td>Site (${D.site} m²)</td><td>${D.site}</td><td>${money(D.dawsonEx/D.site)}</td><td>—</td></tr>`;
+    `<tr><th>Basis</th><th>Area</th><th>${D.tenderLabel} $/m²</th><th>BDM $/m²</th></tr>
+     <tr><td>GBA</td><td>${fmt(t.gba)}</td><td>${rate(rG)}</td><td>${bench(BR)}</td></tr>
+     <tr><td>GFA (AIQS)</td><td>${fmt(t.gfa)}</td><td>${rate(rF)}</td>
+         <td>${bench(BR*t.gba/t.gfa)}</td></tr>
+     <tr><td>FECA enclosed</td><td>${fmt(t.feca)}</td><td>${rate(rE)}</td>
+         <td>${bench(BR*t.gba/t.feca)}</td></tr>`+
+    (hasS?`<tr><td>Site (${SITE} m²)</td><td>${SITE}</td><td>${rate(TX/SITE)}</td>
+         <td>—</td></tr>`:'');
 }
 document.getElementById('save').onclick=()=>{
   const R=live();
-  const out={source:'79 Seagull Ave live area correction',
+  const out={source:D.project+' — live area correction',
     corrected_on:new Date().toISOString().slice(0,10),
     project:D.project,address:D.address,lot:D.lot,site_area:D.site,
     px_per_m:PPM,status:'DRAFT — corrected by the Director, not yet rebuilt into Form 405',
@@ -682,7 +824,8 @@ document.getElementById('save').onclick=()=>{
   const b=new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(b);
-  a.download='79_Seagull_Ave_takeoff_corrected.json'; a.click();
+  a.download=(D.project||'takeoff').replace(/[^A-Za-z0-9]+/g,'_')+'_takeoff_corrected.json';
+  a.click();
 };
 
 /* ------------------------------------------------------------------ */
@@ -729,8 +872,11 @@ function buildPrint(){
                    {gba:0,gfa:0,feca:0,uca:0,unroof:0,base:0});
   const moved=R.filter(r=>Math.abs(r.gba-r.base)>CORR_TOL);
   const dash=v=>v>0.05?fmt(v):'–';
-  const rows=R.map(r=>`<tr><td>${r.key}</td><td>${fmt(r.feca)}</td><td>${dash(r.uca)}</td>
-      <td>${fmt(r.gfa)}</td><td>${fmt(r.gba)}</td><td>–</td><td>–</td></tr>`).join('');
+  const tNSA=S.reduce((a,l)=>a+(Number(l.nsa)||0),0);
+  const tApts=S.reduce((a,l)=>a+(Number(l.apts)||0),0);
+  const rows=R.map((r,i)=>`<tr><td>${r.key}</td><td>${fmt(r.feca)}</td><td>${dash(r.uca)}</td>
+      <td>${fmt(r.gfa)}</td><td>${fmt(r.gba)}</td><td>${dash(Number(S[i].nsa)||0)}</td>
+      <td>${Number(S[i].apts)||'–'}</td></tr>`).join('');
   let h='';
 
   /* ---- page 1 : cover, matching the Form 405 markup set ---------------- */
@@ -745,10 +891,11 @@ function buildPrint(){
       <table class="pt"><tr><th>Level</th><th>FECA (m²)</th><th>UCA (m²)</th>
         <th>GFA (m²)</th><th>GBA (m²)</th><th>NSA (m²)</th><th>Apts</th></tr>${rows}
         <tr class="t"><td>TOTAL</td><td>${fmt(t.feca)}</td><td>${fmt(t.uca)}</td>
-        <td>${fmt(t.gfa)}</td><td>${fmt(t.gba)}</td><td>–</td><td>–</td></tr></table>
-      <div class="bd" style="margin-top:2mm">GFA = FECA + UCA. This is one dwelling on one
-        lot, so there is no net sellable area and no apartment schedule — the NSA and Apts
-        columns are nil throughout. The statutory ${D.scheme} GFA is a different measure
+        <td>${fmt(t.gfa)}</td><td>${fmt(t.gba)}</td><td>${dash(tNSA)}</td>
+        <td>${tApts||'–'}</td></tr></table>
+      <div class="bd" style="margin-top:2mm">GFA = FECA + UCA.${tApts?'':` There is no net
+        sellable area and no apartment schedule for this project — the NSA and Apts columns
+        are nil throughout.`} The statutory ${D.scheme} GFA is a different measure
         again — it is reported in the workbook and is not marked up here.</div>
       <div class="sect" style="margin-top:5mm">Sheet index</div>
       <table class="pt">${S.map((l,i)=>`<tr><td>${String(i+2).padStart(2,'0')}</td>
@@ -779,26 +926,17 @@ function buildPrint(){
         plant and car park.</div>
       <div class="sect" style="margin-top:4mm">Status and open items</div>
       <ul class="oi">
-        <li>DRAFT — not for issue. Held for Director sign-off.</li>
-        ${moved.length?`<li><b>Areas corrected interactively against the drawn linework.</b>
-          ${moved.map(m=>`${m.key} ${(m.gba-m.base)>0?'+':''}${fmt(m.gba-m.base)} m²`).join(' · ')}.
-          Total GBA ${fmt(t.base)} → ${fmt(t.gba)} m². Form 405 and the Form 413 rates must be
-          rebuilt from the corrected take-off before either is relied on.</li>`:''}
-        <li>This is ONE DWELLING on one lot. There is no net sellable area, no unit mix and no
-          apartment schedule — the NSA and Apts columns are nil throughout and the
-          corresponding workbook tabs are marked not applicable.</li>
-        <li>The ${D.architect} tender set carries NO area schedule. Every floor area here is
-          measured by BDM. Obtain the architect’s own schedule and reconcile before these
-          figures go to the client, a financier or the builder.</li>
-        <li>The ground floor required manual cut lines along the external walls and carries
-          ±3%. It is the level to reconcile first.</li>
-        <li>Site area ${D.site} m² is FIGURED on A1.101 for ${D.lot} and has been confirmed
-          against an independent measure of the boundary (405.7 m², +0.4%). Obtain the survey
-          plan before any planning use.</li>
-        <li>No planning-scheme GFA has been assessed. Site cover and plot ratio here are on the
-          AIQS basis and must not be used for a ${D.scheme} test.</li>
-        <li>External works at grade — driveway ramp, forecourt, walkways, uncovered terrace and
-          planters — total 165.6 m² and are excluded from all building areas.</li>
+        ${(()=>{
+          const oi=(D.openItems&&D.openItems.length)?D.openItems.slice()
+                   :['DRAFT — not for issue. Held for Director sign-off.'];
+          const out=oi.map(s=>`<li>${s}</li>`);
+          if(moved.length) out.splice(1,0,`<li><b>Areas corrected interactively against the
+            drawn linework.</b> ${moved.map(m=>`${m.key} ${(m.gba-m.base)>0?'+':''}`+
+            `${fmt(m.gba-m.base)} m²`).join(' · ')}. Total GBA ${fmt(t.base)} → ${fmt(t.gba)} m².
+            Form 405 and the Form 413 rates must be rebuilt from the corrected take-off
+            before either is relied on.</li>`);
+          return out.join('');
+        })()}
       </ul>
     </div></div>
     ${foot(`${D.project} · Area take-off markups (AIQS / ASMM basis)`,1,np)}</div>`;

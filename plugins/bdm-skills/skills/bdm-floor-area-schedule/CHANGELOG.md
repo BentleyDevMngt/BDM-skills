@@ -1,5 +1,68 @@
 # CHANGELOG — Floor Area Schedule Skill
 
+## R3 / 2026-08 — the live tool made general; the PDF exporter written
+
+Found on the portability audit before the skills library was packaged as a
+plugin. The skill could not have run on any machine but the one it was written
+on.
+
+**`scripts/build_live_takeoff.py` was a working script from one job, dressed as a
+tool.** It hardcoded a sandbox session path, the 79 Seagull Avenue tender PDF,
+that drawing's clip rectangle and level-to-page map, and `plates/*.npy` masks by
+name; it imported `takeoff` and `dawson_lines`, neither of which was ever in the
+folder; and `main()` took no arguments at all, while SKILL.md documented it as
+taking `takeoff.json`. It would have failed on first run for every user.
+
+**`scripts/export_live_pdf.py` did not exist.** SKILL.md referenced it twice and
+described its behaviour in detail, so the third deliverable — the A3 markup set —
+could not be produced at all.
+
+Changes:
+
+- **`build_live_takeoff.py` now reads the take-off config**, per its documented
+  signature. Every project figure comes from the config; nothing about a job is
+  compiled in. Added a `live` block to the config carrying the source PDF, and a
+  page and plate mask per level, documented in `references/config_schema.md`.
+  Render dpi, drawing scale, mask dpi, clip, vertex budget and area tolerance are
+  all config with the previous hardcoded values as defaults, so the measurement
+  behaviour is unchanged.
+- **The single-job assumptions came out.** Off-plate UCA was applied with
+  `if level == 'Ground'`; it is now `uca_offplate` per level. The wall-thickness
+  band is derived as `gba − feca − uca − unroof` rather than carried, so it
+  cannot disagree with the workbook. Sheet numbers were computed from the PDF page
+  index; they are now config.
+- **The builder's name came out of the interface.** `dawsonEx` / `bdmRate` are
+  `tenderEx` / `benchRate`, fed from a `rates` block with the tenderer's own
+  label. Where a project has no tender or budget figure the rate panel says so
+  instead of printing `$Infinity/m²`.
+- **The markup cover reconciles properly.** NSA and Apts were hardcoded to dashes
+  and the cover asserted "one dwelling on one lot" whatever it was reading. Both
+  now come from the config's `apartments`.
+- **STATUS AND OPEN ITEMS is config-driven.** Seven bullets specific to 79 Seagull
+  Avenue were compiled into the print builder — including a site-area confirmation
+  and an external-works figure that belonged to that job alone. The block now
+  prints `open_items`, with the corrected-levels bullet inserted after the first
+  item where a level has moved, exactly as SKILL.md specifies.
+- **Added `scripts/export_live_pdf.py`** — headless Chromium loads the tool, waits
+  on the totals panel rather than a timer (so a slow machine cannot produce a set
+  of blank plans), calls the tool's own `buildPrint()`, and prints at 420 × 297 mm
+  with `prefer_css_page_size`. It fails loudly and exits non-zero if Chromium
+  cannot launch, naming the `libXdamage.so.1` workaround. It never hand-builds a
+  substitute PDF.
+- **Added `scripts/make_fixture.py`** — a synthetic 1:100 drawing set, plate masks
+  and config. The building is 20 × 12 m with a 4 × 3 m notch, so the polygon the
+  tool opens with can be checked against 228.0 m² worked out by hand. Run it
+  before trusting a change to the pipeline.
+
+Verified end to end on the fixture from a clean directory: plate 227.9 m²,
+polygon 227.7 m² at 6 vertices (+0.11%, inside the 0.12% rule), snap targets
+found on both axes, NSA 186.0 / 106.0 / 292.0 and apartment counts reconciling to
+the config, and a 3-page PDF at 420 × 297 mm — cover plus one sheet per level —
+with the house layout and both authority blocks intact.
+
+No change to the measurement method, the standards citations, the Form 405 tab
+map, or the HTML tool's own behaviour in the browser.
+
 ## R2 / 2026-08 — Excel integrity gate; library copy resynced
 
 Issued 17 August 2026 after two BDM workbooks were delivered that Excel reported as

@@ -33,28 +33,32 @@ Every one of them drafts and holds. None issues, and none signs.
 
 ---
 
-## Known defects — blocking 1.0.0
+## Portability
 
-Found on the portability audit of 2026-08-19, before packaging. Thirteen of the
-fourteen skills carry no machine-specific references and will run on any staff
-member's install. One will not:
+All fourteen skills carry no machine-specific references and will run on any
+staff member's install. Audited 2026-08-19, re-checked after the repair below.
 
-**`bdm-floor-area-schedule`** — two faults, both in the live take-off tool:
+### Repaired — `bdm-floor-area-schedule`, 2026-08-20
 
-1. `scripts/build_live_takeoff.py` is a working script from a single job, not a
-   general tool. It hardcodes a sandbox session path, the source PDF for 79
-   Seagull Avenue, that drawing's clip rectangle, its level-to-page map and its
-   `plates/*.npy` masks, and it imports two modules (`takeoff`, `dawson_lines`)
-   that are not in the folder. SKILL.md documents it as taking a `takeoff.json`
-   argument. The two disagree, and the script will fail on first run for anyone.
-2. `scripts/export_live_pdf.py` is referenced twice in SKILL.md and does not
-   exist, so the third deliverable — the A3 markup PDF — cannot be produced.
+The audit found the skill could not have run anywhere but the machine it was
+written on. `build_live_takeoff.py` was a single-job working script — hardcoded
+sandbox path, one project's drawings, two imports of modules that were never in
+the folder — while SKILL.md documented it as a config-driven tool; and
+`export_live_pdf.py`, which SKILL.md referenced twice, did not exist, so the A3
+markup set could not be produced at all.
 
-The Form 405 workbook path and the validator are unaffected. The decision for
-the Director is whether to repair the take-off tool before release or hold this
-skill out of the 1.0.0 bundle and ship the other thirteen.
+Both are fixed. The tool now reads the take-off config as documented, the
+exporter is written, and a synthetic fixture (`scripts/make_fixture.py`) lets
+the whole pipeline be run and checked against a hand-worked 228.0 m² without a
+live job. The measurement method, the standards citations and the Form 405 tab
+map are untouched. Detail in the skill's own
+[CHANGELOG](skills/bdm-floor-area-schedule/CHANGELOG.md).
 
-Also carried forward from the staging commit, unresolved:
+---
+
+## Open — for the Director at sign-off
+
+Carried forward from the staging commit, unresolved:
 `skills/progress-claim-update/projects/` holds a config file for a named live
 job (202415 South Pine Rd). It is retained so the skill still works, but
 per-project configuration probably does not belong in a skills repository.

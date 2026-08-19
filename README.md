@@ -11,10 +11,20 @@ is not here is not controlled, and its output must not be issued.
 
 ## Status
 
-**Scaffold — no skills migrated yet.** The structure, governance and CI are in
-place. Skills are being migrated in from `_AI Directory/2.0_Skills` and the
-legacy `bdm-plugins` repository under a controlled exercise, one plugin at a
-time, each with its own Change Note.
+**Staged, not yet signed off.** The 14 skills from the controlled
+`_AI Directory/2.0_Skills` library are in, as a single `bdm-skills` plugin at
+version **0.1.0**. The leading `0.` is the point: they are here so they are
+under version control and reviewable, not because they have been reviewed.
+
+Still outstanding, deliberately:
+
+- Director review and sign-off of each skill, after which the plugin goes to
+  1.0.0 and normal Change Note control begins.
+- Reconciliation with the legacy `JamesBDM/bdm-plugins` repository, which holds
+  overlapping but not identical versions of several of these skills, plus nine
+  others not in this library.
+- Whether these 14 stay as one plugin or split by domain. One plugin for now,
+  so the grouping is not prejudged ahead of that review.
 
 ---
 
@@ -24,11 +34,11 @@ In Claude Code or Cowork:
 
 ```
 /plugin marketplace add BentleyDevMngt/bdm-skills
-/plugin install bdm-standards@bdm
+/plugin install bdm-skills@bdm
 ```
 
-Install `bdm-standards` first — every other plugin assumes the house style,
-brand rules and PDF export it provides.
+The repository is private, so you need read access on the `BentleyDevMngt`
+account and a GitHub credential configured locally.
 
 ---
 

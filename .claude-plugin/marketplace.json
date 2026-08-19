@@ -5,5 +5,15 @@
     "name": "Bentley Development Management",
     "url": "https://github.com/BentleyDevMngt/bdm-skills"
   },
-  "plugins": []
+  "plugins": [
+    {
+      "name": "bdm-skills",
+      "source": "./plugins/bdm-skills",
+      "description": "BDM project, contract administration and quantity surveying skills, staged from the controlled 2.0_Skills library. Version 0.x — not yet reviewed or signed off.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Bentley Development Management"
+      }
+    }
+  ]
 }

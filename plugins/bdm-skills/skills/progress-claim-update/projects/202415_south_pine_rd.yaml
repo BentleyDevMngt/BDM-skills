@@ -1,0 +1,574 @@
+project:
+  code: 202415
+  name: 818 South Pine Road, Everton Park
+  folder_root: C:/Users/asben/BDM/Projects - Documents/202415_South Pine Rd, Everton Park
+  accounts_subfolder: 01a_Accounts
+  principal: Urban DCA Pty Ltd ATF Everton Trust
+  contractor: Bentley Development Management Pty Ltd
+  original_contract_sum: 11818808.41
+  contract_form: AS 4000-1997 (Head Contract)
+  builders_margin_pct: 10
+  builders_margin_row: 79
+  builders_margin_code: 05-5.0-5.0.S
+claim_template:
+  filename_pattern: 818_SouthPineRd_ProgressClaim_*.xlsx
+  output_filename: 202415_818_SouthPineRd_ProgressClaim_{claim_no}_{month}{year}_DRAFT_v{version}.xlsx
+supplier_to_ctd_block:
+  Australian Framing Solutions: Australian Framing Solutions Subtotal
+  Carilla Williams (Carpentry): Carilla Carpentry Subtotal
+  Jesse Chatfield (Carpentry): Jessie Chatfield - Carpentry Subtotal
+  Bretts Timber: Bretts - Carpentry Materials Subtotal
+  The Building Connection Group: The Building Connection Group - Framing Materials Subtotal
+  Plasta Trade Centre: Plaster Trade Subtotal
+  PlastaMasta: Plaster Masta - Carpentry Materials (Cladding) Subtotal
+  Plasta Masta: Plaster Masta - Carpentry Materials (Cladding) Subtotal
+  Plaster Masta: Plaster Masta - Carpentry Materials (Cladding) Subtotal
+  Ace Posts & Beams: Ace Posts and Beams Subtotal
+  Powertruss: Power Truss Subtotal
+  Orient Interiors: Orient Interiors Subtotal
+  BBC Painting: BBC Painting Subtotal
+  Slattery & Acquroff Stairs (S&A): Slattery Acquroff Stairs Qld - Stairs Subtotal
+  S&A COD 1655: Slattery Acquroff Stairs Qld - Stairs Subtotal
+  S&A U14: Slattery Acquroff Stairs Qld - Stairs Subtotal
+  S&A U15: Slattery Acquroff Stairs Qld - Stairs Subtotal
+  Viking Group (Hydraulic): Viking TH Plumbing Subtotal
+  Viking Group (Plumbing): Viking TH Plumbing Subtotal
+  Viking Group (Electrical): Viking - TH Electrical Subtotal
+  Viking Group (Mechanical): Viking - Mechanical Subtotal
+  Blue Mojo: Blue Mojo Subtotal
+  Supreme Scaffolding: Supreme Scaffolding Subtotal
+  BuildSafe: Buildsafe - Stair Voids Subtotal
+  Buildsafe QLD: Buildsafe - Stair Voids Subtotal
+  Master Hire: Master Hire - Site sheds/toilets Subtotal
+  Access Equipment Group (Access Hire): Access Hire Subtotal
+  Alpine Temporary Fencing: Alpine Temporary Fencing Subtotal
+  SEQ Crane Hire: Brisbane Crane Hire - Preliminaries Subtotal
+  Workcon (QLD): Workcon - Labour Hire Subtotal
+  Workcon QLD: Workcon - Labour Hire Subtotal
+  AMCO Built: AMCO Subtotal
+  Bespoke Engineers (Development Objective): Bespoke Structural Engineer Subtotal
+  Bespoke Engineering Solutions: Bespoke Structural Engineer Subtotal
+  Bespoke Engineering: Bespoke Structural Engineer Subtotal
+  Bespoke Pest Management: Bespoke Pest Management - Termite treatment Subtotal
+  Westera Partners: Westera Subtotal
+  Axis Building Certifiers: AXIS Subtotal
+  Sotera: Sorera - Fire Report Subtotal
+  Beaumont Tiles: Beaumont Tiles - Tile Supply Subtotal
+  Beaumont Tiles (BAT weep holes): Beaumont Tiles - Tile Supply Subtotal
+  Hoffmann Trading Pty Ltd: Beaumont Tiles - Tile Supply Subtotal
+  Capral Aluminium: Capral - Window Materials Subtotal
+  HighGrove Trading: HighGrove - Plumbing Fixtures Subtotal
+  Premium Tiling Services: Premium Tiling - Tile Labour Subtotal
+  Edge Protection Australia (Johansens): Edge Protection - Block A Subtotal
+  SiteSec: SiteSec - Preliminaries - site security Subtotal
+  Site Sec: SiteSec - Preliminaries - site security Subtotal
+  Glass Outlet: Glass Outlet - Balustrade Supply Subtotal
+  Australian Landscape Supplies: Aus Landscape - RTW Materials Subtotal
+  AWF Hire: AWF Hire - RTW Plant Subtotal
+  Cramers Plumbing Co: Cramers Plumbing - Civil Plumbing Subtotal
+  MastaFire: MastaFire - Fire Certification Subtotal
+  Performance Garage Doors: Performance Garage Doors Subtotal
+  Bingo Waste: Bingo Waste - Preliminaries; Waste Subtotal
+  Bunnings: Bunnings - Carpentry materials Subtotal
+  Bunnings Warehouse: Bunnings - Carpentry materials Subtotal
+  Ryan Cook: Ryan Cook - Site labour Subtotal
+  Test X: Test X - Civil Services testing Subtotal
+  Smooth Operators: Smooth Operators - Concrete cutting Subtotal
+  Kangaroo Windows: R&R Windows Subtotal
+  Allyco Pty Ltd: Allyco - Privacy Screens Subtotal
+  AFW HIRE PTY LT WAKERLEY: AWF Hire - RTW Plant Subtotal
+  SP AUSTRALIAN LANDSCAP NEWSTEAD: Aus Landscape - RTW Materials Subtotal
+  'BBC Invoice #': BBC Painting Subtotal
+  Ace Post & Beam: Ace Posts and Beams Subtotal
+  QLD Sheet Metal: Queensland Sheet Metal Subtotal
+  Raven Roofing: Raven Roofing Subtotal
+  Ashburner Francis: Ashburner Francis Subtotal
+  Power Truss: Power Truss Subtotal
+  Urban Utilities: Urban Utilities - Authority fees Subtotal
+  Superior Steel: Superior Steel - Structural Steel Subtotal
+  Brisbane Patios & Decks: Brisbane Patios & Decks Subtotal
+  Australis: Australian Safety Rail Subtotal
+  Australian Safety Rail: Australian Safety Rail Subtotal
+  JDP Concreting: JDP Concreting - Concrete Works Subtotal
+  JPD Concreting: JDP Concreting - Concrete Works Subtotal
+  Harvey Norman: Harvey Norman Subtotal
+  Allsafe Consulting: Allsafe Consulting Subtotal
+  Steve Jones Hardware & Landscape: Steve Jones Landscape Supplies Subtotal
+  Reece: Reece Pty Ltd Subtotal
+  Doyles Trade Centre: Doyles Trade Centre Subtotal
+  Jeff Burnette Services: Jeff Burnette Services Subtotal
+service_type_map:
+  Viking Group:
+    Electrical: Viking - TH Electrical Subtotal
+    Mechanical: Viking - Mechanical Subtotal
+    Plumbing: Viking TH Plumbing Subtotal
+    Hydraulic: Viking TH Plumbing Subtotal
+    Temp Power: Viking - Temp Power Subtotal
+new_ctd_blocks:
+  Cramers Plumbing - Civil Plumbing Subtotal:
+    code: 04-4.2-4.23.S
+    added_in_claim: 16
+    approved_by: Andrew
+    notes: New civil plumbing subbie (PC01 May). Same code as Blue Mojo/DMC Civil.
+  Viking - Mechanical Subtotal:
+    code: 04-6.3.S
+    added_in_claim: 16
+    approved_by: Andrew
+    notes: First Viking Mech claim. Same Viking entity but different scope; warranted own block.
+  Premium Tiling - Tile Labour Subtotal:
+    code: 04-5.4-5.42.S
+    added_in_claim: 16
+    approved_by: Andrew
+    notes: New tiling labour sub for Block E.
+  Beaumont Tiles - Tile Supply Subtotal:
+    code: 04-5.4-5.41.S
+    added_in_claim: 16
+    approved_by: Andrew
+    notes: Hoffmann Trading t/a Beaumont Tiles franchisee. One block for all Beaumont invoices.
+  Performance Garage Doors Subtotal:
+    code: 04-5.8-5.86.S
+    added_in_claim: 16
+    approved_by: Andrew
+    notes: Block D&E garage door deposit.
+  MastaFire - Fire Certification Subtotal:
+    code: 02-2.0-2.27.SVC
+    added_in_claim: 16
+    approved_by: Andrew
+    notes: Fire engineer certification. Same code as Sotera.
+  HighGrove - Plumbing Fixtures Subtotal:
+    code: 04-6.1-6.11.S
+    added_in_claim: 16
+    approved_by: Andrew
+    notes: Andrew corrected from 04-6.1-6.13.S to 04-6.1-6.11.S during pilot review.
+  Glass Outlet - Balustrade Supply Subtotal:
+    code: 04-5.8-5.87.S
+    added_in_claim: 16
+    approved_by: Andrew
+    notes: Aluminium balustrade posts.
+  Edge Protection - Block A Subtotal:
+    code: 03-3.0-3.40.S
+    added_in_claim: 16
+    approved_by: Andrew
+    notes: Temporary edge protection. Same code as Supreme / Buildsafe.
+  Aus Landscape - RTW Materials Subtotal:
+    code: 04-6.6-6.63.S
+    added_in_claim: 16
+    approved_by: Andrew
+    notes: Sleeper RTW posts.
+  Capral - Window Materials Subtotal:
+    code: 04-4.9.S
+    added_in_claim: 16
+    approved_by: Andrew
+    notes: Window materials paid via AB credit card.
+  AWF Hire - RTW Plant Subtotal:
+    code: 04-6.6-6.63.S
+    added_in_claim: 16
+    approved_by: Andrew
+    notes: 1.7t excavator hire for retaining walls.
+  Allyco - Privacy Screens Subtotal:
+    code: 04-5.8-5.80.S
+    added_in_claim: 16
+    approved_by: Andrew (inferred from Xero orphan)
+    notes: Privacy screens supplier — Xero CC payment 28/04/2026
+  Plaster Masta - Carpentry Materials (Cladding) Subtotal:
+    code: 04-4.7-4.71.S
+    added_in_claim: 16
+    approved_by: Andrew
+    notes: Carpentry materials — cladding. Confirmed by Andrew 28/05/2026.
+  Superior Steel - Structural Steel Subtotal:
+    code: 04-4.5.S
+    added_in_claim: 17
+    approved_by: PROPOSED - pending Andrew sign-off
+    notes: First structural steel invoice (Superior Steel INV00331799, $426.00 incl). Budget code 04-4.5.S
+      Structural Steel.
+  Brisbane Patios & Decks Subtotal:
+    code: 04-4.7-4.74.S
+    added_in_claim: 18
+    approved_by: PROPOSED - pending Andrew sign-off
+    notes: Inv 3934 30/06/2026 supply and install 6 decks incl stairs, $59,400.00 incl GST. Served as
+      a BIF Act payment claim. Alternative coding 04-6.6-6.61.S Hard Landscaping if decks are split from
+      stairs.
+  Australian Safety Rail Subtotal:
+    code: 03-3.0-3.40.S
+    added_in_claim: 18
+    approved_by: PROPOSED - pending Andrew sign-off
+    notes: Trades as Australis; invoice masthead reads 1300 ASRAIL. CONSOLIDATE with the existing "Australis
+      (Edge Protection) Subtotal" - one supplier, two blocks.
+  JDP Concreting - Concrete Works Subtotal:
+    code: 04-6.6-6.64.S
+    added_in_claim: 18
+    approved_by: PROPOSED - pending Andrew sign-off
+    notes: Xero spells the payee "JPD Concreting". Driveway pavement - external pavements, not civil.
+  Harvey Norman Subtotal:
+    code: 04-5.9.S
+    added_in_claim: 18
+    approved_by: PROPOSED - pending Andrew sign-off
+    notes: Sales inv 7048023, 60cm gas cooktop, PO-202415-112.
+xero_aliases:
+  hoffmann trading: beaumont
+  sp australian landscap: landscape
+  afw hire pty lt wakerley: hire
+  the viking group: viking
+  alpine leisure: alpine
+  australian framing solutions pty ltd: framing
+  carilla williams pty ltd: carilla
+  jf chatfeild: jesse chatfield
+  civil enoggera: reece
+  jpd concreting: jdp concreting
+  australis: australian safety rail
+  bunnings riverdale: bunnings
+  steve jones  hardware: steve jones
+  jeff burnette services: jeff burnette
+manual_overrides:
+  Carilla_Williams_Pty_Ltd_inv_074:
+    total: 46592.06
+    date: 17/04/2026
+    invoice_no: '074'
+    supplier: Carilla Williams (Carpentry)
+  Carilla_Williams_Pty_Ltd_inv_075:
+    total: 36685.66
+    date: 24/04/2026
+    invoice_no: '075'
+    supplier: Carilla Williams (Carpentry)
+  Carilla_Williams_Pty_Ltd_inv_082:
+    total: 15703.16
+    date: 08/05/2026
+    invoice_no: 082
+    supplier: Carilla Williams (Carpentry)
+  Carilla_Williams_Pty_Ltd_inv_083:
+    total: 17864.31
+    date: 08/05/2026
+    invoice_no: 083
+    supplier: Carilla Williams (Carpentry)
+  Carilla_Williams_Pty_Ltd_inv_088:
+    total: 4466.0
+    date: 19/05/2026
+    invoice_no: 088
+    supplier: Carilla Williams (Carpentry)
+  Carilla_Williams_Pty_Ltd_inv_089:
+    total: 44294.91
+    date: 19/05/2026
+    invoice_no: 089
+    supplier: Carilla Williams (Carpentry)
+  AFS_Invoice_6364_BA_B:
+    total: 91358.52
+    date: 31/03/2026
+    invoice_no: 6364 BA B
+    supplier: Australian Framing Solutions
+  AFS_Invoice_6364_BB:
+    total: 110847.0
+    date: 31/03/2026
+    invoice_no: 6364 BB
+    supplier: Australian Framing Solutions
+  PlastaMasta_12401_670768:
+    total: 16654.76
+    date: 13/05/2026
+    invoice_no: '670768'
+    supplier: Plasta Masta
+  PlastaMasta_12401_670769:
+    total: 3549.74
+    date: 13/05/2026
+    invoice_no: '670769'
+    supplier: Plasta Masta
+  PlastaMasta_12401_674003:
+    total: 15042.06
+    date: 11/06/2026
+    invoice_no: '674003'
+    supplier: Plasta Masta
+  PlastaMasta_12401_675008:
+    total: 1973.37
+    date: 19/06/2026
+    invoice_no: '675008'
+    supplier: Plasta Masta
+  PlastaMasta_12401_675116:
+    total: 23467.15
+    date: 22/06/2026
+    invoice_no: '675116'
+    supplier: Plasta Masta
+  AFS_Invoice_7195_Var17:
+    total: 4581.5
+    date: 23/06/2026
+    invoice_no: 7195 Var17
+    supplier: Australian Framing Solutions
+  Ashburner_Francis:
+    total: 352.0
+    date: 30/04/2026
+    invoice_no: AF020215
+    supplier: Ashburner Francis
+  Glassoutlet:
+    total: 1611.5
+    date: 23/06/2026
+    invoice_no: SO951660-BO26-1
+    supplier: Glass Outlet
+  Credit_Note_CN-00022517:
+    total: -3000.0
+    date: 03/06/2026
+    invoice_no: CN-00022517
+    supplier: Power Truss
+  Turss_-_Invoice_00022520:
+    total: 6833.2
+    date: 03/06/2026
+    invoice_no: '00022520'
+    supplier: Power Truss
+  Urban_Utilities_INV_21-PNT-51246:
+    total: 248.0
+    date: 19/06/2026
+    invoice_no: 21-PNT-51246
+    supplier: Urban Utilities
+  invoice_no._250225:
+    total: 21544.6
+    date: 05/06/2026
+    invoice_no: '250225'
+    supplier: Premium Tiling Services
+  QLD_Sheet_Metal_INV-0175150:
+    total: 1640.95
+    date: 19/06/2026
+    invoice_no: '0175150'
+    supplier: QLD Sheet Metal
+  Qld_Sheet_Metal_Paid_by_CC_QUOTE_0175023:
+    total: 4872.19
+    date: 15/06/2026
+    invoice_no: QUOTE-0175023
+    supplier: QLD Sheet Metal
+  Superior_Steel_INV00331799:
+    total: 426.0
+    date: 09/06/2026
+    invoice_no: 00331799
+    supplier: Superior Steel
+  Ace_Post_&_Beam_INV0012656:
+    total: 200.0
+    date: 15/03/2026
+    invoice_no: '0012656'
+    supplier: Ace Post & Beam
+  Raven_Roofing_INV00021627:
+    total: 24360.88
+    date: 08/06/2026
+    invoice_no: '00021627'
+    supplier: Raven Roofing
+sub_document_patterns:
+- '- VO'
+- /_SS/
+- Breakdown and progress claim
+- Civil_Form_12
+- DW Dockets
+- DW dockets
+- Day_Dockets
+- PC JUL
+- Payment Schedule
+- Plumbing-1042__-AB_To_Check
+- Progress Claim Summary
+- RequestForClaim
+- Request_For_Claim
+- STATEMENT
+- Statement
+- Variation_Register
+- statement
+duplicate_patterns:
+- -AB To Check
+- _-AB_To_Check
+remittance_patterns:
+- Receipt
+- ANZ Receipt
+- Payment Receipt
+budget_codes:
+  01-1.0-1.20.S: Local Authority Fees
+  02-2.0-2.10.SVC: Architectural Services
+  02-2.0-2.11.S: Structural Engineer
+  02-2.0-2.12.S: Civil Engineer
+  02-2.0-2.14.S: Electrical Engineer
+  02-2.0-2.21.S: Building Certifier
+  02-2.0-2.27.SVC: Fire Engineer & Certification
+  02-2.0-2.34.S: Legal Advice
+  03-3.0-3.13.S: Survey Set Outs
+  03-3.0-3.20.S: Project Staff / Labour Hire
+  03-3.0-3.30.S: Site Sheds & Toilets
+  03-3.0-3.31.S: Temporary Services
+  03-3.0-3.32.S: Computers & Software
+  03-3.0-3.33.S: Temporary Fencing
+  03-3.0-3.34.O: Contract Works Insurances
+  03-3.0-3.34.S: QLeave & QBCC HOWI
+  03-3.0-3.35.S: Skip Bins & Rubbish
+  03-3.0-3.40.S: Scaffold
+  03-3.0-3.50.S: Purchase Tools & Equipment
+  03-3.0-3.51.S: Plant Hire & Equipment
+  03-3.0-3.72.S: Site Security
+  03-3.0-3.73.S: Site Safety
+  03-3.0-3.74.S: Site Signage
+  03-3.0-3.80.S: Mobile Crane
+  03-3.0-3.90.S: Defect Works
+  04-4.1-4.10.S: Demolition
+  04-4.2-4.23.S: Civil Plumbing & Drainage
+  04-4.2-4.24.S: Bulk Earthworks & Excavation
+  04-4.2-4.25.S: Site Prep / Clean
+  04-4.3-4.32.S: Concrete Repair / Cutting
+  04-4.3-4.35.S: Termite Barrier
+  04-4.5.S: Structural Steel
+  04-4.7-4.70.S: Carpentry Labour (Fixout & Cladding)
+  04-4.7-4.71.S: Carpentry Materials
+  04-4.7-4.73.S: Steel Frame Supply & Install
+  04-4.7-4.74.S: Timber Stairs Supply & Install
+  04-4.7-4.76.S: Insulation & Sarking
+  04-4.8-4.80.S: Stone Benchtops
+  04-4.8-4.81.S: Joinery
+  04-4.9.S: Aluminium Windows & Doors – Glazing
+  04-5.1-5.11.S: Door Hardware
+  04-5.2.S: Roofing
+  04-5.3.S: Ceilings & Partitions
+  04-5.4-5.41.S: Tile Supply
+  04-5.4-5.42.S: Tile Labour
+  04-5.4-5.43.S: Floor Coverings
+  04-5.6.S: Painting
+  04-5.8-5.80.S: Privacy Screens & Sun Hoods
+  04-5.8-5.81.S: Shower Screens / Mirrors
+  04-5.8-5.82.S: General Metalwork
+  04-5.8-5.86.S: Roller Shutters & Garage Doors
+  04-5.8-5.87.S: Glass Balustrades
+  04-5.9.S: Appliances
+  04-6.1-6.11.S: Plumbing Fixtures & Fittings
+  04-6.1-6.13.S: Hydraulic Services
+  04-6.2-6.22.S: Electrical Services
+  04-6.3.S: Mechanical
+  04-6.6-6.60.S: Soft Landscaping
+  04-6.6-6.61.S: BBQ & Hard Landscaping
+  04-6.6-6.63.S: Retaining Walls
+  04-6.6-6.64.S: External Pavements
+  04-6.6-6.65.S: External Fencing
+  05-5.0-5.0.S: Builders Margin
+load_bearing:
+  sheets:
+  - Progress Claim
+  - Detail Sheet
+  - Summary
+  - CTD Breakdown
+  - Unpaid Invoices
+  - Advanced Payments
+  cover_cells:
+    claim_no: I3
+    invoice_no: I4
+    period: I5
+    project_no: I6
+    original_contract_sum: F19
+    contract_sum_to_date: F21
+    total_completed: F22
+    total_earned_less_retention: F27
+    previous_claims: F28
+    current_ex_tax: F29
+    gst: F30
+    current_incl_tax: F31
+    balance_to_finish: F32
+    amount_certified: K36
+    draft_banner_row: 47
+  detail_sheet:
+    first_line_row: 10
+    last_line_row: 79
+    totals_row: 80
+    cols:
+      item_no: 1
+      budget_code: 2
+      description: 3
+      scheduled: 4
+      variance: 5
+      revised: 6
+      previous: 8
+      this_period: 9
+      total_to_date: 10
+      percent: 11
+      balance: 12
+      actual_to_date: 14
+      direct_costs: 15
+      advance_payments: 16
+      total_actual: 17
+      difference: 19
+  ctd_breakdown:
+    data_start_row: 7
+    multipay_row: 9
+    multipay_pickup_marker: MULTI-PAY Pick-up
+    grand_total_marker_col_b: Total
+    cols:
+      date: 2
+      source: 3
+      description: 4
+      debit: 5
+      credit: 6
+      gross: 7
+      gst: 8
+      notes: 9
+  summary:
+    paid_section_first_row: 5
+    grand_total_col_b: null
+    unpaid_header_match: unpaid invoices
+    unpaid_subhead_match: Subcontractor
+    cols:
+      supplier_or_subtotal: 2
+      debit: 3
+      credit: 4
+      total: 5
+      budget_code: 6
+  unpaid_invoices:
+    header_row: 1
+    data_start_row: 2
+    cols:
+      supplier: 1
+      invoice_no: 2
+      invoice_date: 3
+      ex_gst: 4
+      gst: 5
+      total: 6
+      status: 7
+status_folders:
+  1.0 Received: Received
+  2.0 Approved: Approved
+  3.0 Paid: Paid
+  4.0 Remittance: Remittance
+xero_report:
+  filename_pattern: '*Account_Transactions*.xlsx'
+  sheet_name: Construction Costs Transactions
+  data_start_row: 7
+  cols:
+    date: 1
+    source: 2
+    description: 3
+    reference: 4
+    debit: 5
+    credit: 6
+    running_balance: 7
+    gross: 8
+    gst: 9
+ctd_special_top_sections:
+- Construction Insurance Subtotal
+- Mutli-pay Subtotal
+highlight_colours:
+  new_invoice: FFEB9C
+  new_section_subtotal: FFD966
+  xero_orphan: FFC7CE
+  approved_status_text: 1F3864
+  received_status_text: C00000
+  draft_banner_fill: FFF2CC
+  draft_banner_font: C00000
+  quarantine_fill: FCE4D
+duplicate_blocks_to_consolidate:
+- keep: Doyles Trade Centre Subtotal
+  merge: Doyles Trade Centre - Framing materials Subtotal
+  note: One trade split across two blocks; both feed 04-4.7-4.71.S so totals are right, presentation is
+    not.
+- keep: Australian Safety Rail Subtotal
+  merge: Australis (Edge Protection) Subtotal
+  note: Same supplier. Both feed 03-3.0-3.40.S.
+accrual_sources:
+- Manual Journal
+known_accruals:
+- row_desc: '2025 HR: Take up Accrued Expenses - Insurance Advisernet'
+  date: 30/06/2025
+  ex_gst: 110836.36
+  status: UNRESOLVED - only entry in the Construction Insurance block; no payment anywhere in the CTD,
+    yet Detail Sheet row 26 claims $118,643.73 against it.
+- row_desc: '2025 HR: Take up Accrued Expenses - AMCO Built - Civil works'
+  date: 30/06/2025
+  ex_gst: 32956.13
+  status: UNRESOLVED - sits among 15 genuine AMCO payments with no reversal entry; if the accrued work
+    was later invoiced and paid this is a duplicate.
+superseded_documents:
+- file: JDP Concreting - INV -4123.pdf
+  was: 53317.17
+  now: Revised INV-4123 in 3.0 Paid at 29,007.17 incl GST, invoice dated 28/07/2026.
+  note: The Received-folder copy was an 11-page PDF with Steve Jones dockets at pp8-9. Do not use it.

@@ -1,0 +1,197 @@
+# Template per-project config for progress-claim-update skill.
+# Copy to {project_code}_{short_name}.yaml and fill in for each new project.
+# See projects/202415_south_pine_rd.yaml for a fully-worked example.
+
+project:
+  code: "NNNNNN"
+  name: "FULL PROJECT NAME"
+  folder_root: "C:/Users/asben/BDM/Projects - Documents/NNNNNN_ShortName"
+  accounts_subfolder: "01a_Accounts"
+  principal: "TBC"
+  contractor: "Bentley Development Management Pty Ltd"
+  original_contract_sum: 0.00
+  contract_form: "AS 4000-1997 (Head Contract)"
+  builders_margin_pct: 10
+  builders_margin_row: 79
+  builders_margin_code: "05-5.0-5.0.S"
+
+claim_template:
+  filename_pattern: "*_ProgressClaim_*.xlsx"
+  output_filename: "{project_code}_ClaimXX_{month}{year}_DRAFT_v{version}.xlsx"
+
+# Supplier → CTD block (grow this as new suppliers approved)
+# Pre-populate from your project's existing CTD Breakdown supplier rows.
+supplier_to_ctd_block:
+  # "Supplier Trading Name": "Existing CTD Subtotal Row Name"
+
+# Multi-service suppliers — resolve service type from Xero description before block mapping.
+# Required when one supplier entity bills across multiple service types (e.g. Viking
+# Group billing Plumbing, Electrical, Mechanical, Hydraulic, Temp Power under one name).
+service_type_map:
+  # SupplierEntityName:
+  #   Electrical: "Electrical CTD Subtotal"
+  #   Mechanical: "Mechanical CTD Subtotal"
+  #   Plumbing: "Plumbing CTD Subtotal"
+
+# New CTD blocks created across the project, with their codes
+new_ctd_blocks:
+  # "New Block Name Subtotal":
+  #   code: "0X-X.X-X.XX.S"
+  #   added_in_claim: NN
+  #   approved_by: "Andrew"
+  #   notes: ""
+
+# Xero account-transaction aliases — when Xero shows a different name than the invoice file
+xero_aliases:
+  # "xero description token": "invoice supplier keyword"
+  # Example: "jf chatfeild": "jesse chatfield"
+
+# Manual OCR overrides (for image-only PDFs that can't be auto-parsed, e.g. MYOB scans)
+manual_overrides:
+  # "Filename_Pattern":
+  #   total: 0.00
+  #   date: "DD/MM/YYYY"
+  #   invoice_no: ""
+  #   supplier: ""
+
+sub_document_patterns:
+  - "DW Dockets"
+  - "DW dockets"
+  - "STATEMENT"
+  - "Variation_Register"
+  - "Day_Dockets"
+  - "Civil_Form_12"
+  - "Request_For_Claim"
+  - "RequestForClaim"
+
+duplicate_patterns:
+  - "-AB To Check"
+
+remittance_patterns:
+  - "Receipt"
+  - "ANZ Receipt"
+  - "Payment Receipt"
+
+# Budget code chart of accounts — copy from 202415 example for standard BDM Head Contract,
+# or customise per project.
+budget_codes:
+  # 0X-X.X-X.XX.S: "Description"
+
+# Excel template structure — copy from 202415 example for standard BDM template,
+# or update if your project uses a different claim template layout.
+load_bearing:
+  sheets:
+    - "Progress Claim"
+    - "Detail Sheet"
+    - "Summary"
+    - "CTD Breakdown"
+    - "Unpaid Invoices"
+    - "Advanced Payments"   # or "Advnaced Payments" — both spellings tolerated
+  cover_cells:
+    claim_no: "I3"
+    invoice_no: "I4"
+    period: "I5"
+    project_no: "I6"
+    original_contract_sum: "F19"
+    contract_sum_to_date: "F21"
+    total_completed: "F22"
+    total_earned_less_retention: "F27"
+    previous_claims: "F28"
+    current_ex_tax: "F29"
+    gst: "F30"
+    current_incl_tax: "F31"
+    balance_to_finish: "F32"
+    amount_certified: "K36"
+    draft_banner_row: 47
+  detail_sheet:
+    first_line_row: 10
+    last_line_row: 79
+    totals_row: 80
+    cols:
+      item_no: 1
+      budget_code: 2
+      description: 3
+      scheduled: 4
+      variance: 5
+      revised: 6
+      previous: 8
+      this_period: 9
+      total_to_date: 10
+      percent: 11
+      balance: 12
+      actual_to_date: 14
+      direct_costs: 15
+      advance_payments: 16
+      total_actual: 17
+      difference: 19
+  ctd_breakdown:
+    data_start_row: 7
+    multipay_row: 9
+    multipay_pickup_marker: "MULTI-PAY Pick-up"
+    grand_total_marker_col_b: "Total"
+    cols:
+      date: 2
+      source: 3
+      description: 4
+      debit: 5
+      credit: 6
+      gross: 7
+      gst: 8
+      notes: 9
+  summary:
+    paid_section_first_row: 5
+    grand_total_col_b: null
+    unpaid_header_match: "unpaid invoices"
+    unpaid_subhead_match: "Subcontractor"
+    cols:
+      supplier_or_subtotal: 2
+      debit: 3
+      credit: 4
+      total: 5
+      budget_code: 6
+  unpaid_invoices:
+    header_row: 1
+    data_start_row: 2
+    cols:
+      supplier: 1
+      invoice_no: 2
+      invoice_date: 3
+      ex_gst: 4
+      gst: 5
+      total: 6
+      status: 7
+
+status_folders:
+  "1.0 Received": "Received"
+  "2.0 Approved": "Approved"
+  "3.0 Paid": "Paid"
+  "4.0 Remittance": "Remittance"
+
+xero_report:
+  filename_pattern: "*Account_Transactions*.xlsx"
+  sheet_name: "Construction Costs Transactions"
+  data_start_row: 7
+  cols:
+    date: 1
+    source: 2
+    description: 3
+    reference: 4
+    debit: 5
+    credit: 6
+    running_balance: 7
+    gross: 8
+    gst: 9
+
+ctd_special_top_sections:
+  - "Construction Insurance Subtotal"
+  - "Mutli-pay Subtotal"
+
+highlight_colours:
+  new_invoice: "FFEB9C"
+  new_section_subtotal: "FFD966"
+  xero_orphan: "FFC7CE"
+  approved_status_text: "1F3864"
+  received_status_text: "C00000"
+  draft_banner_fill: "FFF2CC"
+  draft_banner_font: "C00000"
+  quarantine_fill: "FCE4D6"   # for QUARANTINE-coded rows; preserved across monthly rolls

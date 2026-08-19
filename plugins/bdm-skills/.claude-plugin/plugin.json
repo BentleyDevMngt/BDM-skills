@@ -1,0 +1,18 @@
+{
+  "name": "bdm-skills",
+  "version": "0.1.0",
+  "description": "BDM project, contract administration and quantity surveying skills — monthly reporting, progress claims and certificates, QS lender reports, consultancy agreements, DA conditions, area schedules, meeting minutes, site inspections, tender clarifications and Datum markup. Staged from the controlled 2.0_Skills library and not yet reviewed.",
+  "author": {
+    "name": "Bentley Development Management"
+  },
+  "homepage": "https://github.com/BentleyDevMngt/bdm-skills",
+  "repository": "https://github.com/BentleyDevMngt/bdm-skills",
+  "keywords": [
+    "bdm",
+    "development management",
+    "contract administration",
+    "quantity surveying",
+    "as4000",
+    "reporting"
+  ]
+}

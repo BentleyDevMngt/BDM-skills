@@ -48,9 +48,13 @@ jobs:
 
       - name: Reject client project data
         run: |
-          bad=$(git ls-files -- '*.docx' '*.xlsx' '*.pdf' '*.pptx' | grep -v '/templates\?/' || true)
+          # Controlled BDM forms live in a skill's templates/ or assets/ folder.
+          # A binary anywhere else is almost certainly a job document that has
+          # been committed by accident.
+          bad=$(git ls-files -- '*.docx' '*.xlsx' '*.pdf' '*.pptx' \
+                | grep -Ev '/(templates|assets)/' || true)
           if [ -n "$bad" ]; then
-            echo "FAIL  binary deliverables outside a templates/ folder:"
+            echo "FAIL  binary deliverables outside a templates/ or assets/ folder:"
             echo "$bad"
             exit 1
           fi

@@ -10,7 +10,10 @@ Checks, in order:
   6. Descriptions are within the length Claude actually reads.
   7. No plugin directory is orphaned (present on disk, absent from the manifest).
 
-Exit code 0 = pass, 1 = fail. Run from anywhere: python scripts/validate_marketplace.py
+Exit code 0 = pass, 1 = fail.
+
+    python scripts/validate_marketplace.py              # this repository
+    python scripts/validate_marketplace.py <repo-root>  # audit another checkout
 """
 from __future__ import annotations
 
@@ -19,7 +22,7 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent
 MANIFEST = ROOT / ".claude-plugin" / "marketplace.json"
 PLUGINS_DIR = ROOT / "plugins"
 

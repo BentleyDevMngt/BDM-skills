@@ -1,0 +1,11 @@
+# Every change to this repository requires Director review before merge.
+# Enforce with branch protection: Settings > Branches > main >
+# "Require a pull request" + "Require review from Code Owners".
+
+*                       @BDMANAGEMENT/directors
+
+# Governance and release control — Director only, no delegation.
+/GOVERNANCE.md          @BDMANAGEMENT/directors
+/CHANGELOG.md           @BDMANAGEMENT/directors
+/.claude-plugin/        @BDMANAGEMENT/directors
+/.github/               @BDMANAGEMENT/directors

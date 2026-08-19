@@ -1,0 +1,23 @@
+# Normalise line endings on commit. Without this, files edited on Windows /
+# OneDrive are re-committed wholesale as CRLF and every diff becomes noise.
+* text=auto eol=lf
+
+# Windows-only scripts must keep CRLF on checkout.
+*.ps1   text eol=crlf
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+
+# Binary — never diff or normalise.
+*.docx  binary
+*.dotx  binary
+*.xlsx  binary
+*.xltx  binary
+*.xlsm  binary
+*.pptx  binary
+*.potx  binary
+*.pdf   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.emf   binary
+*.wmf   binary

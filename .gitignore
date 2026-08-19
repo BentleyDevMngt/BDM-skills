@@ -1,0 +1,30 @@
+# OS / sync artefacts
+.DS_Store
+Thumbs.db
+desktop.ini
+.~lock.*
+
+# Office lock and autosave files
+~$*
+*.tmp
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+
+# Editors
+.vscode/
+.idea/
+
+# Never commit live project data or client deliverables into the skills repo.
+# Skills carry templates and logic only.
+/_scratch/
+/**/output/
+/**/outputs/
+
+# Redundant placeholders (each folder is kept by its README)
+templates/skill-template/*/.gitkeep

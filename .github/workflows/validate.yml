@@ -1,0 +1,57 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Marketplace and skill structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate marketplace and skills
+        run: python scripts/validate_marketplace.py
+
+      - name: Check every JSON file parses
+        run: |
+          fail=0
+          while IFS= read -r f; do
+            python -c "import json,sys; json.load(open(sys.argv[1], encoding='utf-8'))" "$f" \
+              || { echo "FAIL  invalid JSON: $f"; fail=1; }
+          done < <(find . -name '*.json' -not -path './.git/*')
+          exit $fail
+
+      - name: Check Python scripts compile
+        run: |
+          if find . -name '*.py' -not -path './.git/*' | grep -q .; then
+            python -m compileall -q $(find . -name '*.py' -not -path './.git/*')
+          fi
+
+      - name: Reject CRLF in tracked text files
+        run: |
+          bad=$(git grep -Il $'\r' -- '*.md' '*.py' '*.json' '*.yml' '*.yaml' || true)
+          if [ -n "$bad" ]; then
+            echo "FAIL  CRLF line endings found. .gitattributes should have normalised these:"
+            echo "$bad"
+            exit 1
+          fi
+          echo "OK — no CRLF in tracked text files"
+
+      - name: Reject client project data
+        run: |
+          bad=$(git ls-files -- '*.docx' '*.xlsx' '*.pdf' '*.pptx' | grep -v '/templates\?/' || true)
+          if [ -n "$bad" ]; then
+            echo "FAIL  binary deliverables outside a templates/ folder:"
+            echo "$bad"
+            exit 1
+          fi
+          echo "OK — no stray client documents"

@@ -14,3 +14,12 @@
 /CHANGELOG.md           @BentleyDevMngt
 /.claude-plugin/        @BentleyDevMngt
 /.github/               @BentleyDevMngt
+
+# Per-plugin custodians (GOVERNANCE §2). Every line is the Director until the
+# custodians have GitHub accounts on this repository — an unfilled custodian is
+# not a reason to leave a plugin unowned. Replace the username as each is added;
+# do not add a person here before they have agreed to the role.
+/plugins/bdm-standards/          @BentleyDevMngt   # Director
+/plugins/bdm-contract-admin/     @BentleyDevMngt   # Senior PM — contract
+/plugins/bdm-quantity-surveying/ @BentleyDevMngt   # QS lead
+/plugins/bdm-project-delivery/   @BentleyDevMngt   # Senior PM — delivery

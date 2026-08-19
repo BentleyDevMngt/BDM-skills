@@ -12,25 +12,39 @@ is not here is not controlled, and its output must not be issued.
 ## Status
 
 **Staged, not yet signed off.** The 14 skills from the controlled
-`_AI Directory/2.0_Skills` library are in, as a single `bdm-skills` plugin at
-version **0.1.0**. The leading `0.` is the point: they are here so they are
-under version control and reviewable, not because they have been reviewed.
+`_AI Directory/2.0_Skills` library are in, across four plugins at version
+**0.1.0**. The leading `0.` is the point: they are here so they are under version
+control and reviewable, not because they have been reviewed.
 
 Still outstanding, deliberately:
 
-- Director review and sign-off of each skill, after which the plugin goes to
+- Director review and sign-off of each skill, after which the plugins go to
   1.0.0 and normal Change Note control begins.
-- Reconciliation with the legacy `JamesBDM/bdm-plugins` repository, which holds
-  overlapping but not identical versions of several of these skills, plus nine
-  others not in this library.
-- Whether these 14 stay as one plugin or split by domain. One plugin for now,
-  so the grouping is not prejudged ahead of that review.
+- **Merging the legacy `JamesBDM/bdm-plugins` repository** — 15 skills, of which
+  10 have no counterpart here and five overlap. On some of the overlaps the
+  legacy copy is the newer one. Direction of merge is decided per skill, not per
+  repository, and with its author in the room. Next Change Note.
+
+---
+
+## The four plugins
+
+| Plugin | Skills | Covers |
+|---|---|---|
+| [`bdm-standards`](plugins/bdm-standards/README.md) | 1 | House style, QA, PDF export, markup. **The foundation — everything depends on it.** |
+| [`bdm-contract-admin`](plugins/bdm-contract-admin/README.md) | 2 | AS4000 instruments — certificates, variations, EOTs, tender documents |
+| [`bdm-quantity-surveying`](plugins/bdm-quantity-surveying/README.md) | 5 | Area, cost, financier reporting, progress claims |
+| [`bdm-project-delivery`](plugins/bdm-project-delivery/README.md) | 6 | Monthly reporting, DA conditions, agreements, minutes, inspections |
+
+Split by change cadence and custodian, not by subject — see
+[GOVERNANCE.md](GOVERNANCE.md) §2. `bdm-standards` is thin at 0.1.0 because the
+house style and PDF export skills arrive with the legacy merge.
 
 ---
 
 ## Installing
 
-**Staff on the Claude desktop app** — install the `bdm-skills.plugin` bundle.
+**Staff on the Claude desktop app** — install the `.plugin` bundles.
 Step-by-step instructions are in [docs/INSTALL.md](docs/INSTALL.md). No GitHub
 account or command line needed. Held until sign-off; do not circulate yet.
 
@@ -38,16 +52,24 @@ account or command line needed. Held until sign-off; do not circulate yet.
 
 ```
 /plugin marketplace add BentleyDevMngt/bdm-skills
-/plugin install bdm-skills@bdm
+/plugin install bdm-standards@bentley-dm
+/plugin install bdm-quantity-surveying@bentley-dm     # pulls bdm-standards automatically
 ```
 
-The repository is private, so this route needs read access on the
-`BentleyDevMngt` account and a GitHub credential configured locally.
+The marketplace is named **`bentley-dm`**, not `bdm`. The legacy repository also
+declares `bdm`, and when two marketplaces share a name the second silently
+overwrites the first with no error — so the name had to be unique.
 
-Build the bundle with:
+The repository is private, so this route needs access on the `BentleyDevMngt`
+account and a GitHub credential configured locally. Note that GitHub does not
+offer read-only collaborators on a private personal repository; anyone added has
+write access (GOVERNANCE §7).
+
+Build the bundles with:
 
 ```
-bash scripts/build_plugin.sh
+bash scripts/build_plugin.sh bdm-standards
+bash scripts/build_plugin.sh bdm-quantity-surveying
 ```
 
 ---

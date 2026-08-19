@@ -9,6 +9,47 @@ Format: `## CN-YYYY-NNN — YYYY-MM-DD` then Added / Changed / Fixed / Retired.
 
 ## Unreleased
 
+### Changed — CN-2026-034 (draft), repository restructured into four plugins
+
+Director decisions of 2026-08-20. The single `bdm-skills` plugin is retired as a
+container; its 14 skills are redistributed, unchanged, across four plugins split
+by change cadence and custodian rather than by subject:
+
+| Plugin | Skills | Custodian |
+|---|---|---|
+| `bdm-standards` | 1 | Director |
+| `bdm-contract-admin` | 2 | Senior PM — contract |
+| `bdm-quantity-surveying` | 5 | QS lead |
+| `bdm-project-delivery` | 6 | Senior PM — delivery |
+
+- **No skill was edited.** Every file moved with `git mv`; the tracked-file list
+  before and after differs only by the four new `plugin.json` and `README.md`
+  pairs replacing the one they supersede.
+- **The three domain plugins declare `dependencies: {"bdm-standards": "^0.1.0"}`.**
+  Claude installs the foundation automatically, so "install this one first" is
+  enforced rather than being a line in a README. CI now fails if a dependency
+  names a plugin the marketplace does not ship — verified with a negative test.
+- **Marketplace renamed `bdm` → `bentley-dm`.** The legacy `JamesBDM/bdm-plugins`
+  marketplace also declares `bdm`, and where two marketplaces share a name the
+  second silently overwrites the first with no error and no way to qualify an
+  install. The name had to be unique.
+- **Templates: SharePoint resolution confirmed as policy** (GOVERNANCE §5),
+  matching the rule already set in CN-2026-033 — a skill never carries its own
+  copy of a controlled form; it resolves the highest revision from `Working Copy`
+  at run time, ignoring `_Superseded`. Added revision pinning: a skill records
+  the revision it was last verified against and says so when it resolves a newer
+  one, rather than picking it up silently.
+- **GOVERNANCE §7 corrected.** It claimed `main` was protected by pull request
+  and Code Owner review. It is not — branch protection on a private repository
+  needs a paid plan, and the account is on none by decision. The section now
+  states what is actually in force, including that GitHub offers no read-only
+  collaborator on a private personal repository, so any collaborator has write
+  access to `main`.
+- **CI now reports package conformance** against the CN-2026-033 convention
+  (SKILL.md + README.md + INSTALL.md + CHANGELOG.md) as warnings. 3 of 14
+  conform today; CN-2026-033 records the estate as largely non-conformant and
+  brings each skill up at its next revision, so this warns rather than fails.
+
 ### Added
 
 - Repository scaffold: marketplace manifest, governance, contribution process,

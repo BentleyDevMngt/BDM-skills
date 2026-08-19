@@ -1,0 +1,20 @@
+{
+  "name": "bdm-standards",
+  "version": "0.1.0",
+  "description": "BDM house style and the shared production tooling every BDM deliverable passes through - brand rules, document QA, Word-faithful PDF export and Datum markup. Install this first: every other BDM plugin depends on it.",
+  "author": {
+    "name": "Bentley Development Management"
+  },
+  "homepage": "https://github.com/BentleyDevMngt/bdm-skills",
+  "repository": "https://github.com/BentleyDevMngt/bdm-skills",
+  "license": "UNLICENSED",
+  "keywords": [
+    "bdm",
+    "brand",
+    "house style",
+    "pdf",
+    "markup",
+    "templates",
+    "qa"
+  ]
+}

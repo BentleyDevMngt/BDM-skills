@@ -1,0 +1,26 @@
+{
+  "name": "bdm-quantity-surveying",
+  "version": "0.1.0",
+  "description": "Quantity surveying and cost control - floor area schedules and take-offs (Form 405), financier initial and monthly progress valuation reports (Forms 424 / 425), head contract progress claims and the consultant fee register.",
+  "author": {
+    "name": "Bentley Development Management"
+  },
+  "homepage": "https://github.com/BentleyDevMngt/bdm-skills",
+  "repository": "https://github.com/BentleyDevMngt/bdm-skills",
+  "license": "UNLICENSED",
+  "keywords": [
+    "quantity surveying",
+    "floor area",
+    "gfa",
+    "gba",
+    "nsa",
+    "cost to complete",
+    "progress claim",
+    "financier",
+    "lender report",
+    "cost report"
+  ],
+  "dependencies": {
+    "bdm-standards": "^0.1.0"
+  }
+}

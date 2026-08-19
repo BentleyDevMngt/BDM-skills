@@ -10,32 +10,42 @@ account, git, or the command line.
 
 ## What you are installing
 
-A plugin called **bdm-skills**. It teaches Claude how BDM does fourteen
-recurring pieces of work — monthly reports, progress claims and certificates,
-QS lender reports, consultancy agreements, DA conditions matrices, area
-schedules, meeting minutes, site inspections and tender clarifications.
+Four plugins. Together they teach Claude how BDM does its recurring work —
+monthly reports, progress claims and certificates, QS lender reports,
+consultancy agreements, DA conditions matrices, area schedules, meeting minutes,
+site inspections and tender clarifications.
 
-Once it is installed you do not have to do anything special to use it. You ask
-for the work in the way you would ask a person — "draft the progress
-certificate for claim 14", "roll the monthly report forward" — and Claude picks
-up the right method on its own.
+| Plugin | Who needs it |
+| --- | --- |
+| **bdm-standards** | **Everyone. Install this one first** — the others build on it |
+| **bdm-contract-admin** | Anyone administering a head contract as Superintendent |
+| **bdm-quantity-surveying** | Anyone doing areas, cost reports, claims or financier reports |
+| **bdm-project-delivery** | Anyone running a job month to month — reports, minutes, approvals |
+
+Take the ones that match your work. If you are unsure, take all four; nothing
+breaks by having a skill you never use.
+
+Once installed you do not have to do anything special. You ask for the work the
+way you would ask a person — "draft the progress certificate for claim 14",
+"roll the monthly report forward" — and Claude picks up the right method itself.
 
 ---
 
 ## Installing it
 
-1. Save the `bdm-skills.plugin` file somewhere you can find it, such as your
-   Downloads folder.
+1. Save the `.plugin` files somewhere you can find them, such as your Downloads
+   folder.
 2. Open the Claude desktop app and start a new chat.
-3. Attach the `bdm-skills.plugin` file to the chat, the same way you would
-   attach any other file.
+3. Attach a `.plugin` file to the chat, the same way you would attach any other
+   file. **Do `bdm-standards` first.**
 4. The file appears as a card showing what is inside it, with a button to
    install. Press it.
-5. Claude confirms the plugin is installed. That is the whole job — it stays
-   installed, you do not repeat this each time.
+5. Repeat for each of the others you need.
+
+That is the whole job — they stay installed, you do not repeat this each time.
 
 To check it worked, ask Claude: *"which skills do I have?"* You should see the
-fourteen BDM skills listed.
+BDM skills listed.
 
 ---
 
@@ -63,9 +73,10 @@ the facts of your job.
 
 ## Updating
 
-Updates come as a new `bdm-skills.plugin` file. Install it the same way and it
-replaces the previous version. Watch for the notice that goes out with it — it
-will carry a Change Note number telling you what changed and why.
+Updates come as a new `.plugin` file for whichever plugin changed. Install it
+the same way and it replaces the previous version. Watch for the notice that
+goes out with it — it will carry a Change Note number telling you what changed
+and why.
 
 ---
 
@@ -93,8 +104,12 @@ picks up changes as they are pushed:
 
 ```
 /plugin marketplace add BentleyDevMngt/bdm-skills
-/plugin install bdm-skills@bdm
+/plugin install bdm-standards@bentley-dm
+/plugin install bdm-project-delivery@bentley-dm
 ```
+
+The domain plugins declare a dependency on `bdm-standards`, so it comes along
+automatically. The marketplace is `bentley-dm`, not `bdm`.
 
 This route needs the account to have added you as a collaborator first. For
 most staff the plugin file above is the simpler path.

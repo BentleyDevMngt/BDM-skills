@@ -33,6 +33,36 @@ The repository does not sit on any individual employee's personal account. If a
 maintainer leaves BDM their collaborator access is removed and the repository is
 unaffected.
 
+### Plugin ownership
+
+**BDM owns every plugin in this marketplace.** Ownership does not transfer with
+authorship — a skill written by a Senior PM, a consultant or anyone else is BDM's
+on the same terms as any other work product. `author` in every `plugin.json`
+reads Bentley Development Management, never an individual, and the `owner` of the
+marketplace is BDM.
+
+Each plugin has a named **custodian**: the person who reviews changes to it and
+whose sign-off the CHANGELOG records. The custodian is accountable for the
+plugin, not the owner of it.
+
+| Plugin | Custodian | Covers |
+|---|---|---|
+| `bdm-standards` | Director | House style, QA, PDF export, markup. Changes rarely; everything depends on it. |
+| `bdm-contract-admin` | Senior PM — contract | AS4000 instruments. Contractual output; §4's separate-reviewer rule always applies. |
+| `bdm-quantity-surveying` | QS lead | Area, cost and financier reporting. |
+| `bdm-project-delivery` | Senior PM — delivery | Monthly reporting, approvals, minutes, records. Moves most often. |
+
+### Why four plugins
+
+The split is by **change cadence and custodian**, not by subject matter. Things
+that move together and are reviewed by the same person share a version number.
+
+`bdm-standards` is the foundation: the other three declare it in `dependencies`,
+so Claude installs it automatically and it cannot be missing. That dependency is
+the enforceable version of "install this one first", which had previously been a
+line in a README that nothing checked. CI fails if a dependency names a plugin
+this marketplace does not ship.
+
 **Known limitation.** `BentleyDevMngt` is a GitHub *user* account, not an
 organisation. Three consequences, recorded here rather than glossed over:
 
@@ -106,14 +136,39 @@ and the reason. Git history retains the code.
 
 ## 5. Templates
 
-Skills fill controlled BDM forms. The form itself is controlled in the BDM
-template library, not here; a skill carries a copy for the revision it was
-built and tested against.
+**Templates are not in this repository.** Settled 2026-08-20. They stay in the
+SharePoint `Standard - Documents\BDM TEMPLATES` library, under the Change Note
+process that already controls them, and skills resolve them at run time.
 
-When a form is revised, the skills that fill it are **not** automatically
-updated. The template revision CN identifies the affected skills, and each is
-re-tested and re-issued under its own CN. A skill silently picking up a new form
-revision is a defect, not a convenience.
+The reason is single source of truth. BDM Standards revises a form once and
+every skill picks it up. A copy of a controlled form committed here would be a
+second controlled copy — the exact divergence this repository exists to end
+(§6). A repository that carries its own templates starts telling a different
+story from the register within one revision cycle.
+
+**Resolution rule.** Take the highest revision of `NNN-Form_Name_R*.ext` from the
+relevant `Working Copy` folder. Ignore `_Superseded`. Never hardcode a path
+under a person's home directory — resolve from the current user's.
+
+**Revision pinning.** Latest-wins alone means a form revision can silently break
+a skill. So each skill records in its frontmatter the revision it was last
+verified against:
+
+```yaml
+template_revision: R3
+```
+
+If the resolved template is **newer** than the recorded revision, the skill says
+so and asks for a check before its output is relied on. It does not refuse to
+run, and it does not proceed silently. When a form is revised, the template CN
+names the affected skills; each is re-tested and its `template_revision` bumped
+under its own CN.
+
+**The one exception**, recorded so it is not mistaken for the rule:
+`bdm-project-delivery/skills/bdm-monthly-project-report` carries an embedded
+master document, because that form is not in the library — it has no form number
+and no register entry. It is to be issued a number, filed, and the skill
+converted. Until then it is the only controlled binary in this repository.
 
 ---
 
@@ -138,8 +193,24 @@ copy.
 - Two-factor authentication is enabled, and the recovery codes are stored with
   the credentials — not on one person's phone.
 - Collaborator access is reviewed when anyone joins or leaves.
-- `main` is protected: no direct pushes, pull request and Code Owner review
-  required, CI must pass.
+
+**`main` is not technically protected, and this document will not pretend it
+is.** Branch protection and rulesets on a *private* repository require a paid
+plan — GitHub Pro on a personal account, or Team on an organisation. The account
+is on neither as at 2026-08-20, by decision.
+
+The consequences, stated plainly so they are managed rather than assumed away:
+
+- Any collaborator can push directly to `main`. On a private repository owned by
+  a personal account, GitHub offers no read-only collaborator role — write is the
+  only level available, so "read access" cannot be granted at all.
+- CODEOWNERS and the pull request template are **advisory**. They record who
+  should review; nothing enforces that they did.
+- CI runs on pull requests but cannot block a merge.
+
+Until the account is converted and a paid plan taken, the review rule in §4 is a
+professional undertaking between named people, not a technical control. Anyone
+given collaborator access is to be told that in those words.
 
 ---
 

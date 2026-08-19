@@ -1,16 +1,47 @@
 {
-  "name": "bdm",
-  "description": "Bentley Development Management — controlled Claude skills for development management, contract administration, quantity surveying and BDM document standards.",
+  "name": "bentley-dm",
+  "description": "Bentley Development Management - controlled Claude skills for development management, contract administration, quantity surveying and BDM document standards.",
   "owner": {
     "name": "Bentley Development Management",
     "url": "https://github.com/BentleyDevMngt/bdm-skills"
   },
   "plugins": [
     {
-      "name": "bdm-skills",
-      "source": "./plugins/bdm-skills",
-      "description": "BDM project, contract administration and quantity surveying skills, staged from the controlled 2.0_Skills library. Version 0.x — not yet reviewed or signed off.",
+      "name": "bdm-standards",
+      "source": "./plugins/bdm-standards",
+      "description": "BDM house style and the shared production tooling every BDM deliverable passes through - brand rules, document QA, Word-faithful PDF export and Datum markup. Install this first: every other BDM plugin depends on it.",
       "version": "0.1.0",
+      "category": "standards",
+      "author": {
+        "name": "Bentley Development Management"
+      }
+    },
+    {
+      "name": "bdm-contract-admin",
+      "source": "./plugins/bdm-contract-admin",
+      "description": "Contract administration under AS4000 - variations and CSAs, extensions of time, the Contract Admin Register, progress certificates as Superintendent, tender clarifications and addenda.",
+      "version": "0.1.0",
+      "category": "contract administration",
+      "author": {
+        "name": "Bentley Development Management"
+      }
+    },
+    {
+      "name": "bdm-quantity-surveying",
+      "source": "./plugins/bdm-quantity-surveying",
+      "description": "Quantity surveying and cost control - floor area schedules and take-offs (Form 405), financier initial and monthly progress valuation reports (Forms 424 / 425), head contract progress claims and the consultant fee register.",
+      "version": "0.1.0",
+      "category": "quantity surveying",
+      "author": {
+        "name": "Bentley Development Management"
+      }
+    },
+    {
+      "name": "bdm-project-delivery",
+      "source": "./plugins/bdm-project-delivery",
+      "description": "Development and project management delivery - monthly reports to the Principal and to financiers, DA conditions matrices, consultancy agreements, meeting minutes and site inspection records.",
+      "version": "0.1.0",
+      "category": "project management",
       "author": {
         "name": "Bentley Development Management"
       }

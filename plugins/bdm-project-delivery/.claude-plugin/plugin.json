@@ -1,0 +1,23 @@
+{
+  "name": "bdm-project-delivery",
+  "version": "0.1.0",
+  "description": "Development and project management delivery - monthly reports to the Principal and to financiers, DA conditions matrices, consultancy agreements, meeting minutes and site inspection records.",
+  "author": {
+    "name": "Bentley Development Management"
+  },
+  "homepage": "https://github.com/BentleyDevMngt/bdm-skills",
+  "repository": "https://github.com/BentleyDevMngt/bdm-skills",
+  "license": "UNLICENSED",
+  "keywords": [
+    "development management",
+    "monthly report",
+    "da conditions",
+    "consultancy agreement",
+    "meeting minutes",
+    "site inspection",
+    "project management"
+  ],
+  "dependencies": {
+    "bdm-standards": "^0.1.0"
+  }
+}

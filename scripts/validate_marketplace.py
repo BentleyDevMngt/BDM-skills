@@ -9,6 +9,8 @@ Checks, in order:
   5. Frontmatter carries name + description; name matches the folder.
   6. Descriptions are within the length Claude actually reads.
   7. No plugin directory is orphaned (present on disk, absent from the manifest).
+  8. Every declared plugin dependency resolves to a plugin in this marketplace.
+  9. Each skill carries the CN-2026-033 package set (warning only).
 
 Exit code 0 = pass, 1 = fail.
 
@@ -109,6 +111,7 @@ def check_skill(skill_dir: Path, plugin_name: str) -> None:
 
 
 def main() -> int:
+    declared_deps: dict[str, object] = {}
     if not MANIFEST.is_file():
         err(f"missing {MANIFEST.relative_to(ROOT)}")
         return report()
@@ -154,6 +157,8 @@ def main() -> int:
 
         if plugin.get("name") != pname:
             err(f"{pname}: plugin.json name '{plugin.get('name')}' disagrees with the manifest")
+        if plugin.get("dependencies") is not None:
+            declared_deps[pname] = plugin.get("dependencies")
         if entry.get("version") and plugin.get("version") != entry.get("version"):
             err(
                 f"{pname}: version mismatch — manifest {entry.get('version')} "
@@ -169,11 +174,35 @@ def main() -> int:
             warn(f"{pname}: skills/ is empty")
         for skill_dir in found:
             check_skill(skill_dir, pname)
+            # CN-2026-033 package convention. A warning, not an error: that
+            # notice records the estate as largely non-conformant and brings
+            # each skill up at its next revision, so failing CI here would
+            # block every unrelated change.
+            missing = [n for n in ("README.md", "INSTALL.md", "CHANGELOG.md")
+                       if not (skill_dir / n).is_file()]
+            if missing:
+                warn(f"{pname}/{skill_dir.name}: package incomplete — "
+                     f"missing {', '.join(missing)} (CN-2026-033)")
 
     if PLUGINS_DIR.is_dir():
         for pdir in sorted(PLUGINS_DIR.iterdir()):
             if pdir.is_dir() and pdir.name not in listed:
                 err(f"{pdir.name}: plugin directory on disk is not listed in marketplace.json")
+
+    # 8. Every declared dependency resolves to a plugin this marketplace ships.
+    #    Claude auto-installs dependencies; one naming a plugin that is not here
+    #    fails at install time on someone else's machine, not ours.
+    for pname, deps in declared_deps.items():
+        if not isinstance(deps, dict):
+            err(f"{pname}: dependencies must be an object of name -> version range")
+            continue
+        for dep_name, dep_range in deps.items():
+            if dep_name not in listed:
+                err(f"{pname}: depends on '{dep_name}', which this marketplace does not ship")
+            if not isinstance(dep_range, str) or not dep_range.strip():
+                err(f"{pname}: dependency '{dep_name}' has no version range")
+            if dep_name == pname:
+                err(f"{pname}: depends on itself")
 
     return report()
 

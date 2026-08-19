@@ -28,3 +28,6 @@ venv/
 
 # Redundant placeholders (each folder is kept by its README)
 templates/skill-template/*/.gitkeep
+
+# Build outputs — .plugin bundles are built from the release tag, not committed
+/dist/

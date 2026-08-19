@@ -16,6 +16,13 @@ Format: `## CN-YYYY-NNN — YYYY-MM-DD` then Added / Changed / Fixed / Retired.
 - `.gitattributes` normalising line endings, which the legacy repository lacked.
 - `bdm-skills` plugin at 0.1.0 — the 14 skills from `_AI Directory/2.0_Skills`,
   staged under version control ahead of Director review.
+- `plugins/bdm-skills/README.md` — what the plugin covers, and the defects
+  blocking 1.0.0.
+- `scripts/build_plugin.sh` — builds a distributable `.plugin` bundle, with the
+  structural checks the Claude CLI validator makes. Bundles go to `dist/`, which
+  is ignored; release bundles are built from the release tag.
+- `docs/INSTALL.md` — install and use instructions for staff on the Claude
+  desktop app. **Held, not circulated**, pending sign-off.
 
 ### Notes
 
@@ -36,6 +43,12 @@ Format: `## CN-YYYY-NNN — YYYY-MM-DD` then Added / Changed / Fixed / Retired.
   file for a named live job (202415 South Pine Rd). Retained so the skill still
   works; flagged for a decision on whether per-project config belongs in a
   skills repository at all.
+- Portability audit before packaging, 2026-08-19: 13 of the 14 skills carry no
+  machine-specific references. `bdm-floor-area-schedule` does —
+  `scripts/build_live_takeoff.py` is a single-job working script hardcoded to a
+  sandbox session path, the 79 Seagull Avenue drawing set and two modules that
+  are not in the folder, and `scripts/export_live_pdf.py` is referenced twice in
+  SKILL.md but does not exist. Both block 1.0.0. Recorded in the plugin README.
 
 ### Changed
 

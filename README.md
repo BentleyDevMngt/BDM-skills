@@ -30,15 +30,25 @@ Still outstanding, deliberately:
 
 ## Installing
 
-In Claude Code or Cowork:
+**Staff on the Claude desktop app** — install the `bdm-skills.plugin` bundle.
+Step-by-step instructions are in [docs/INSTALL.md](docs/INSTALL.md). No GitHub
+account or command line needed. Held until sign-off; do not circulate yet.
+
+**From source**, for anyone with repository access:
 
 ```
 /plugin marketplace add BentleyDevMngt/bdm-skills
 /plugin install bdm-skills@bdm
 ```
 
-The repository is private, so you need read access on the `BentleyDevMngt`
-account and a GitHub credential configured locally.
+The repository is private, so this route needs read access on the
+`BentleyDevMngt` account and a GitHub credential configured locally.
+
+Build the bundle with:
+
+```
+bash scripts/build_plugin.sh
+```
 
 ---
 

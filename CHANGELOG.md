@@ -22,9 +22,11 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 The Director's Claude account ("Alfred") runs 14 BDM skills. Twelve of them already
 exist in this repository. The two that do not are added here, unmodified:
 
-- **`bdm-invoice-filing`** → `plugins/bdm-quantity-surveying/skills/`. Sweeps the
+- **`bdm-invoice-filing`** → `plugins/bdm-project-delivery/skills/`. Sweeps the
   mailbox for project invoices and files them under the BDM naming convention.
-  Files and logs only — it never assesses, approves or registers.
+  Files and logs only — it never assesses, approves or registers. Staged under
+  `bdm-quantity-surveying` and moved on the Director's ruling of 2026-08-31:
+  filing to the job folder is delivery record-keeping, not cost control.
 - **`bdm-meeting-brief`** → `plugins/bdm-project-delivery/skills/`. Builds the
   Director's pre-meeting brief. Held open: it is a stub that depends on a procedure
   file outside this repository — see the plugin README.

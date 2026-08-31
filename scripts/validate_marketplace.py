@@ -192,15 +192,43 @@ def main() -> int:
     # 8. Every declared dependency resolves to a plugin this marketplace ships.
     #    Claude auto-installs dependencies; one naming a plugin that is not here
     #    fails at install time on someone else's machine, not ours.
+    #    The schema is an ARRAY of entries, each either a bare plugin-name
+    #    string or {"name": ..., "version": <semver range>}. It is NOT the npm
+    #    object-of-name-to-range shape; this validator asserted that shape until
+    #    2026-08-31 and so passed three manifests whose dependency declarations
+    #    Claude ignored entirely.
     for pname, deps in declared_deps.items():
-        if not isinstance(deps, dict):
-            err(f"{pname}: dependencies must be an object of name -> version range")
+        if isinstance(deps, dict):
+            err(f"{pname}: dependencies is an object; the schema is an array of "
+                f"names or {{name, version}} entries")
             continue
-        for dep_name, dep_range in deps.items():
+        if not isinstance(deps, list):
+            err(f"{pname}: dependencies must be an array")
+            continue
+        for dep in deps:
+            if isinstance(dep, str):
+                dep_name, dep_range = dep, None
+            elif isinstance(dep, dict):
+                dep_name = dep.get("name")
+                dep_range = dep.get("version")
+                if not isinstance(dep_name, str) or not dep_name.strip():
+                    err(f"{pname}: a dependency entry has no 'name'")
+                    continue
+                if dep_range is not None and (
+                    not isinstance(dep_range, str) or not dep_range.strip()
+                ):
+                    err(f"{pname}: dependency '{dep_name}' has an empty version range")
+                unknown = set(dep) - {"name", "version", "marketplace"}
+                if unknown:
+                    err(f"{pname}: dependency '{dep_name}' has unknown "
+                        f"field(s) {', '.join(sorted(unknown))}")
+            else:
+                err(f"{pname}: a dependency entry is neither a string nor an object")
+                continue
+            if isinstance(dep, dict) and dep.get("marketplace"):
+                continue  # resolved in another marketplace; not ours to check
             if dep_name not in listed:
                 err(f"{pname}: depends on '{dep_name}', which this marketplace does not ship")
-            if not isinstance(dep_range, str) or not dep_range.strip():
-                err(f"{pname}: dependency '{dep_name}' has no version range")
             if dep_name == pname:
                 err(f"{pname}: depends on itself")
 

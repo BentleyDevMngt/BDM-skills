@@ -33,16 +33,34 @@ way you would ask a person — "draft the progress certificate for claim 14",
 
 ## Installing it
 
-1. Save the `.plugin` files somewhere you can find them, such as your Downloads
-   folder.
-2. Open the Claude desktop app and start a new chat.
-3. Attach a `.plugin` file to the chat, the same way you would attach any other
-   file. **Do `bdm-standards` first.**
-4. The file appears as a card showing what is inside it, with a button to
-   install. Press it.
-5. Repeat for each of the others you need.
+BDM distributes these through a **marketplace** — a catalogue Claude reads
+straight from the BDM repository. You add the catalogue once, install the
+plugins once, and after that updates arrive on their own.
 
-That is the whole job — they stay installed, you do not repeat this each time.
+**Step 1 — add the marketplace.** In the Claude desktop app, go to
+**Customize → Plugins → Add marketplace** and enter:
+
+```
+BentleyDevMngt/bdm-skills
+```
+
+The marketplace is named **`bentley-dm`**. Adding it installs nothing on its
+own — it only tells Claude where the plugins live.
+
+**Step 2 — install the plugins.** Open the `bentley-dm` marketplace and install
+**`bdm-standards` first**. Then install whichever of the other three match your
+work. They each declare `bdm-standards` as a dependency, so it is pulled in
+automatically if you skip ahead.
+
+**Step 3 — turn on auto-update.** This is the step that saves you repeating all
+of the above. Go to **Plugins → Marketplaces → `bentley-dm`** and choose
+**Enable auto-update**.
+
+> Auto-update is **off by default** for marketplaces outside Anthropic's own.
+> If you skip this step the plugins stay frozen at the version you installed and
+> you will not be told there is a newer one.
+
+**Step 4 — restart Claude.** Plugins load at start-up.
 
 To check it worked, ask Claude: *"which skills do I have?"* You should see the
 BDM skills listed.
@@ -73,10 +91,17 @@ the facts of your job.
 
 ## Updating
 
-Updates come as a new `.plugin` file for whichever plugin changed. Install it
-the same way and it replaces the previous version. Watch for the notice that
-goes out with it — it will carry a Change Note number telling you what changed
-and why.
+**With auto-update on, there is nothing to do.** Claude refreshes the
+marketplace shortly after each session starts and moves your plugins to the
+current version. You may be prompted to reload, or the new version loads next
+time you start.
+
+A change reaches you only when the plugin's **version number is raised**. That
+is BDM's job, not yours — but it means if you are told a change went out and you
+do not see it, the version bump is the first thing to check.
+
+Change Notes still go out for anything that touches the controlled estate. The
+plugin arriving quietly is not a substitute for reading the notice.
 
 ---
 
@@ -96,11 +121,18 @@ came back.
 
 ---
 
-## Alternative: installing from the repository
+## Alternative: the packaged plugin files
 
-For anyone with read access to `BentleyDevMngt/bdm-skills` on GitHub and a git
-credential configured, the plugin can be installed from source instead, which
-picks up changes as they are pushed:
+If the marketplace route is unavailable to you, each plugin can also be handed
+out as a `.plugin` file: attach it to a new chat in the Claude desktop app and
+press Install, `bdm-standards` first.
+
+**This route does not auto-update.** An installed `.plugin` file is a frozen
+copy with no link to the repository — it stays exactly as it was until someone
+sends you a new file and you install it again. Use it only where the
+marketplace will not work.
+
+Claude Code users can do the same from the command line:
 
 ```
 /plugin marketplace add BentleyDevMngt/bdm-skills
@@ -108,8 +140,4 @@ picks up changes as they are pushed:
 /plugin install bdm-project-delivery@bentley-dm
 ```
 
-The domain plugins declare a dependency on `bdm-standards`, so it comes along
-automatically. The marketplace is `bentley-dm`, not `bdm`.
-
-This route needs the account to have added you as a collaborator first. For
-most staff the plugin file above is the simpler path.
+Then `/plugin` → **Marketplaces** → `bentley-dm` → **Enable auto-update**.

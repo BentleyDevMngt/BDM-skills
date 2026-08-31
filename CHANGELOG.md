@@ -15,6 +15,46 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Changed — distribution moves to the marketplace, and dependency resolution is repaired
+
+**No Change Notice.** Director decision of 2026-08-20; see §1 above.
+
+Director ruling of 2026-08-31: the `bentley-dm` marketplace is the distribution
+route for BDM plugins. The packaged `.plugin` files become a fallback for cases
+where the marketplace is unavailable. The reason is that an installed `.plugin`
+file is a frozen copy — it never updates — whereas a marketplace with
+auto-update enabled moves installed plugins to the current version on its own.
+
+- **`dependencies` corrected from an object to an array** in
+  `bdm-contract-admin`, `bdm-quantity-surveying` and `bdm-project-delivery`.
+  All three declared `"dependencies": { "bdm-standards": "^0.1.0" }`, which is
+  npm's shape, not Claude's. The documented schema is an array of entries. As
+  written the declaration did nothing, so `bdm-standards` would not have been
+  pulled in automatically despite every README saying it would be.
+- **Constraint widened to `>=0.2.0`** rather than `^0.2.0`. On a `0.x` version a
+  caret range stops at the next minor, so `^0.2.0` would have had to be edited
+  in three manifests every time `bdm-standards` took a minor bump.
+- **All four plugins raised to `0.2.0`**, in both `plugin.json` and the
+  marketplace entry. Auto-update only ships a change when the version is raised,
+  so from here **every push intended to reach installed accounts must carry a
+  version bump in both files.** A push without one is invisible to users.
+- **`scripts/validate_marketplace.py` corrected.** The validator itself
+  asserted the npm object shape and raised `dependencies must be an object of
+  name -> version range`, so it had been actively certifying the defect. It now
+  enforces the array schema, accepts both the bare-string and `{name, version}`
+  entry forms, rejects unknown fields, and skips cross-marketplace entries it
+  cannot resolve.
+- **`docs/INSTALL.md` rewritten** around the marketplace route, including the
+  auto-update toggle, which is **off by default** for non-Anthropic
+  marketplaces. The old note that the repository route required collaborator
+  access no longer holds — the repository is public.
+
+Version constraints resolve against git tags named `{plugin}--v{version}`, and
+this repository carries none. For plugins referenced by relative path, as these
+are, Claude falls back to the marketplace's current copy and checks the
+constraint at load, so tagging is not yet blocking. It will be if a plugin is
+ever moved to its own repository.
+
 ### Added — two skills carried in from the running Claude account
 
 **No Change Notice.** Director decision of 2026-08-20; see §1 above.

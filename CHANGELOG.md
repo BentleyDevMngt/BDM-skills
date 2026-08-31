@@ -15,6 +15,38 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Added — two skills carried in from the running Claude account
+
+**No Change Notice.** Director decision of 2026-08-20; see §1 above.
+
+The Director's Claude account ("Alfred") runs 14 BDM skills. Twelve of them already
+exist in this repository. The two that do not are added here, unmodified:
+
+- **`bdm-invoice-filing`** → `plugins/bdm-quantity-surveying/skills/`. Sweeps the
+  mailbox for project invoices and files them under the BDM naming convention.
+  Files and logs only — it never assesses, approves or registers.
+- **`bdm-meeting-brief`** → `plugins/bdm-project-delivery/skills/`. Builds the
+  Director's pre-meeting brief. Held open: it is a stub that depends on a procedure
+  file outside this repository — see the plugin README.
+
+### Not changed — the other twelve skills
+
+The running account copies were compared file by file against this repository before
+anything was written. **On every skill that differed, this repository is the newer
+side**, so nothing was overwritten:
+
+| Skill | Account copy | This repository |
+|---|---|---|
+| `bdm-floor-area-schedule` | R2 — `build_live_takeoff.py` still hardcoded to one job; no `export_live_pdf.py`, no `make_fixture.py` | R3, repaired at `e3bc0f8` |
+| `bdm-monthly-project-report` | carries the embedded master `.docx`; SKILL.md predates the Form 260 decision | master removed, resolves Form 260 at run time |
+| `bdm-site-inspection-report` | names a live project and a personal Windows profile path | sanitised |
+| `qs-initial-report` | example config names a live project, financier, developer and builder | sanitised |
+| the other eight | byte-identical | byte-identical |
+
+Nine skills carry a stale `scripts/__pycache__/` in the running account. Ignored here
+by `.gitignore`; not imported.
+
+
 ### Changed — repository restructured into four plugins
 
 **No Change Notice.** Director decision of 2026-08-20 places this repository and the

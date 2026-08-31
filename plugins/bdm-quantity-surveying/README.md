@@ -19,6 +19,7 @@ See [GOVERNANCE.md](../../GOVERNANCE.md) §4.
 | `bdm-qs-progress-valuation` | Financier's monthly drawdown report | 425 |
 | `progress-claim-update` | Head contract progress claim, rolled forward | — |
 | `monthly-cost-report` | Consultant fee register for the period | 201 |
+| `bdm-invoice-filing` | Project invoices swept from the mailbox and filed to the job folder, with a sync log | — |
 
 ## Notes
 
@@ -31,3 +32,11 @@ end to end without a live job.
 (202415 South Pine Rd). Retained so the skill still works, but per-project
 configuration probably does not belong in a skills repository — open for the
 Director at sign-off.
+
+`bdm-invoice-filing` is placed here because everything it feeds — the Form 201
+fee register, the head contract progress claim and the Form 335 certificate — is a
+quantity surveying skill. The placement is a judgement, not a ruling, and is open
+for the Director at sign-off; `bdm-project-delivery` is the alternative home. The
+skill also carries a standing Director ruling excluding **202415 South Pine Rd,
+Everton Park** by name, because that job runs the only `01a_Accounts` payment chain
+and a second copy of those invoices would make the progress claim unauditable.

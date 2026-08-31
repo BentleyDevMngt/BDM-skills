@@ -20,6 +20,7 @@ See [GOVERNANCE.md](../../GOVERNANCE.md) §4.
 | `bdm-consultancy-agreement` | Consultancy agreement from a consultant's fee proposal | 105 |
 | `meeting-minutes-update` | Meeting minutes rolled forward with tracked changes | — |
 | `bdm-site-inspection-report` | Site inspection record from a OneNote export | 331 |
+| `bdm-meeting-brief` | Pre-meeting brief for the Director, emailed | — |
 
 ## Open items
 
@@ -37,3 +38,12 @@ context, the drop-closed-items rule, renumbering logic and the OOXML
 track-changes patterns. **Do not overwrite JG's with this one.** It also holds
 `bdm-site-and-adhoc-minutes`, which belongs in this plugin and has no counterpart
 here. Both resolve under the next Change Note.
+
+**`bdm-meeting-brief` is not self-contained — open for the Director.** The skill is a
+short form that directs the reader to `Projects - Documents\Alfred\
+BDM_Meeting_Brief_Procedure_2026-08-30.md` as its source of truth, so it cannot run
+for anyone without that path, and the procedure it depends on is versioned outside
+this repository and edited by hand. It is also written for one named recipient
+rather than a role. Either the procedure comes into the skill and the recipient
+becomes a parameter, or the skill stays a personal tool and out of the controlled
+estate. Not resolved here.

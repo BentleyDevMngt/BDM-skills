@@ -15,6 +15,52 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Changed — the update process becomes hands-off, 2026-09-01
+
+**No Change Notice.** Director decision of 2026-08-20; see GOVERNANCE §1.
+
+The route to staff worked but was clunky enough that people worked around it.
+Four things were wrong with it, and each is now fixed rather than documented.
+
+- **Versions and the CHANGELOG are no longer written by hand.**
+  `.github/workflows/release.yml` runs on every push to `main`: it validates,
+  works out which plugins the commit actually changed, raises their patch
+  version in `plugin.json` and `marketplace.json` together, keeps `bdm-all` in
+  step, writes the CHANGELOG entry and pushes it back. This closes a silent
+  failure: auto-update ships a change only when the version is raised, so a
+  merge that forgot the bump reached nobody while the repository looked current,
+  and nothing anywhere reported the fault.
+
+- **New `bdm-all` bundle plugin.** Ships no skills; its manifest is a dependency
+  list on the four. Staff install one thing instead of four in a required order,
+  and the four update as a set. Registered first in `marketplace.json` so it
+  heads the Discover list.
+
+- **Pull requests are now required by blast radius, not by habit.** Director
+  ruling of 2026-09-01, recorded in GOVERNANCE §4: the Director commits skill
+  changes direct to `main`; `GOVERNANCE.md`, `marketplace.json`, `.github/**`
+  and `scripts/**` keep a mandatory pull request. A self-approved pull request
+  on a one-line skill fix was ceremony, not control — the control is CI, which
+  runs identically on both routes, and an unvalidated change never gets a
+  version so it never reaches a machine.
+
+- **CONTRIBUTING no longer contradicts GOVERNANCE.** It demanded a Change Note
+  before starting work; GOVERNANCE §1 has placed this repository outside the QA
+  system since 2026-08-20. The CN requirement is withdrawn, and the boundary —
+  a CN is still raised where a change touches a controlled form or Form 007 —
+  is stated instead.
+
+### Fixed
+
+- `validate_marketplace.py` now fails a `>=` dependency range that is ahead of
+  the version a plugin actually ships. Such a range cannot resolve at install
+  time, and the only symptom on a staff machine is a plugin that quietly never
+  arrives. A bundle plugin no longer draws a spurious "no skills/ directory"
+  warning.
+- README corrected: it stated the repository is private (it is public, and must
+  be — the desktop app cannot sync a private marketplace) and directed staff to
+  the retired `.plugin` bundles in `dist/`, which are stale at v0.1.0.
+
 ### Changed — distribution moves to the marketplace, and dependency resolution is repaired
 
 **No Change Notice.** Director decision of 2026-08-20; see §1 above.

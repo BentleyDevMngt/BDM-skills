@@ -52,33 +52,49 @@ house style and PDF export skills arrive with the legacy merge.
 
 ## Installing
 
-**Staff on the Claude desktop app** — install the `.plugin` bundles.
-Step-by-step instructions are in [docs/INSTALL.md](docs/INSTALL.md). No GitHub
-account or command line needed. Held until sign-off; do not circulate yet.
+**BDM staff — one install, once.**
 
-**From source**, for anyone with repository access:
+1. Claude desktop app → **Customize → Plugins → Add marketplace**
+2. Enter `BentleyDevMngt/bdm-skills`
+3. Leave **"Sync automatically — keep plugins up to date when the repository
+   changes on GitHub"** switched **on**. This is what keeps you on the current
+   revision without ever doing this again. An account with it off silently
+   stays behind and never self-corrects.
+4. Go to the **Discover** tab, find **`bdm-all`**, and click **Add**.
+
+That is the whole thing. `bdm-all` carries no skills itself — it declares the
+other four as dependencies, so all four install together in the right order and
+update together afterwards. You do not need to install them individually, and
+you should not: doing it by hand is how accounts ended up with two of the four.
+
+On a Discover card, the "by ..." line names the **marketplace**, not the author.
+`by bdm-skills` is a marketplace install and is what you want.
+
+**Checking what you are on.** Open the plugin's detail page in
+Customize → Plugins. The version line there is the only place the installed
+version appears. Compare it with the latest **Release** workflow run on
+github.com, whose summary prints the published version of every plugin.
+
+**Command line**, for anyone working from a terminal:
 
 ```
 /plugin marketplace add BentleyDevMngt/bdm-skills
-/plugin install bdm-standards@bentley-dm
-/plugin install bdm-quantity-surveying@bentley-dm     # pulls bdm-standards automatically
+/plugin install bdm-all@bentley-dm
 ```
 
 The marketplace is named **`bentley-dm`**, not `bdm`. The legacy repository also
 declares `bdm`, and when two marketplaces share a name the second silently
 overwrites the first with no error — so the name had to be unique.
 
-The repository is private, so this route needs access on the `BentleyDevMngt`
-account and a GitHub credential configured locally. Note that GitHub does not
-offer read-only collaborators on a private personal repository; anyone added has
-write access (GOVERNANCE §7).
+> **The repository is public.** It has to be: the desktop app validates a
+> marketplace server-side and unauthenticated, so a private repository fails to
+> sync (`anthropics/claude-code` #61271). Nothing client-identifying may be
+> committed here. See GOVERNANCE §1.
 
-Build the bundles with:
-
-```
-bash scripts/build_plugin.sh bdm-standards
-bash scripts/build_plugin.sh bdm-quantity-surveying
-```
+**The `.plugin` bundles in `dist/` are retired.** An installed `.plugin` file is
+a frozen copy that never updates — the exact problem the marketplace solves. The
+files there are stale (v0.1.0) and must not be circulated. `scripts/build_plugin.sh`
+remains only as a fallback for a machine that cannot reach github.com.
 
 ---
 
@@ -98,8 +114,14 @@ bdm-skills/
 │               ├── SKILL.md      frontmatter + instructions, + template_revision
 │               ├── references/   detail Claude loads only when needed
 │               └── scripts/      deterministic work, not left to the model
+├── plugins/bdm-all/              bundle: dependencies only, no skills
 ├── templates/skill-template/     copy this to start a new skill
-├── scripts/validate_marketplace.py
+├── scripts/
+│   ├── validate_marketplace.py   structural checks; CI gate
+│   └── bump_versions.py          release automation - do not run by hand
+├── .github/workflows/
+│   ├── validate.yml              runs on every push and pull request
+│   └── release.yml               versions and publishes on merge to main
 ├── GOVERNANCE.md                 who may change what, and how
 ├── CONTRIBUTING.md               how to add or revise a skill
 └── CHANGELOG.md                  every release

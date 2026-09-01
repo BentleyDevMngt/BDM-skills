@@ -79,7 +79,14 @@ The split is by **change cadence and custodian**, not by subject matter. Things
 that move together and are reviewed by the same person share a version number.
 
 `bdm-standards` is the foundation: the other three declare it in `dependencies`,
-so Claude installs it automatically and it cannot be missing. That dependency is
+so Claude installs it automatically and it cannot be missing.
+
+A fifth entry, **`bdm-all`**, ships no skills. Its manifest is a dependency list
+on the other four, so a staff member installs one thing instead of four in a
+required order, and the four thereafter move as a set. It is a distribution
+convenience, not a fifth product: it has no custodian of its own and the release
+workflow — not a person — keeps its version and its dependency ranges in step
+with its children. That dependency is
 the enforceable version of "install this one first", which had previously been a
 line in a README that nothing checked. CI fails if a dependency names a plugin
 this marketplace does not ship.
@@ -121,25 +128,63 @@ This constraint is stated in every SKILL.md, not just here.
 
 ## 4. Change control
 
-> **Not yet in force.** See §1 — this repository sits outside the QA system by
-> Director decision of 2026-08-20, and raises no Change Notices. The process
-> below is what applies from adoption. Until then, steps 1, 3, 4, 5 and 7 are
-> good practice and are followed; step 2 is suspended and step 6 cannot be
-> enforced (§7).
+> **Not yet in force in its CN form.** See §1 — this repository sits outside the
+> QA system by Director decision of 2026-08-20 and raises no Change Notices.
+> Step 2 below is suspended until adoption. Everything else in this section
+> **is** in force, as revised by the Director's ruling of 2026-09-01.
 
-Every change to a controlled skill follows the same path.
+### Director's ruling, 2026-09-01 — what needs a pull request
+
+The distribution route is only useful if it is faster to use it than to work
+around it. A pull request the Director raises, reviews and merges alone is not a
+control; it is a round trip through a browser on every one-line fix, and it was
+making the controlled route the slow route. That invites people off it.
+
+So the routes divide by **blast radius**, not by who is asking:
+
+| Change | Route |
+|---|---|
+| A skill, a template inside a skill, a script inside a skill, a plugin README | **Director may commit direct to `main`.** Maintainers and contributors raise a pull request. |
+| `GOVERNANCE.md`, `.claude-plugin/marketplace.json`, `.github/**`, `scripts/**` | **Pull request always**, the Director's own included. |
+
+The second row is the set that can break distribution for every installed
+account simultaneously. It keeps a second reader. The first row cannot: a bad
+skill change fails validation, and **a change that fails validation never gets a
+version, so auto-update never carries it to staff.** The gate moved from the
+merge button to CI, where it runs on every route.
+
+Maintainers still cannot merge their own work (§2).
+
+### The path a change takes
 
 1. **Raise.** A defect, request or Director ruling is recorded.
-2. **Allocate a Change Note.** The next CN number from the MasterRegister.
-   Confirm the real date before dating the CN — do not rely on a session's
-   assumed date.
-3. **Branch.** `cn-YYYY-NNN-short-description` off `main`.
-4. **Change.** Only what the CN describes. Scope discipline is a hard rule:
-   incidental "improvements" to files the CN does not name are rejected.
-5. **Verify.** Per the pull request checklist. Verification is doing it, not
-   intending to.
-6. **Review.** Pull request, Director review, CODEOWNERS enforced.
-7. **Merge and record.** Squash to `main`; CHANGELOG.md updated with the CN.
+2. **Allocate a Change Note.** *Suspended — see §1.* Applies only where the
+   change also touches a controlled BDM form or Form 007. Confirm the real date
+   before dating a CN; do not rely on a session's assumed date.
+3. **Branch**, where the table above requires a pull request.
+4. **Change.** Scope discipline is a hard rule: incidental "improvements" to
+   files the change does not name are rejected.
+5. **Verify.** Per CONTRIBUTING. Verification is doing it, not intending to.
+6. **Review.** Pull request, Director review, CODEOWNERS enforced — for the
+   second row, and for anyone who is not the Director.
+7. **Release.** Automatic. See below.
+
+### Release is automated, and that is a control
+
+`.github/workflows/release.yml` owns version numbers and the CHANGELOG. On every
+push to `main` it validates, identifies the plugins the commit actually changed,
+raises their patch versions in `plugin.json` and `marketplace.json` together,
+keeps the `bdm-all` bundle in step, writes the CHANGELOG entry and pushes it
+back.
+
+This replaced a manual step that failed silently. Auto-update ships a change
+only when the version is raised; a merge that forgot the bump reached no one
+while the repository looked current, and nothing in the system reported it. A
+control nobody can see failing is not a control. This one leaves a workflow run,
+a version, and a commit for every delivery.
+
+**Nobody edits a patch version by hand.** MAJOR and MINOR remain human
+decisions, set in the same commit as the change that justifies them.
 
 ### Versioning
 
@@ -150,8 +195,11 @@ Skills and plugins use `MAJOR.MINOR.PATCH`.
 - **MINOR** — new capability, backwards compatible.
 - **PATCH** — a fix with no behavioural change.
 
-A version is bumped in `plugin.json` **and** `.claude-plugin/marketplace.json`
-together. CI fails if they disagree.
+PATCH is raised by the release workflow, in `plugin.json` **and**
+`.claude-plugin/marketplace.json` together. CI fails if they disagree, and fails
+if a dependency range is ahead of the version a plugin actually ships.
+
+MAJOR and MINOR are set by a person, in the commit that earns them.
 
 ### Retirement
 

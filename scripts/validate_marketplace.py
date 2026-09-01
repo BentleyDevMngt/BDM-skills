@@ -10,7 +10,8 @@ Checks, in order:
   6. Descriptions are within the length Claude actually reads.
   7. No plugin directory is orphaned (present on disk, absent from the manifest).
   8. Every declared plugin dependency resolves to a plugin in this marketplace.
-  9. Each skill carries the CN-2026-033 package set (warning only).
+  9. No ">=" dependency range is ahead of the version actually shipped.
+ 10. Each skill carries the CN-2026-033 package set (warning only).
 
 Exit code 0 = pass, 1 = fail.
 
@@ -112,6 +113,7 @@ def check_skill(skill_dir: Path, plugin_name: str) -> None:
 
 def main() -> int:
     declared_deps: dict[str, object] = {}
+    shipped: dict[str, str] = {}
     if not MANIFEST.is_file():
         err(f"missing {MANIFEST.relative_to(ROOT)}")
         return report()
@@ -157,6 +159,8 @@ def main() -> int:
 
         if plugin.get("name") != pname:
             err(f"{pname}: plugin.json name '{plugin.get('name')}' disagrees with the manifest")
+        if plugin.get("version"):
+            shipped[pname] = plugin["version"]
         if plugin.get("dependencies") is not None:
             declared_deps[pname] = plugin.get("dependencies")
         if entry.get("version") and plugin.get("version") != entry.get("version"):
@@ -165,9 +169,15 @@ def main() -> int:
                 f"vs plugin.json {plugin.get('version')}"
             )
 
+        # A bundle plugin ships no skills of its own — its whole purpose is the
+        # dependency list, which gives staff one thing to install instead of
+        # four in a required order. Not a fault, so not a warning.
+        is_bundle = bool(plugin.get("dependencies")) and not (pdir / "skills").is_dir()
+
         skills_dir = pdir / "skills"
         if not skills_dir.is_dir():
-            warn(f"{pname}: no skills/ directory")
+            if not is_bundle:
+                warn(f"{pname}: no skills/ directory")
             continue
         found = [d for d in sorted(skills_dir.iterdir()) if d.is_dir()]
         if not found:
@@ -231,6 +241,23 @@ def main() -> int:
                 err(f"{pname}: depends on '{dep_name}', which this marketplace does not ship")
             if dep_name == pname:
                 err(f"{pname}: depends on itself")
+
+            # 9. A ">=X" range must not be ahead of the version that plugin
+            #    actually ships. A range left at a version this marketplace no
+            #    longer contains is unresolvable at install time, and the only
+            #    symptom on the staff member's machine is a plugin that quietly
+            #    never arrives. scripts/bump_versions.py keeps these in step;
+            #    this check is what catches a hand edit that got it wrong.
+            if dep_range and dep_name in shipped:
+                m = re.match(r"^>=\s*(\d+)\.(\d+)\.(\d+)$", dep_range.strip())
+                s_m = re.match(r"^(\d+)\.(\d+)\.(\d+)$", shipped[dep_name])
+                if m and s_m:
+                    want = tuple(int(g) for g in m.groups())
+                    have = tuple(int(g) for g in s_m.groups())
+                    if want > have:
+                        err(f"{pname}: requires {dep_name} {dep_range} but this "
+                            f"marketplace ships {shipped[dep_name]} — the "
+                            f"dependency cannot resolve")
 
     return report()
 

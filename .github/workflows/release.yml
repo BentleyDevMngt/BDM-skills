@@ -1,0 +1,105 @@
+name: Release
+
+# Everything that used to be a manual chore after a merge happens here.
+#
+# The old loop was: edit a skill, remember to raise the version in plugin.json,
+# remember to raise the identical version in marketplace.json, write a CHANGELOG
+# entry, push. Miss the bump and the change reached nobody, with no error
+# anywhere - the repository looked current while every installed account stayed
+# on the old skill. That is the failure this workflow removes.
+#
+# Order matters: VALIDATE FIRST, then release. A change that fails validation
+# stays on `main` but never gets a version, so auto-update never carries it to
+# staff. Broken work stops here rather than on somebody's job.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      base:
+        description: 'Compare against this ref (default: previous commit)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Version and publish
+    runs-on: ubuntu-latest
+    # The bot's own bump commit must not trigger another bump. GitHub already
+    # suppresses workflow runs for GITHUB_TOKEN pushes; this is the second belt.
+    if: "!contains(github.event.head_commit.message, '[bump]')"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate before releasing anything
+        run: python scripts/validate_marketplace.py
+
+      - name: Work out the comparison point
+        id: base
+        run: |
+          if [ -n "${{ github.event.inputs.base }}" ]; then
+            base="${{ github.event.inputs.base }}"
+          elif [ -n "${{ github.event.before }}" ] \
+               && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ] \
+               && git cat-file -e "${{ github.event.before }}^{commit}" 2>/dev/null; then
+            base="${{ github.event.before }}"
+          else
+            base="HEAD~1"
+          fi
+          echo "ref=$base" >> "$GITHUB_OUTPUT"
+          echo "Comparing $base..HEAD"
+
+      - name: Raise versions for every plugin that changed
+        run: python scripts/bump_versions.py --base "${{ steps.base.outputs.ref }}" --head HEAD
+
+      - name: Re-validate the bumped manifests
+        run: python scripts/validate_marketplace.py
+
+      - name: Commit the release
+        run: |
+          if git diff --quiet; then
+            echo "No version change to commit - nothing reached staff, and nothing needed to."
+            exit 0
+          fi
+          git config user.name  "bdm-release[bot]"
+          git config user.email "andrew@bdmanagement.com.au"
+          git add -A
+          git commit -m "Release versions for the changes in ${GITHUB_SHA:0:7} [bump]"
+          git push origin HEAD:main
+          echo "Released. Auto-sync carries this to installed accounts."
+
+      - name: Summary
+        if: always()
+        run: |
+          python - > /tmp/versions.md <<'EOF'
+          import json
+          m = json.load(open('.claude-plugin/marketplace.json', encoding='utf-8'))
+          print('| Plugin | Version |')
+          print('|---|---|')
+          for e in m['plugins']:
+              print(f"| `{e['name']}` | {e.get('version','?')} |")
+          EOF
+          {
+            echo "### BDM plugin release"
+            echo ""
+            echo "Commit: \`${GITHUB_SHA:0:7}\`"
+            echo ""
+            echo "Published versions after this run:"
+            echo ""
+            cat /tmp/versions.md
+          } >> "$GITHUB_STEP_SUMMARY"

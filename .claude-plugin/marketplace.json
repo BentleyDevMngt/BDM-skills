@@ -10,7 +10,7 @@
       "name": "bdm-all",
       "source": "./plugins/bdm-all",
       "description": "Install this one. The complete BDM skills suite - standards, contract administration, quantity surveying and project delivery - in a single install that keeps all four plugins on the same revision.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "category": "standards",
       "author": {
         "name": "Bentley Development Management"
@@ -50,7 +50,7 @@
       "name": "bdm-project-delivery",
       "source": "./plugins/bdm-project-delivery",
       "description": "Development and project management delivery - monthly reports to the Principal and to financiers, DA conditions matrices, consultancy agreements, meeting minutes and site inspection records.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "category": "project management",
       "author": {
         "name": "Bentley Development Management"

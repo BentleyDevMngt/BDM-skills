@@ -15,6 +15,10 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Released 2026-09-01
+
+- **bdm-project-delivery 0.2.1** — Merge pull request #4 from BentleyDevMngt/chore/meeting-minutes-r2-2026-09-01
+
 ### Changed — the update process becomes hands-off, 2026-09-01
 
 **No Change Notice.** Director decision of 2026-08-20; see GOVERNANCE §1.

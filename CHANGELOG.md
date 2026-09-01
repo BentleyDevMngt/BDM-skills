@@ -19,6 +19,34 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 - **bdm-project-delivery 0.2.1** — Merge pull request #4 from BentleyDevMngt/chore/meeting-minutes-r2-2026-09-01
 
+### Changed — one route: routine work goes straight to `main`, 2026-09-01
+
+**No Change Notice.** Director decision of 2026-08-20; see GOVERNANCE §1.
+
+The blast-radius routing introduced earlier the same day still left two routes to
+remember and a browser round trip in front of ordinary work. It is replaced by
+one rule: commit to `main`. A pull request is for a **major update** only — a
+plugin or skill added or retired, a MAJOR or MINOR version decision, or a
+restructure of `.github/workflows/` or `scripts/` (CI validates every other
+change but cannot validate itself).
+
+Review has not been dropped; it moved to before the commit, where the change is
+still cheap to alter. The control on the routine route is CI: a change that
+fails validation never gets a version, so auto-update never carries it to staff.
+
+Updated: `GOVERNANCE.md` §2, §4 and §7; `CONTRIBUTING.md`; `README.md`;
+`.github/PULL_REQUEST_TEMPLATE.md`.
+
+### Changed — meeting-minutes-update R2, 2026-09-01
+
+Phase 4 verification is programmatic, not visual. The PDF/image render step is
+removed, and writing render output or scratch files into a project folder is
+prohibited. Added the six-check tracked-changes audit — including the
+deleted-final-paragraph-mark rule that destroyed the New Earth DDM No.03 redline
+on accept — the accept/reject simulation and the paragraph diff. Added a "Where
+the minutes are saved" section: the project's `07_Meeting Minutes\<N.0_Series>\`
+folder, never `00_ai_sandbox`, filename ending `_DRAFT` until sign-off.
+
 ### Changed — the update process becomes hands-off, 2026-09-01
 
 **No Change Notice.** Director decision of 2026-08-20; see GOVERNANCE §1.

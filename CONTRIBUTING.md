@@ -1,8 +1,9 @@
 # Contributing
 
 How to add or revise a BDM skill. Read [GOVERNANCE.md](GOVERNANCE.md) §1 and §4
-first — they say who may merge what, and why this repository is stricter than a
-normal code repository in some places and deliberately lighter in others.
+first — they say which changes go straight to `main` and which need a pull
+request, and why this repository is stricter than a normal code repository in
+some places and deliberately lighter in others.
 
 ---
 
@@ -25,17 +26,25 @@ here does not.
 
 | What you are changing | Route |
 |---|---|
-| A skill, a template inside a skill, a script, a plugin README | **Director: commit straight to `main`.** Others: branch and raise a pull request. |
-| `GOVERNANCE.md`, `.claude-plugin/marketplace.json`, anything in `.github/`, anything in `scripts/` | **Pull request, always** — including the Director's own. |
+| Anything routine — a skill, a template or script inside a skill, a README, `GOVERNANCE.md`, the marketplace manifest, a fix | **Commit straight to `main`.** |
+| A **major update** | Branch and raise a pull request. |
 
-The reason for the split: a self-approved pull request is not a control, it is a
-ceremony, and it was costing a browser round trip on every one-line fix. What
-does the controlling here is CI plus the release workflow — both run on a direct
-push to `main` exactly as they do on a pull request, and a change that fails
-validation never gets a version, so it never reaches anyone's machine.
+A major update means: a plugin or a skill added or retired; a MAJOR or MINOR
+version decision, meaning a change to how a skill is *used* rather than a
+correction to how it works; or a restructure of `.github/workflows/` or
+`scripts/`.
 
-The files in the second row are the ones that can break distribution for every
-installed account at once. Those keep a second pair of eyes.
+Everything else goes straight to `main`. A self-approved pull request is not a
+control, it is a ceremony, and it was costing a browser round trip on every
+one-line fix. What does the controlling is CI plus the release workflow — both
+run on a direct push to `main` exactly as they do on a pull request, and a
+change that fails validation never gets a version, so it never reaches anyone's
+machine.
+
+The exception for `.github/workflows/` and `scripts/` is not ceremony either:
+CI validates every other change, but it cannot validate itself, and a broken
+release workflow is the one change that stops every other change reaching
+staff.
 
 ---
 
@@ -53,9 +62,10 @@ credential helper, so `git push` works from the command line afterwards without
 storing a token by hand. Without it you will hit
 `could not read Username for 'https://github.com'` and be unable to push at all.
 
-Use GitHub Desktop to commit and push. Do **not** use its
-`Branch → Merge into current branch` on a pull request: that merges locally and
-bypasses CI, the pull request number and the reviewer. Merges happen on
+Use GitHub Desktop to commit and push. For routine work that is the whole
+process: commit to `main`, push, done. On a **major update** pull request, do
+not use its `Branch → Merge into current branch`: that merges locally and
+bypasses CI, the pull request number and the reviewer. Those merges happen on
 github.com.
 
 ---
@@ -86,7 +96,8 @@ github.com.
 
 6. If the skill belongs to a **new plugin**, register the plugin in
    `.claude-plugin/marketplace.json` and add it to `bdm-all`'s `dependencies`.
-   That is a marketplace change, so it goes via pull request.
+   A new plugin is a major update, so that one goes via pull request
+   (GOVERNANCE §4).
 
 7. Validate and verify (below).
 
@@ -152,13 +163,13 @@ pull request:
   determine or approve anything.
 
 Record what you actually did — in the commit body for a direct push, in the
-pull request for everything else. Do not tick boxes in advance.
+pull request for a major update. Do not tick boxes in advance.
 
 ---
 
 ## Confirming it reached everyone
 
-A change is not delivered when it is merged. It is delivered when installed
+A change is not delivered when it is pushed. It is delivered when installed
 accounts have it.
 
 1. Open the **Release** workflow run on github.com. Its summary prints the

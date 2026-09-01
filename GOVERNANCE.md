@@ -47,8 +47,8 @@ written in the present tense but is not yet in force.
 |---|---|---|
 | **Repository owner** | `BentleyDevMngt` (BDM-controlled account) | Everything. |
 | **Director** | Andrew Bentley | Approve and merge any change. Approve new skills, revisions and retirements. Sole approver for GOVERNANCE.md, CHANGELOG.md, the marketplace manifest and CI. |
-| **Maintainer** | Nominated Senior PM | Raise pull requests, review others' work, run verification. Cannot merge their own work. |
-| **Contributor** | Any BDM staff member | Raise pull requests and report defects. |
+| **Maintainer** | Nominated Senior PM | Commit routine work direct to `main` (§4). Raise a pull request for a major update, review others' work, run verification. Cannot merge their own pull request. |
+| **Contributor** | Any BDM staff member | Commit routine work direct to `main` (§4). Raise a pull request for a major update, and report defects. |
 
 The repository does not sit on any individual employee's personal account. If a
 maintainer leaves BDM their collaborator access is removed and the repository is
@@ -131,29 +131,46 @@ This constraint is stated in every SKILL.md, not just here.
 > **Not yet in force in its CN form.** See §1 — this repository sits outside the
 > QA system by Director decision of 2026-08-20 and raises no Change Notices.
 > Step 2 below is suspended until adoption. Everything else in this section
-> **is** in force, as revised by the Director's ruling of 2026-09-01.
+> **is** in force, as revised by the Director's ruling of 2026-09-01 — the
+> second ruling of that date, which supersedes the blast-radius routing of the
+> first.
 
-### Director's ruling, 2026-09-01 — what needs a pull request
+### Director's ruling, 2026-09-01 — routine work goes straight to `main`
 
-The distribution route is only useful if it is faster to use it than to work
-around it. A pull request the Director raises, reviews and merges alone is not a
-control; it is a round trip through a browser on every one-line fix, and it was
-making the controlled route the slow route. That invites people off it.
+Work goes to `main`. That is the route, for almost everything.
 
-So the routes divide by **blast radius**, not by who is asking:
+The first ruling of 2026-09-01 divided the routes by blast radius and kept a
+pull request for the marketplace manifest, CI and this file. In practice that
+still put a browser round trip in front of ordinary work and left two routes to
+remember. One route is simpler, and the simple one is the one that gets used.
 
 | Change | Route |
 |---|---|
-| A skill, a template inside a skill, a script inside a skill, a plugin README | **Director may commit direct to `main`.** Maintainers and contributors raise a pull request. |
-| `GOVERNANCE.md`, `.claude-plugin/marketplace.json`, `.github/**`, `scripts/**` | **Pull request always**, the Director's own included. |
+| Anything routine — a skill, a template or script inside a skill, a README, this file, the marketplace manifest, a fix | **Commit direct to `main`.** |
+| A **major update** | Branch, then pull request. |
 
-The second row is the set that can break distribution for every installed
-account simultaneously. It keeps a second reader. The first row cannot: a bad
-skill change fails validation, and **a change that fails validation never gets a
-version, so auto-update never carries it to staff.** The gate moved from the
-merge button to CI, where it runs on every route.
+A major update is one of:
 
-Maintainers still cannot merge their own work (§2).
+- a plugin added or retired, or a skill added or retired;
+- a MAJOR or MINOR version decision — a change to how a skill is *used*, as
+  distinct from a correction to how it works;
+- a restructure of the release machinery itself, meaning `.github/workflows/**`
+  or `scripts/**`. CI validates every other change; it cannot validate the thing
+  that does the validating, and a broken release workflow is the single change
+  that stops every other change reaching staff.
+
+**What controls the routine route is CI, not a reviewer.** `validate.yml` and
+`release.yml` run on a direct push to `main` exactly as they do on a pull
+request, and **a change that fails validation never gets a version, so
+auto-update never carries it to staff.** Broken work stops in the workflow
+rather than on somebody's job. That gate is real and it runs on every route; a
+pull request its own author reviews and merges is not.
+
+Review has not gone. It moved earlier — to before the commit, where the change
+is still cheap to alter, rather than to a merge button after it is written. The
+commit body carries what was verified.
+
+On a major update, maintainers still cannot merge their own work (§2).
 
 ### The path a change takes
 
@@ -161,12 +178,13 @@ Maintainers still cannot merge their own work (§2).
 2. **Allocate a Change Note.** *Suspended — see §1.* Applies only where the
    change also touches a controlled BDM form or Form 007. Confirm the real date
    before dating a CN; do not rely on a session's assumed date.
-3. **Branch**, where the table above requires a pull request.
+3. **Branch**, for a major update. Routine work commits straight to `main`.
 4. **Change.** Scope discipline is a hard rule: incidental "improvements" to
    files the change does not name are rejected.
 5. **Verify.** Per CONTRIBUTING. Verification is doing it, not intending to.
-6. **Review.** Pull request, Director review, CODEOWNERS enforced — for the
-   second row, and for anyone who is not the Director.
+6. **Review.** For a major update: pull request, Director review, CODEOWNERS.
+   For routine work: the check happens before the commit, and the commit body
+   records what was verified.
 7. **Release.** Automatic. See below.
 
 ### Release is automated, and that is a control
@@ -277,15 +295,21 @@ is on neither as at 2026-08-20, by decision.
 
 The consequences, stated plainly so they are managed rather than assumed away:
 
-- Any collaborator can push directly to `main`. On a private repository owned by
-  a personal account, GitHub offers no read-only collaborator role — write is the
-  only level available, so "read access" cannot be granted at all.
+- Any collaborator can push directly to `main`. Since the ruling of 2026-09-01
+  that is the intended route for routine work (§4) rather than merely a gap — but
+  it also means nothing prevents a push that should have been a major-update pull
+  request. On a private repository owned by a personal account, GitHub offers no
+  read-only collaborator role — write is the only level available, so "read
+  access" cannot be granted at all.
 - CODEOWNERS and the pull request template are **advisory**. They record who
   should review; nothing enforces that they did.
-- CI runs on pull requests but cannot block a merge.
+- CI runs on every push and every pull request, but cannot block a merge. What
+  it does control is release: a change that fails validation never gets a
+  version, so it never reaches an installed account (§4).
 
-Until the account is converted and a paid plan taken, the review rule in §4 is a
-professional undertaking between named people, not a technical control. Anyone
+Until the account is converted and a paid plan taken, the major-update review
+rule in §4 is a professional undertaking between named people, not a technical
+control. The routine route does not rely on it: CI is the control there. Anyone
 given collaborator access is to be told that in those words.
 
 ---

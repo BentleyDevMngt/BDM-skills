@@ -121,7 +121,7 @@ bdm-skills/
 │   └── bump_versions.py          release automation - do not run by hand
 ├── .github/workflows/
 │   ├── validate.yml              runs on every push and pull request
-│   └── release.yml               versions and publishes on merge to main
+│   └── release.yml               versions and publishes on push to main
 ├── GOVERNANCE.md                 who may change what, and how
 ├── CONTRIBUTING.md               how to add or revise a skill
 └── CHANGELOG.md                  every release

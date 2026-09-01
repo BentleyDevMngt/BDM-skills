@@ -1,3 +1,13 @@
+<!--
+Pull requests are for MAJOR UPDATES only (GOVERNANCE §4, ruling of 2026-09-01):
+a plugin or skill added or retired, a MAJOR or MINOR version decision, or a
+restructure of .github/workflows/ or scripts/.
+
+Routine work — a skill, a template or script inside a skill, a README,
+GOVERNANCE.md, the marketplace manifest, a fix — commits straight to `main`.
+If that is what this is, close this and push it.
+-->
+
 ## Change Note
 
 **CN reference:** CN-YYYY-NNN

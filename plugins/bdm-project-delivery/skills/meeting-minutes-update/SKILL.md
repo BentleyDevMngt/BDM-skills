@@ -12,7 +12,7 @@ description: >-
 
 # Meeting Minutes Update Skill
 
-**Revision: R1 · 2026-06** (check this against the latest package in
+**Revision: R2 · 2026-09** (check this against the latest package in
 `Alfred\_Skills\meeting-minutes-update\` — filename carries the revision, e.g.
 `meeting-minutes-update_R1_2026-06.skill`. If your installed copy shows an older
 revision, reinstall the latest.)
@@ -220,11 +220,70 @@ convention.
 
 ## Phase 4: Validate and Deliver
 
-Repack with validation (`scripts/office/pack.py ... --original minutes.docx`), then
-convert to PDF/images and review each page to confirm: track changes visible (for
-updates), table formatting intact, new rows in the correct sections, attendee /
-apology block correct (names AND emails populated from the calendar), and no
-formatting corruption.
+Repack with validation (`scripts/office/pack.py ... --original minutes.docx`).
+
+**Verify programmatically, not visually.** Do NOT render the document to PDF or
+images as a review step, and never write render output, scratch files or intermediate
+artefacts into the project folder -- they are not a deliverable, they clutter the
+job folder, and the shell cannot delete them again afterwards. Anything of that kind
+stays in the session workspace.
+
+Run these six checks on the packed file:
+
+1. No duplicate revision `w:id`.
+2. **No table cell whose FINAL paragraph mark carries `<w:del>`** -- excluding rows
+   that are themselves deleted (`w:trPr/w:del`). This is the check that matters. A
+   deleted final paragraph mark makes Word eat the cell when the reviewer accepts
+   changes, and the whole row at the end of a table. LibreOffice does not reproduce
+   it, so a render or an accept-changes script will show a clean document that Word
+   destroys. To replace a cell's content safely, insert the new paragraphs AFTER the
+   cell's current last paragraph, THEN apply the deletions -- so no deleted paragraph
+   is ever the cell's final one -- and build every new `pPr` from a pristine snapshot
+   taken before the deletion pass.
+3. No paragraph marked both inserted and deleted.
+4. The revision mark is the first child of `rPr` (schema order).
+5. No `w:t` inside `w:del`, and no `w:delText` outside one.
+6. Every row in a table has the same cell count.
+
+Then **simulate accept-all and reject-all** independently of LibreOffice -- drop
+`w:del`, unwrap `w:ins`, merge paragraphs whose mark is deleted -- and confirm on
+both passes: row count, cell count per row, the full item-number sequence, the
+attendee and apology lists, and the header fields. Accept must yield the new
+meeting; reject must reproduce the previous minutes exactly.
+
+Finally, **diff the paragraph text against the previous minutes**: every paragraph of
+the prior issue must still be present, retained as struck text. Only header and date
+cells where the old and new text now share one paragraph may differ.
+
+`validate.py --author` only compares text; it will pass a document Word will destroy.
+
+---
+
+## Where the minutes are saved (BDM)
+
+Minutes file into the project's own meeting-minutes folder, in the subfolder for that
+meeting series:
+
+`Projects - Documents\<project>\07_Meeting Minutes\<N.0_Series>\`
+
+for example `3.0_Sales Meeting`, `2.0_PCG Meetings`, `4.0_Design Meetings`. The series
+file lives with its series. Read that folder before saving -- the prior issues are the
+only reliable guide to the folder and the naming this project actually uses, and they
+override any general assumption about where a draft belongs.
+
+**Do NOT save minutes to `00_ai_sandbox`.** The sandbox is for one-off drafts and
+working files, not for an ongoing numbered series.
+
+**The filename ends `_DRAFT`:**
+
+`YYYYMMDD_<Project short name>_<Series> Meeting Minutes_No.NN_DRAFT.docx`
+
+for example `20260901_12-14 Hamilton_S&M Meeting Minutes_No.16_DRAFT.docx`
+
+- The date prefix is the meeting date, matching the prior issues in that folder.
+- `_DRAFT` stays on the filename until the Director or Senior PM signs it off. It
+  comes off at issue, when the PDF is produced -- not before.
+- Never PDF a draft. A PDF reads as an issued instrument.
 
 ---
 
@@ -251,6 +310,9 @@ Before delivering, verify:
 - No stale references to the previous meeting's date remain
 - For updates: Track Changes are NOT accepted -- leave them visible for review
 - Document is visibly marked DRAFT until the user signs it off (BDM drafting rule)
+- Saved into the project's `07_Meeting Minutes\<N.0_Series>\` folder, filename ending
+  `_DRAFT` -- not into `00_ai_sandbox`
+- No render output, scratch or intermediate files left anywhere in the project folder
 
 ---
 
@@ -266,6 +328,14 @@ the principal/client.
 
 ## Revision history
 
+- **R2 · 2026-09** — Director instruction, 1 September 2026. Phase 4 verification is
+  now programmatic, not visual: the PDF/image render step is removed, and no render
+  output or scratch file may be written into the project folder. Added the six-check
+  tracked-changes audit (including the deleted-final-paragraph-mark rule that
+  destroyed the New Earth DDM No.03 redline on accept), the accept/reject simulation
+  and the paragraph diff. Added a "Where the minutes are saved" section: the project's
+  `07_Meeting Minutes\<N.0_Series>\` folder, never `00_ai_sandbox`, filename ending
+  `_DRAFT` until sign-off.
 - **R1 · 2026-06** — First BDM-customised revision. Added: pull attendees/invitees
   (names + emails) from the Outlook calendar as the source of truth for the attendee
   block; Form 230 template-currency rule for design meetings (replaces the generic

@@ -15,6 +15,22 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Changed — meeting-minutes-update R3, 2026-10-13
+
+**No Change Notice.** Director decision of 2026-08-20; see GOVERNANCE §1.
+
+Director ruling of 2026-10-13, on New Earth DDM No.05: the minutes are a
+current-status register, not a history. Discussed items are rewritten to their
+current status instead of having dated updates appended; closed, superseded,
+duplicated and past-dated items are removed as tracked row deletions; the
+programme sits in one section; items not discussed with past dates are listed for
+the chair; length is checked against the previous issue; every cross-reference
+must resolve. Added a safe method for replacing a cell's content under track
+changes. Part attendance counts as attended, with guidance on mislabelled
+transcript speakers. DRAFT marking and the `_DRAFT` filename are removed to match
+company CLAUDE.md §5. Added re-read-before-overwrite and confirm-after-sync steps,
+and allowed a flat `07_Meeting Minutes\` folder where a project uses one.
+
 ### Released 2026-09-01
 
 - **bdm-project-delivery 0.2.1** — Merge pull request #4 from BentleyDevMngt/chore/meeting-minutes-r2-2026-09-01

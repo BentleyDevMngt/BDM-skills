@@ -12,14 +12,16 @@ description: >-
 
 # Meeting Minutes Update Skill
 
-**Revision: R2 · 2026-09** (check this against the latest package in
+**Revision: R3 · 2026-10** (check this against the latest package in
 `Alfred\_Skills\meeting-minutes-update\` — filename carries the revision, e.g.
 `meeting-minutes-update_R1_2026-06.skill`. If your installed copy shows an older
 revision, reinstall the latest.)
 
 Updates an existing Meeting Minutes Word document to reflect the latest meeting
 discussion by reviewing a transcript or notes, applying tracked changes, updating
-action items, and maintaining the document's existing structure and formatting. Also
+action items, and maintaining the document's existing structure and formatting.
+The output is a **current-status register**: every item reads as where it stands
+now, and anything closed, superseded or duplicated is removed (see Phase 2). Also
 covers building the FIRST set of minutes for a new series from the current BDM
 template.
 
@@ -115,8 +117,16 @@ the meeting's Outlook calendar event is the source of truth for the attendee blo
 4. **Split attendees vs apologies using the transcript.** The calendar lists
    *invitees*, not who actually attended. Anyone who spoke / joined in the transcript
    is an Attendee; an invitee who did not appear (or was explicitly noted as an
-   apology) goes in Apologies. If attendance is genuinely unclear, flag for the user
-   rather than guessing.
+   apology) goes in Apologies. Anyone who attended **in part** is an Attendee, not an
+   apology (Director ruling, 13 October 2026). If attendance is genuinely unclear,
+   flag for the user rather than guessing.
+   - Auto-transcripts mislabel speakers: two people sharing a device appear under
+     one name, and a person addressed by name who answers may be logged under
+     someone else. Read who is *addressed* as well as who is labelled, and confirm
+     doubtful attendees with the chair.
+   - An invitee on the calendar who never featured in the meeting (for example a
+     second contact at a consultant) is left off both lists unless the chair says
+     otherwise -- do not list a name you cannot complete.
 5. If the calendar tool is unavailable, fall back to the meeting invite email in the
    project's email folder, then to the transcript -- and flag any name/email left
    unconfirmed.
@@ -175,21 +185,52 @@ This prevents missed updates and gives you a clear checklist to work through.
 
 ## Phase 2: Plan Changes
 
+### The minutes are a current-status register, not a history (Director ruling, 13 October 2026)
+
+Each issue of the minutes states **where every live item stands now**. It is not a
+diary of how the item got there. The previous issue is the history; the redline is
+the record of what changed. In practice:
+
+1. **Rewrite, don't append.** When an item is discussed, replace its description
+   with one current-status entry. Never add "Update 12 October 2026 --" bullets on
+   top of the old text. The old wording is tracked-deleted and the new wording
+   tracked-inserted, so the reviewer still sees the change.
+2. **Closed or superseded items come out.** Delete the whole row as a tracked row
+   deletion (`w:trPr/w:del`). It shows struck once in this redline and is gone when
+   the changes are accepted. Do not carry a "Closed." prefix or a "Closed" date
+   into the next issue -- and any row the previous issue already marked Closed or
+   Superseded is deleted now.
+3. **One item per topic.** Where the same topic sits in two sections (rooftop plant
+   under Architecture and Mechanical; the booster under Electrical and Hydraulic;
+   a programme date under General and Programme), keep it in the section that owns
+   the decision, fold the other's live content into it, and delete the duplicate.
+4. **Past events and past dates come out.** A meeting that has been held, a document
+   that has been issued, a milestone that has passed -- remove it. The Programme
+   section carries live key dates only; the General programme item points to it
+   rather than repeating it.
+5. **Items not discussed** stay as they are -- do not invent a status. But list
+   every one carrying a past due date in the hand-off, so the chair can close or
+   carry it.
+6. **Keep it tight.** Bullets, one operative sentence each. Measure the description
+   word count against the previous issue; a meeting with many new items may run a
+   little longer, but the minutes should not grow just because items accumulate.
+7. **Post-meeting information** goes in only when sourced (for example a consultant's
+   email that afternoon), labelled "Post meeting --", and named in the hand-off.
+8. **Every cross-reference resolves.** After deletions and merges, check that each
+   "refer x.x" points to an item still in the accepted document.
+
 ### Action item status logic
 
-For each existing action item in the minutes, determine its status based on the
-transcript discussion:
+For each existing action item, decide from the transcript:
 
-- **Close** -- Item confirmed complete or no longer relevant. Apply strikethrough
-  to the entire row's text content using tracked deletion, or mark with a status
-  indicator depending on the document's existing convention.
-- **Update** -- Item discussed with new information. Add the new information as a
-  tracked insertion, either appending to the existing description or adding a new
-  sub-item row.
-- **No change** -- Item not discussed or confirmed as ongoing with no new info.
-  Leave untouched.
-- **New** -- Discussion raised a topic not covered by any existing item. Add a new
-  row with the next sequential item number.
+- **Close** -- complete, superseded, past, or duplicated elsewhere. Tracked row
+  deletion (rule 2).
+- **Rewrite** -- discussed with new information. Replace the description with its
+  current status (rule 1); update the action initials and the date to match.
+- **Carry** -- not discussed. Leave untouched; flag it in the hand-off if its date
+  has passed (rule 5).
+- **New** -- a topic not covered by any existing item. Add a new row with the next
+  number in that section.
 
 ### Numbering convention
 
@@ -211,10 +252,19 @@ level; use w:delText inside w:del; for inserted/deleted table rows place w:ins/w
 inside w:trPr after w:trHeight; keep every w:id unique; copy run properties from the
 text being replaced. These patterns are unchanged.)
 
+**Replacing a cell's content safely (the rewrite in rule 1).** Diff the old and new
+paragraphs. Keep paragraphs whose text is unchanged; tracked-delete the old ones;
+tracked-insert the new ones in position. The cell's **last** original paragraph must
+never have its paragraph mark deleted: if its text goes, wrap its runs in `w:del`,
+leave its mark alone, and put the final new text inside it as an inserted run, with
+any other new paragraphs inserted before it. If nothing new follows it, delete the
+mark of the paragraph *before* it instead, so that paragraph joins the last one when
+changes are accepted. Build new paragraph properties from a clean copy taken before
+the deletion pass.
+
 **Fresh (first-meeting) build:** there are no prior items to track, so a clean
 issue is appropriate -- no tracked changes required. Populate the current Form 230
-template, mark the document DRAFT FOR REVIEW, and follow the BDM filename
-convention.
+template and follow the BDM filename convention.
 
 ---
 
@@ -262,11 +312,12 @@ cells where the old and new text now share one paragraph may differ.
 ## Where the minutes are saved (BDM)
 
 Minutes file into the project's own meeting-minutes folder, in the subfolder for that
-meeting series:
+meeting series where the project uses one:
 
 `Projects - Documents\<project>\07_Meeting Minutes\<N.0_Series>\`
 
-for example `3.0_Sales Meeting`, `2.0_PCG Meetings`, `4.0_Design Meetings`. The series
+for example `3.0_Sales Meeting`, `2.0_PCG Meetings`, `4.0_Design Meetings`. Where the
+project keeps its minutes flat in `07_Meeting Minutes\`, follow that. The series
 file lives with its series. Read that folder before saving -- the prior issues are the
 only reliable guide to the folder and the naming this project actually uses, and they
 override any general assumption about where a draft belongs.
@@ -274,16 +325,28 @@ override any general assumption about where a draft belongs.
 **Do NOT save minutes to `00_ai_sandbox`.** The sandbox is for one-off drafts and
 working files, not for an ongoing numbered series.
 
-**The filename ends `_DRAFT`:**
+**Filename -- follow the prior issues in that folder, with no `_DRAFT`:**
 
-`YYYYMMDD_<Project short name>_<Series> Meeting Minutes_No.NN_DRAFT.docx`
+`YYYYMMDD_<Project short name>_<Series> Meeting Minutes No.NN.docx`
 
-for example `20260901_12-14 Hamilton_S&M Meeting Minutes_No.16_DRAFT.docx`
+for example `20261012_New Earth_Design Development Meeting Minutes No.05.docx`
 
 - The date prefix is the meeting date, matching the prior issues in that folder.
-- `_DRAFT` stays on the filename until the Director or Senior PM signs it off. It
-  comes off at issue, when the PDF is produced -- not before.
-- Never PDF a draft. A PDF reads as an issued instrument.
+- **No DRAFT marking** -- not on the filename, footer, header or a watermark. The
+  company file (§5, 15 September 2026) prohibits it, and the Director removes it.
+  The minutes are held for sign-off as a process, not a label: they are not sent
+  until the chair issues them.
+- Never PDF the minutes before sign-off. A PDF reads as an issued instrument.
+
+**Before overwriting, re-read the live file.** The chair may have opened, renamed or
+edited the draft since it was saved. Stage it, diff it against what you saved, and
+fold any edits in. Edits made without track changes are to be treated as
+instructions and carried into the tracked rebuild.
+
+**After saving, confirm the save held.** OneDrive can sync an older copy back over a
+fresh save, and SharePoint adds its own properties to the file, so the file's hash
+changes. Wait for the sync to settle, then compare the hash of `word/document.xml`
+inside the saved file with the one you built. If it does not match, save again.
 
 ---
 
@@ -304,14 +367,17 @@ Before delivering, verify:
   from the Outlook calendar** -- no blank email cells, no [placeholder] text
 - All attendees who spoke in the transcript are in the Attendees table; invitees who
   did not attend are in Apologies (or removed if no longer on the project)
-- New item numbers follow the existing sequence without gaps or duplicates
+- New item numbers follow the existing sequence without duplicates
+- **No closed, superseded, duplicated or past-dated item survives the accepted view**
+  (Phase 2 rules 2 to 4); every "refer x.x" resolves
+- Items not discussed that carry a past date are listed in the hand-off
 - Responsibility initials match names in the attendee list
-- Items confirmed as closed are properly marked
+- Items confirmed as closed are deleted as tracked rows, not left marked "Closed"
 - No stale references to the previous meeting's date remain
 - For updates: Track Changes are NOT accepted -- leave them visible for review
-- Document is visibly marked DRAFT until the user signs it off (BDM drafting rule)
-- Saved into the project's `07_Meeting Minutes\<N.0_Series>\` folder, filename ending
-  `_DRAFT` -- not into `00_ai_sandbox`
+- No DRAFT marking anywhere in the document or the filename (company file §5)
+- Saved into the project's `07_Meeting Minutes\` folder (series subfolder where used),
+  not into `00_ai_sandbox`, and the save confirmed by hash after OneDrive sync
 - No render output, scratch or intermediate files left anywhere in the project folder
 
 ---
@@ -328,6 +394,17 @@ the principal/client.
 
 ## Revision history
 
+- **R3 · 2026-10** — Director ruling, 13 October 2026, on New Earth DDM No.05. The
+  minutes are a current-status register: discussed items are rewritten to their
+  current status rather than appended to; closed, superseded, duplicated and
+  past-dated items are removed as tracked row deletions; the programme lives in one
+  section; items not discussed with past dates are listed for the chair; length is
+  measured against the previous issue; cross-references are checked. Added the safe
+  cell-replacement method for those rewrites. Attendance: part attendance counts as
+  attended; guidance on mislabelled transcript speakers. DRAFT marking and the
+  `_DRAFT` filename removed to match company file §5. Added the re-read-before-overwrite
+  and confirm-after-sync steps. Save location allows a flat `07_Meeting Minutes\`
+  where the project uses one.
 - **R2 · 2026-09** — Director instruction, 1 September 2026. Phase 4 verification is
   now programmatic, not visual: the PDF/image render step is removed, and no render
   output or scratch file may be written into the project folder. Added the six-check

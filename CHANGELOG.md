@@ -15,6 +15,10 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Released 2026-10-13
+
+- **bdm-project-delivery 0.2.2** — meeting-minutes-update R3: minutes are a current-status register
+
 ### Changed — meeting-minutes-update R3, 2026-10-13
 
 **No Change Notice.** Director decision of 2026-08-20; see GOVERNANCE §1.

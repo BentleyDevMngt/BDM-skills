@@ -15,6 +15,10 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Released 2026-10-14
+
+- **bdm-project-delivery 0.2.3** — Comit
+
 ### Added — bdm-drawing-report-filing R1, 2026-10-14
 
 **No Change Notice for this repository change.** Director decision of 2026-08-20; see

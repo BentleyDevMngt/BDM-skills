@@ -15,6 +15,29 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Added — bdm-drawing-report-filing R1, 2026-10-14
+
+**No Change Notice for this repository change.** Director decision of 2026-08-20; see
+GOVERNANCE §1. The QA estate's skills register (Form 007) is updated separately, under its
+own Change Notice.
+
+New skill in `plugins/bdm-project-delivery/skills/`, library name
+**BDM-Drawing-Report-Filing R1 · 2026-10**.
+
+- It sweeps the mailbox for drawings, specifications and consultant reports, and files each
+  issue into `06_Drawings & Specifications\<discipline>\yyyymmdd_<Issue name>\`.
+- It keeps the project's Form 207 document register current. Director rulings of 2026-10-14:
+  Form 207 is the master record of documents received, and there is one row per document,
+  with the current revision kept up to date.
+- Every register write goes through the bundled `scripts/register_207.py`. It re-renders the
+  sheet from a data model, refuses to write on a conflicting revision, and validates before the
+  live copy is replaced.
+- Files, registers and logs only. It never issues a transmittal, never sends and never
+  deletes; superseded registers and issue folders move to `_SS`.
+- Built to run under the daily Drawing & Report Filing scheduled task. Placed in project
+  delivery, alongside `bdm-invoice-filing`, on the 2026-08-31 ruling that filing into the job
+  folder is delivery record-keeping.
+
 ### Released 2026-10-13
 
 - **bdm-project-delivery 0.2.2** — meeting-minutes-update R3: minutes are a current-status register

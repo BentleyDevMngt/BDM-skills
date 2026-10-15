@@ -5,8 +5,14 @@ Template: `405-Floor_Area_Schedule_R*.xlsx` in
 revision. Nine tabs, BDM branded, every formula wrapped in `IFERROR` so an
 unstarted template shows blanks rather than `#DIV/0!`.
 
-Companion: `405a-Area_Markup_Cover_R*.pdf` — the A3 markup cover sheet, produced
-by `scripts/build_markups.py`.
+Companion: `405a-Area_Markup_Cover_R*.pdf` — the A3 markup cover sheet. In R4
+the cover is generated with the 405a by `scripts/build_405a.py` (house layout in
+`scripts/layout_405a.py`; `layout_405a.py --blank` writes the blank template).
+The 405a carries an embedded Datum project — see SKILL.md step 4.
+
+**Figures go in at 2 dp** from the take-off config as built; the form displays
+1 dp. Totals then round the way the 405a cover rounds them, and
+`verify_schedule.py` ties.
 
 ---
 
@@ -85,9 +91,12 @@ Fill every row. A check that could not be closed is recorded as
 
 ## Filing and naming
 
-- Working file → `…\00_ai_sandbox\<project>\`
-- Final → the project's contract admin or feasibility folder
-- Workbook: `<Project>_Floor_Area_Schedule_ASMM_DRAFT_<yyyymmdd>.xlsx`
-- Markups: `<Project>_Area_Markups_ASMM_DRAFT_<yyyymmdd>.pdf`
-- Config: `<project>_takeoff.json` — keep it; it is the measurement record and
+- Workbook and 405a → the project's **`10_Cost Plans`** folder, first save
+  (company CLAUDE.md §8; Director instruction of 4 August 2026 for Forms 405/413).
+  Superseded revisions to `ss\`.
+- Workbook: `405-<Project>_Floor_Area_Schedule_<yyyymmdd>.xlsx`
+- Markups: `405a-<Project>_Area_Markups_<yyyymmdd>.pdf`
+- No `DRAFT` in a filename or on the document (company CLAUDE.md §5, 15/9/26) —
+  the files are held for sign-off by process, not by label.
+- Config: `<project>_takeoff.json` in `00_ai_sandbox` — keep it; it is the measurement record and
   makes the next revision a re-run rather than a re-measure.

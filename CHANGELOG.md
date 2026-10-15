@@ -15,6 +15,34 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Changed — bdm-floor-area-schedule R4, datum-markup refresh, 2026-10-15
+
+**No Change Notice for this repository change.** Director decision of 2026-08-20; see
+GOVERNANCE §1. Form 007 AI Skills Register is updated separately, under its own Change Notice.
+
+**MINOR version decision, set by hand per CONTRIBUTING:** `bdm-quantity-surveying` 0.2.0 → 0.3.0
+and `bdm-standards` 0.2.0 → 0.3.0, because the floor area skill's deliverables change (how it is
+*used*), and it now needs the newer Datum library. `bdm-quantity-surveying` requires
+`bdm-standards >=0.3.0`. Director rulings of 2026-10-15.
+
+- **bdm-floor-area-schedule R3 → R4.** Measures from the PDF's own vector linework (zones, named
+  wall-poche layer) instead of a rendered picture; raster method kept as a fallback for sheets with
+  no usable vectors. Two deliverables: Form 405 and the 405a A3 markup PDF, which is now also a live
+  Datum file (editable calibrated area shapes, baked). The HTML live-correction tool is retired;
+  Datum is the correction tool and `read_405a.py` reads corrections back. New scripts
+  `vector_takeoff.py`, `build_405a.py`, `read_405a.py`, `layout_405a.py`, `datum_link.py`;
+  `verify_schedule.py` also checks the live Datum project; `make_fixture.py` rewritten (vector set,
+  hand-worked figures, rotated sheet). Retired `build_live_takeoff.py`, `export_live_pdf.py`,
+  `build_markups.py`. Detail in the skill's own CHANGELOG.
+- **datum-markup brought level with the library copy** (`2.0_Skills\Datum-markup - PDF skill`,
+  refreshed 2026-10-14): Datum v3.44 catch-up, `bake()` via `scripts/datum-bake.js`,
+  `references/symbols.md`, true-size CMP plant. Description trimmed to 963 characters, so it now
+  passes the 1,024-character limit.
+
+Verified: fixture (every hand figure to 0.00 m², rotated sheet aligned, read-back clean before and
+after a real Datum v3.45 bake); a live three-level test job (read-back clean, alignment 92–95%,
+correction loop and `verify_schedule.py` positive and negative cases).
+
 ### Released 2026-10-14
 
 - **bdm-project-delivery 0.2.3** — Comit

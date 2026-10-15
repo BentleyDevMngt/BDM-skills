@@ -74,7 +74,7 @@ BASIS = [
 
 BLANK = {
     'project': '[Project name]', 'address': '[Site address]', 'approval': 'DA [reference]',
-    'issue_date': '[dd month yyyy]', 'workbook': '405-Floor_Area_Schedule_[Project]_DRAFT_[yyyymmdd].xlsx',
+    'issue_date': '[dd month yyyy]', 'workbook': '405-[Project]_Floor_Area_Schedule_[yyyymmdd].xlsx',
     'drawing_source': '[drawing set file name] ([architect], project [no.]) — sheets [numbers and revisions]',
     'approval_note': 'the plans referred to in [council] approval [reference] dated [date]',
     'scale_note': 'Scale verified against [n] figured dimension pairs — [x]% agreement with [scale]. Target tolerance ±2%.',
@@ -84,7 +84,7 @@ BLANK = {
     'apartments': [{'apt': f'{i:02d}', 'level': '', 'internal': None, 'balcony': None} for i in range(1, 19)],
     'sheets': [], 'categories': {}, 'seeds': {},
     'open_items': [
-        'DRAFT — not for issue.  Held for Director sign-off and for reconciliation against the architect’s own area schedule.',
+        'Held for Director sign-off and for reconciliation against the architect’s own area schedule.',
         'Source: [drawing set], [architect] — [sheet numbers and revisions].',
         '[Scale verification statement.]',
         'Site area is measured, not confirmed — confirm against the survey plan or title before relying on site cover or plot ratio.',
@@ -162,7 +162,8 @@ def cover(doc, cfg, npages):
     para(pg, M, 122,
          f"Every polygon measured on the sheets that follow is reported in {cfg['workbook']}.  The figures printed on "
          'each sheet are the workbook figures — this set and the schedule are produced from one measurement and '
-         'reconcile line for line.', W - 2 * M, 9, False, GREY)
+         'reconcile line for line.  The file opens live in Datum: every polygon is editable and Datum works the '
+         'quantities from the shapes (Workbook button).', W - 2 * M, 9, False, GREY)
 
     LX, LW = M, 560.0
     RX = 626.0
@@ -205,8 +206,9 @@ def cover(doc, cfg, npages):
     y += 18
     pgfa = cfg.get('planning_gfa')
     y = para(pg, LX, y,
-             f"GFA = FECA + UCA.  NSA is the sum of the {len(apts)} apartment lots and is scheduled unit by unit on the NSA & Revenue "
-             f"tab.  The statutory {cfg.get('planning_scheme', 'planning-scheme')} GFA " + (f'({pgfa:,.1f} m²) ' if pgfa else '')
+             'GFA = FECA + UCA.  ' + (f"NSA is the sum of the {len(apts)} apartment lots and is scheduled unit by unit on the NSA & Revenue tab.  "
+                                      if apts else 'No apartment lots — NSA does not apply.  ')
+             + f"The statutory {cfg.get('planning_scheme', 'planning-scheme')} GFA " + (f'({pgfa:,.1f} m²) ' if pgfa else '')
              + 'is a different measure again — it is reported in the workbook and is not marked up here.', LW, 8)
 
     # --- sheet index
@@ -283,104 +285,19 @@ def cover(doc, cfg, npages):
 
     pg.draw_line((M, H - 34), (W - M, H - 34), color=RULE, width=0.5)
     txt(pg, M, H - 21,
-        f"{cfg['project']} · Area take-off markups (AIQS / ASMM basis) · DRAFT · {cfg['issue_date']}", 8, False, GREY)
+        f"{cfg['project']} · Area take-off markups (AIQS / ASMM basis) · {cfg['issue_date']}", 8, False, GREY)
     rtxt(pg, W - M, H - 21, f'Page 1 of {npages}', 8, False, GREY)
 
 
-# ------------------------------------------------------------------ plan sheets
-def plan_sheet(doc, cfg, sh, idx, npages):
-    import cv2
-    im = cv2.imread(sh['image'])
-    if im is None:
-        raise SystemExit(f"cannot read markup image: {sh['image']}")
-    jp = os.path.splitext(sh['image'])[0] + '_pg.jpg'
-    cv2.imwrite(jp, cv2.resize(im, (3308, 2339), interpolation=cv2.INTER_AREA),
-                [cv2.IMWRITE_JPEG_QUALITY, 88])
-    ih, iw = im.shape[:2]
-    lv, kind = sh['level'], sh['kind']
-    d = next((l for l in cfg['levels'] if l['name'] == lv), {})
 
-    pg = doc.new_page(width=W, height=H)
-    logo = cfg.get('logo')
-    if logo and os.path.exists(logo):
-        pg.insert_image(pymupdf.Rect(M, 11, M + 188 * 0.40, 11 + 55 * 0.40), filename=logo)
-    txt(pg, M + 92, 26, f"{cfg['project'].upper()}  ·  {cfg['address'].upper()}", 8.5, True)
-    rtxt(pg, W - M, 26, f'{lv.upper()}  —  {TITLE[kind].upper()}', 8.5, True, GOLD)
-    pg.draw_line((M, HEAD_H), (W - M, HEAD_H), color=NAVY, width=0.9)
-
-    ax0, ay0, ax1, ay1 = M, HEAD_H + 6, W - M, H - FOOT_H
-    sc = min((ax1 - ax0) / iw, (ay1 - ay0) / ih)
-    dw, dh = iw * sc, ih * sc
-    ox, oy = ax0 + (ax1 - ax0 - dw) / 2, ay0 + (ay1 - ay0 - dh) / 2
-    pg.insert_image(pymupdf.Rect(ox, oy, ox + dw, oy + dh), filename=jp)
-
-    apts = [a for a in cfg['apartments'] if a['level'] == lv]
-    nsa = {a['apt']: round((a['internal'] or 0) + (a['balcony'] or 0), 1) for a in apts}
-
-    # NSA callouts, anchored to the numbered region markers already on the plan
-    if kind == 'apt':
-        for (px, py), a in zip(cfg.get('seeds', {}).get(lv, []), apts):
-            cx, cy = ox + px * sc, oy + py * sc
-            s = f"{a['apt']}   {nsa[a['apt']]:,.1f} m²"
-            tw = tl(s, 7.6, True)
-            bx0, by0 = cx - (tw + 9) / 2, cy + 7.0
-            pg.draw_rect(pymupdf.Rect(bx0, by0, bx0 + tw + 9, by0 + 11.5),
-                         color=NAVY, fill=(1, 1, 1), width=0.6)
-            txt(pg, bx0 + 4.5, by0 + 8.4, s, 7.6, True)
-
-    pg.draw_line((M, H - FOOT_H + 8), (W - M, H - FOOT_H + 8), color=NAVY, width=0.9)
-    if kind == 'mk':
-        l1 = (f"{lv}:   FECA {d.get('feca') or 0:,.1f}  +  UCA {d.get('uca') or 0:,.1f}  =  "
-              f"GFA {d.get('gfa') or 0:,.1f} m²      ·      GBA {d.get('gba') or 0:,.1f} m²      —      "
-              f"as reported on the Level Schedule tab of {cfg['workbook']}")
-        l2 = ('GFA (FECA + UCA) per the AIQS Australian Cost Management Manual (2022).  GBA per the Property Council / API / '
-              'REIA Glossary of Property Terms — the enclosed and unenclosed area at all building floor levels, measured to '
-              'the outside face of enclosing walls, balustrades and supports.')
-    elif kind == 'cat':
-        cats = cfg.get('categories', {}).get(lv, {})
-        parts = '  +  '.join(f'{k} {v:,.1f}' for k, v in cats.items())
-        l1 = f"{lv} FECA {d.get('feca') or 0:,.1f} m²   =   {parts}"
-        l2 = sh.get('note', 'Reconcile these measured rooms to the categories used on the Area by Category tab.')
-    else:
-        det = '   ·   '.join(f"{a['apt']} {nsa[a['apt']]:,.1f}" for a in apts)
-        tot = round(sum(nsa.values()), 1)
-        l1 = (f'{lv} net sellable area (m²):    {det}    ·    level total {tot:,.1f} m² across '
-              f'{len(apts)} apartments')
-        l2 = ('Boxed figures are TOTAL NSA per apartment — internal area plus balcony or terrace — as scheduled unit by unit '
-              f"on the NSA & Revenue tab of {cfg['workbook']}.  Grey is core, lobby and common property, which carries no NSA.")
-    txt(pg, M, H - 24, l1, 8, True)
-    txt(pg, M, H - 13, l2, 7.2, False, GREY)
-    rtxt(pg, W - M, H - 13, f"DRAFT · {cfg['issue_date']} · Page {idx} of {npages}", 7.2, False, GREY)
-
-
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument('config', nargs='?', help='take-off config JSON')
-    ap.add_argument('out', help='output PDF')
-    ap.add_argument('--blank', action='store_true', help='blank cover only, for the template')
-    ap.add_argument('--logo', help='path to the BDM logo PNG')
-    a = ap.parse_args()
-
-    if a.blank:
-        cfg = dict(BLANK)
-    else:
-        if not a.config:
-            ap.error('config is required unless --blank')
-        cfg = json.load(open(a.config))
-        for k, v in BLANK.items():
-            cfg.setdefault(k, v)
-    if a.logo:
-        cfg['logo'] = a.logo
-
-    npages = 1 + len(cfg['sheets'])
+def blank_cover(out):
     doc = pymupdf.open()
-    cover(doc, cfg, npages)
-    for i, sh in enumerate(cfg['sheets'], 2):
-        plan_sheet(doc, cfg, sh, i, npages)
+    cover(doc, dict(BLANK), 1)
     doc.subset_fonts()
-    doc.save(a.out, deflate=True, garbage=3)
-    print(f'{doc.page_count} pages -> {a.out}')
+    doc.save(out, deflate=True, garbage=3)
 
 
 if __name__ == '__main__':
-    main()
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--blank', required=True, metavar='OUT.pdf', help='write a blank cover, for the 405a template')
+    blank_cover(ap.parse_args().blank)

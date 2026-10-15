@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
-"""Reconcile the markup PDF against the Form 405 workbook — cell by cell.
+"""Reconcile the 405a markup set against the Form 405 workbook — cell by cell.
 
 Nothing in the schedule is reported until this passes clean.  It reads the
-workbook (calculated values), the take-off config, and the markup PDF, and
+workbook (calculated values), the take-off config, and the 405a PDF, and
 checks that every figure printed on a drawing matches the workbook cell it
-claims to come from.
+claims to come from — and (R4) that the live Datum project inside the 405a,
+worked with Datum's own formula, still gives the workbook's figures. A shape
+moved in Datum after the workbook was built fails here until both are rebuilt.
 
-    python3 verify_schedule.py workbook.xlsx config.json markups.pdf
+    python3 verify_schedule.py workbook.xlsx takeoff.json 405a.pdf
 
 Exit code 0 = clean, 1 = at least one figure does not tie.
 """
-import json, sys
+import json, os, sys
 
 import openpyxl
 import pymupdf
@@ -128,6 +130,27 @@ def main():
         if lv in acrow:
             near(round(sum(cats.values()), 1), ac.cell(acrow[lv], 8).value, f'{lv} categories sum vs FECA')
 
+    # ---- the live Datum project agrees with the workbook (R4)
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from read_405a import readback
+    try:
+        rb = readback(pdff)
+    except SystemExit:
+        rb = None
+        fails.append('405a carries no Datum project — rebuild it with build_405a.py')
+    if rb is not None:
+        for n, rr in row.items():
+            got = rb['levels'].get(n, {})
+            for m, col in (('FECA', 2), ('UCA', 3), ('GBA', 5)):
+                near(round(got.get(m, 0), 2), ls.cell(rr, col).value or 0, f'{n} {m} Datum project vs workbook')
+        r = 10
+        while nr.cell(r, 1).value and str(nr.cell(r, 1).value).upper() != 'TOTAL':
+            apt = str(nr.cell(r, 1).value)
+            got = rb['apartments'].get(apt, {})
+            near(round(got.get('internal', 0), 2), nr.cell(r, 4).value or 0, f'apt {apt} internal Datum vs workbook')
+            near(round(got.get('balcony', 0), 2), nr.cell(r, 5).value or 0, f'apt {apt} balcony Datum vs workbook')
+            r += 1
+
     # ---- GBA authority must appear on the cover and on every measured-area sheet
     for s in ('Property Council of Australia', 'Glossary of Property Terms', 'outside face'):
         has(1, s, 'GBA authority on the cover')
@@ -150,7 +173,7 @@ def main():
         for x in fails:
             print('  -', x)
         return 1
-    print('CLEAN — every figure on the markup ties to the workbook.')
+    print('CLEAN — every figure on the markup and in the Datum project ties to the workbook.')
     return 0
 
 

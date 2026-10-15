@@ -1,138 +1,132 @@
 #!/usr/bin/env python3
-"""Synthetic 1:100 drawing set + plate masks + take-off config, so the live
-take-off tool can be exercised end to end without a real job.
+"""Synthetic VECTOR drawing set + take-off config, so the R4 pipeline can be run
+end to end without a job — and checked against figures worked out by hand.
 
-    python3 make_fixture.py [outdir]          # defaults to ./fixture
-    python3 build_live_takeoff.py  fixture/testbed_takeoff.json  fixture/tool.html
-    python3 export_live_pdf.py     fixture/tool.html             fixture/markups.pdf
+    python3 make_fixture.py [outdir]                         # defaults to ./fixture
+    python3 build_405a.py   fixture/testbed_takeoff.json  fixture/405a-Testbed_Area_Markups.pdf
+    python3 read_405a.py    fixture/405a-Testbed_Area_Markups.pdf  fixture/testbed_takeoff.json
 
-Run it before trusting a change to the take-off pipeline. The building is a
-20 x 12 m rectangle with a 4 x 3 m notch — 228.0 m² — so the polygon the tool
-opens with can be checked against a figure worked out by hand.
+The building is a 20 x 12 m rectangle with a 4 x 3 m notch, drawn at 1:100 on A3
+the way an ArchiCAD export draws it: a grey area zone to the outside face, the
+external walls as black poche on a 'Walls - External' layer, 200 mm thick, with
+one 6 m glazed run on the south face that carries no poche.
 
-Never writes inside the skill folder unless told to.
+  GBA  = 240 − 12                                          = 228.00 m²
+  FECA = inner outline 19.6 x 8.6 + 15.6 x 3.0 = 215.36
+         + the 6 m glazed run x 0.2 m back to the face       = 216.56 m²
+  Level 1 adds a 4 x 3 m roofed balcony in the notch: UCA   =  12.00 m²
+  Level 1 is issued ROTATED 90°, to prove placement survives a rotated sheet.
+
+Run it before trusting a change to the pipeline. Never writes inside the skill
+folder unless told to.
 """
-import json
-import os
-import sys
+import json, os, sys
 
-import numpy as np
 import pymupdf
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from vector_takeoff import VectorSheet, shape_list   # noqa: E402
+
 OUT = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else 'fixture')
-os.makedirs(os.path.join(OUT, 'plates'), exist_ok=True)
-
-PT_PER_M = 1000.0 / 100 / 25.4 * 72.0          # 1:100 -> 28.3465 pt per metre
-MASK_DPI = 300
-PPM300 = 1000.0 / 100 / 25.4 * MASK_DPI        # 118.11 px per metre at 300 dpi
-S = MASK_DPI / 72.0                            # pt -> 300 dpi px
-
-PAGE_W, PAGE_H = 1191, 842                     # A3 landscape, points
-ORIGIN = (100.0, 100.0)                        # building setout, points
-
-# 20 x 12 m rectangle with a 4 x 3 m notch bitten out of the top right corner
-#   area = 240 - 12 = 228.0 m2
-OUTLINE_M = [(0, 0), (20, 0), (20, 9), (16, 9), (16, 12), (0, 12)]
-TRUE_AREA = 228.0
+os.makedirs(OUT, exist_ok=True)
+PT_PER_M = 1000.0 / 100 / 25.4 * 72.0
+ORIGIN = (300.0, 250.0)
+OUTLINE = [(0, 0), (20, 0), (20, 9), (16, 9), (16, 12), (0, 12)]
+INNER = [(0.2, 0.2), (19.8, 0.2), (19.8, 8.8), (15.8, 8.8), (15.8, 11.8), (0.2, 11.8)]
+GLAZED = (7.0, 13.0)                       # south face (y = 0), x from 7 to 13 m: no poche
+BALCONY = [(16, 9), (20, 9), (20, 12), (16, 12)]
+HAND = {'Ground': {'gba': 228.0, 'feca': 216.56, 'uca': 0.0},
+        'Level 1': {'gba': 240.0, 'feca': 216.56, 'uca': 12.0}}
 
 
-def to_pt(p):
-    return (ORIGIN[0] + p[0] * PT_PER_M, ORIGIN[1] + p[1] * PT_PER_M)
+def P(p):
+    return pymupdf.Point(ORIGIN[0] + p[0] * PT_PER_M, ORIGIN[1] + p[1] * PT_PER_M)
 
 
-def build_pdf(path, pages=('Ground', 'Level 1')):
+def poly(sh, pts):
+    for i in range(len(pts)):
+        sh.draw_line(P(pts[i]), P(pts[(i + 1) % len(pts)]))
+
+
+def build_pdf(path):
     doc = pymupdf.open()
-    for title in pages:
-        page = doc.new_page(width=PAGE_W, height=PAGE_H)
-        sh = page.new_shape()
-        pts = [to_pt(p) for p in OUTLINE_M]
-        # external wall, drawn as discrete straight segments so get_drawings()
-        # reports the axis-aligned linework the snapper looks for
-        for i in range(len(pts)):
-            sh.draw_line(pymupdf.Point(*pts[i]), pymupdf.Point(*pts[(i + 1) % len(pts)]))
-        # a few internal walls and a grid line, all axis aligned
-        for x_m in (5, 10, 15):
-            sh.draw_line(pymupdf.Point(*to_pt((x_m, 0))), pymupdf.Point(*to_pt((x_m, 9))))
-        for y_m in (4, 8):
-            sh.draw_line(pymupdf.Point(*to_pt((0, y_m))), pymupdf.Point(*to_pt((16, y_m))))
-        sh.finish(width=1.2, color=(0, 0, 0))
+    walls = doc.add_ocg('Walls - External')
+    zones = doc.add_ocg('Zones - Building Areas')
+    for title, balcony in (('Ground', False), ('Level 1', True)):
+        page = doc.new_page(width=1190.55, height=841.89)
+        sh = page.new_shape()                                  # area zone, outside face
+        poly(sh, OUTLINE)
+        sh.finish(fill=(0.773, 0.773, 0.773), color=None, oc=zones)
+        if balcony:
+            poly(sh, BALCONY)
+            sh.finish(fill=(0.86, 0.86, 0.86), color=None, oc=zones)
+            poly(sh, BALCONY)                                  # balustrade line
+            sh.finish(color=(0, 0, 0), width=0.6)
+        # poche: wall runs as rectangles, leaving the glazed run on the south face open
+        for (x0, y0), (x1, y1) in (((0, 0), (GLAZED[0], 0.2)), ((GLAZED[1], 0), (20, 0.2)), ((19.8, 0.2), (20, 9)),
+                                   ((15.8, 8.8), (19.8, 9)), ((15.8, 9), (16, 12)), ((0, 11.8), (15.8, 12)),
+                                   ((0, 0.2), (0.2, 11.8))):
+            sh.draw_rect(pymupdf.Rect(P((x0, y0)), P((x1, y1))))
+        sh.finish(fill=(0, 0, 0), color=None, oc=walls)
+        sh.draw_line(P((GLAZED[0], 0.1)), P((GLAZED[1], 0.1)))  # the glazing line
+        sh.finish(color=(0, 0, 0), width=0.6)
+        for x in (5, 10):                                      # internal walls, unlayered
+            sh.draw_line(P((x, 0.2)), P((x, 8.8)))
+        sh.finish(color=(0, 0, 0), width=1.0)
         sh.commit()
-        page.insert_text(pymupdf.Point(100, 60), f'{title} — synthetic test plan  1:100',
-                         fontsize=14)
+        page.insert_text(pymupdf.Point(60, 60), f'{title} — synthetic test plan   Scale 1:100 @ A3', fontsize=12)
+        page.insert_text(P((8, 6)), '228.00 m2', fontsize=9)
+        if balcony:
+            page.insert_text(P((16.5, 10.5)), 'BALCONY 12.00 m2', fontsize=7)
+    doc[1].set_rotation(90)
     doc.save(path)
-    doc.close()
-    return path
 
 
-def build_mask(path):
-    """The measured plate, as a boolean raster in 300 dpi page coordinates."""
-    w = int(round(PAGE_W * S))
-    h = int(round(PAGE_H * S))
-    m = np.zeros((h, w), dtype=bool)
-    ox, oy = ORIGIN[0] * S, ORIGIN[1] * S
-    # fill the L: full 20 x 9 band, plus the 16 x 3 upper band
-    def box(x0_m, y0_m, x1_m, y1_m):
-        x0 = int(round(ox + x0_m * PPM300)); x1 = int(round(ox + x1_m * PPM300))
-        y0 = int(round(oy + y0_m * PPM300)); y1 = int(round(oy + y1_m * PPM300))
-        m[y0:y1, x0:x1] = True
-    box(0, 0, 20, 9)
-    box(0, 9, 16, 12)
-    np.save(path, m)
-    return float(np.count_nonzero(m)) / PPM300 ** 2
+def measure(path):
+    levels = []
+    for pg, name in ((0, 'Ground'), (1, 'Level 1')):
+        vs = VectorSheet(path, pg, 100)
+        env = vs.zone_near(228.0)
+        wall = vs.wall_depth(env)
+        feca = vs.feca(env, wall['median_mm'])
+        shapes = {'GBA': shape_list(env), 'FECA': shape_list(feca)}
+        if pg == 1:
+            bal = vs.zone_near(12.0)
+            shapes['UCA'] = shape_list(bal)
+            shapes['GBA'] = shape_list(env.union(bal))
+        levels.append({'name': name, 'page': pg, 'sheet': f'TB-10{pg}', 'scale': 100, 'shapes': shapes,
+                       '_wall': wall})
+    return levels
 
 
-pdf = build_pdf(os.path.join(OUT, 'test_drawings.pdf'))
-a_ground = build_mask(os.path.join(OUT, 'plates', 'ground.npy'))
-a_l1 = build_mask(os.path.join(OUT, 'plates', 'level1.npy'))
-print(f'plate raster area: {a_ground:.2f} m2  (geometry says {TRUE_AREA:.2f})')
-
-cfg = {
-    "project": "Testbed Apartments",
-    "address": "1 Test Street, Southport",
-    "lot_plan": "Lot 9 RP123456",
-    "site_area": 405.7,
-    "approval": "DA TEST/2026/1",
-    "issue_date": "19 August 2026",
-    "drawing_set": "Test set, rev A",
-    "architect": "Test Architects",
-    "workbook": "405-Testbed_Floor_Area_Schedule_DRAFT_20260819.xlsx",
-    "planning_scheme": "Gold Coast City Plan",
-
-    "levels": [
-        {"name": "Ground",  "label": "Ground floor", "feca": 200.0, "uca": 10.0,
-         "gfa": 210.0, "gba": 228.0, "unroof": 0.0, "apts": 2,
-         "note": "Synthetic level for testing."},
-        {"name": "Level 1", "label": "Level 1", "feca": 195.0, "uca": 12.0,
-         "gfa": 207.0, "gba": 228.0, "unroof": 3.0, "apts": 1}
-    ],
-
-    "apartments": [
-        {"apt": "G01", "level": "Ground",  "internal": 84.0, "balcony": 12.0},
-        {"apt": "G02", "level": "Ground",  "internal": 79.5, "balcony": 10.5},
-        {"apt": "101", "level": "Level 1", "internal": 92.0, "balcony": 14.0}
-    ],
-
-    "rates": {"label": "Test Builder", "ex_gst": 2_400_000.0,
-              "inc_gst": 2_640_000.0, "benchmark_rate": 5200.0},
-
-    "open_items": [
-        "DRAFT — not for issue. Held for Director sign-off.",
-        "Synthetic drawing set. Every figure here is a test fixture, not a measurement.",
-        "Site area is figured, not surveyed."
-    ],
-
-    "live": {
-        "pdf": "test_drawings.pdf",
-        "dpi": 220,
-        "scale": 100,
-        "clip": [350, 2850, 350, 1900],
-        "levels": {
-            "Ground":  {"page": 0, "mask": "plates/ground.npy", "sheet": "A2.101"},
-            "Level 1": {"page": 1, "mask": "plates/level1.npy", "sheet": "A2.102",
-                        "uca_offplate": 0.0}
-        }
+def main():
+    pdf = os.path.join(OUT, 'testbed_plans.pdf')
+    build_pdf(pdf)
+    levels = measure(pdf)
+    cfg = {
+        'project': 'Testbed', 'address': '1 Example St, Nowhere', 'approval': 'DA TEST/0000',
+        'issue_date': '1 January 2026', 'workbook': '405-Testbed_Floor_Area_Schedule_20260101.xlsx',
+        'source_pdf': 'testbed_plans.pdf', 'scale': 100,
+        'drawing_source': 'testbed_plans.pdf (synthetic) — TB-100, TB-101',
+        'levels': levels, 'apartments': [],
+        'sheets': [{'level': 'Ground', 'kind': 'mk'}, {'level': 'Level 1', 'kind': 'mk'}],
+        'open_items': ['Held for Director sign-off.', 'Synthetic fixture — not a project.'],
     }
-}
-with open(os.path.join(OUT, 'testbed_takeoff.json'), 'w', encoding='utf-8') as f:
-    json.dump(cfg, f, indent=2)
-print('fixture written to', OUT)
+    cf = os.path.join(OUT, 'testbed_takeoff.json')
+    json.dump(cfg, open(cf, 'w'), indent=1)
+    from build_405a import resolve
+    r = resolve(json.loads(json.dumps(cfg)))
+    ok = True
+    for lv in r['levels']:
+        h = HAND[lv['name']]
+        for k in ('gba', 'feca', 'uca'):
+            good = abs(lv[k] - h[k]) <= 0.05
+            ok &= good
+            print(f"{lv['name']:8s} {k.upper():5s} measured {lv[k]:8.2f}  hand {h[k]:8.2f}  {'OK' if good else 'FAIL'}")
+        print(f"         wall {lv['_wall']}")
+    print(('FIXTURE OK — ' if ok else 'FIXTURE FAILED — ') + cf)
+    return 0 if ok else 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())

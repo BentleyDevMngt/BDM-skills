@@ -1,5 +1,63 @@
 # CHANGELOG — Floor Area Schedule Skill
 
+## R4 / 2026-10 — measure from vectors; Datum replaces the HTML tool
+
+Director rulings of 15 October 2026, on the assessment of 14 October 2026
+(`Projects - Documents\Alfred\BDM_Datum_Floor_Area_Skill_Assessment_2026-10-14.docx`):
+(1) adopt vector-first measurement with Datum; (2) drop the HTML live-correction
+tool but **keep the A3 markup PDF** as a deliverable; (3) use the current
+`datum-markup` skill.
+
+Why. On the October test job (a three-level house, design-development set) the
+R3 method run unaided was −46%, +17% and +2.4% on the three levels and read the
+external walls at 25–36 mm: it could not tell an open terrace or a hatched garden
+from the building, and its wall reading came from a picture. Measuring from the
+PDF's own zones and wall poche matched the architect's zones to 0.03% and found a
+4.91 m² double count in the architect's own schedule.
+
+Changes:
+
+- **Deliverables are now two:** the Form 405 workbook, and the **405a A3 markup
+  PDF, which is also a live Datum file** — the architect's vector page in the BDM
+  frame, every measured polygon an editable, calibrated Datum area shape linked to
+  a Workbook line, baked so the markups show in any PDF viewer. Supersedes the
+  17 August 2026 standing rule that every take-off ships with the HTML tool.
+- **Added `scripts/vector_takeoff.py`** — sheet inventory (scale, sheet factor,
+  layers, zones matched to printed areas), zones by printed figure, wall poche and
+  measured wall depth with solid fraction, FECA to the inside face (glazed runs
+  carry no band; internal walls stay in; voids out), zone-overlap test, and
+  snapping raster corners onto vector line ends.
+- **Added `scripts/build_405a.py`** — derives every figure from the shapes, builds
+  the cover and sheets, embeds the Datum project, and checks itself: Datum
+  `verify()`, read-back with Datum's formula (0.01 m²), polygon-on-ink alignment,
+  GBA containment, bake, and a second read-back. Rotated source sheets are
+  normalised before placement (`show_pdf_page` ignores /Rotate).
+- **Added `scripts/read_405a.py`** — the correction loop. Reads the Director's
+  corrections out of the saved 405a, compares, and writes a corrected config; the
+  cover then names what moved.
+- **Added `scripts/layout_405a.py`** (the house layout and authority text, moved
+  out of `build_markups.py`) and **`scripts/datum_link.py`** (finds the
+  `datum-markup` library in bdm-standards rather than copying it).
+- **`verify_schedule.py`** also reconciles the live Datum project against the
+  workbook, so a shape moved after the workbook was built fails the check.
+- **`make_fixture.py`** rewritten: a vector set with zones, a named wall layer, a
+  glazed run and a rotated sheet; prints the hand-figure check (GBA 228.00 /
+  240.00, FECA 216.56, UCA 12.00).
+- **Retired:** `build_live_takeoff.py`, `export_live_pdf.py`, `build_markups.py`.
+  `takeoff_geometry.py` stays, as the raster fallback for sheets with no usable
+  vectors.
+- **Filing and marking aligned to company CLAUDE.md:** both files to
+  `10_Cost Plans`; no DRAFT stamp or `_DRAFT` filename (§5, 15/9/26).
+
+Verified: fixture from a clean directory — every hand figure to 0.00 m², alignment
+93% on both sheets including the rotated one, read-back clean before and after
+bake (Datum v3.45). Test job — three levels built and baked, alignment 92–95%,
+read-back clean; a corner moved in the saved file read back as +1.27 m² UCA, the
+corrected config rebuilt with the cover bullet and a containment warning (balcony
+moved without the GBA outline); `verify_schedule.py` CLEAN on a matching workbook
+and FAILED on the moved shape. Workbook build itself unchanged from R3 and not
+re-run in this test.
+
 ## R3 / 2026-08 — the live tool made general; the PDF exporter written
 
 Found on the portability audit before the skills library was packaged as a

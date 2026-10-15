@@ -10,7 +10,7 @@
       "name": "bdm-all",
       "source": "./plugins/bdm-all",
       "description": "Install this one. The complete BDM skills suite - standards, contract administration, quantity surveying and project delivery - in a single install that keeps all four plugins on the same revision.",
-      "version": "0.2.3",
+      "version": "0.2.4",
       "category": "standards",
       "author": {
         "name": "Bentley Development Management"
@@ -20,7 +20,7 @@
       "name": "bdm-standards",
       "source": "./plugins/bdm-standards",
       "description": "BDM house style and the shared production tooling every BDM deliverable passes through - brand rules, document QA, Word-faithful PDF export and Datum markup. Install this first: every other BDM plugin depends on it.",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "category": "standards",
       "author": {
         "name": "Bentley Development Management"
@@ -40,7 +40,7 @@
       "name": "bdm-quantity-surveying",
       "source": "./plugins/bdm-quantity-surveying",
       "description": "Quantity surveying and cost control - floor area schedules and take-offs (Form 405), financier initial and monthly progress valuation reports (Forms 424 / 425), head contract progress claims and the consultant fee register.",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "category": "quantity surveying",
       "author": {
         "name": "Bentley Development Management"

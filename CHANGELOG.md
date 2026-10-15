@@ -15,6 +15,11 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Released 2026-10-15
+
+- **bdm-quantity-surveying 0.3.1** — bdm-floor-area-schedule R4 (vector + Datum); datum-markup refresh; 0.3.0
+- **bdm-standards 0.3.1** — bdm-floor-area-schedule R4 (vector + Datum); datum-markup refresh; 0.3.0
+
 ### Changed — bdm-floor-area-schedule R4, datum-markup refresh, 2026-10-15
 
 **No Change Notice for this repository change.** Director decision of 2026-08-20; see

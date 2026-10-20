@@ -11,6 +11,16 @@ or registers an invoice — those stay a human judgement pass.
 
 ---
 
+## Project summary (company CLAUDE.md §8, §13) — read-only skill
+
+- **This skill never writes to `Project_Summary_*.md`.** It runs daily; a
+  change-log line each run would bury the summary. Its own record is
+  `00_ai_sandbox\Invoice_Sync_Log.md` (§9).
+- **It does not read the summary either** — the sweep scope is the operator's
+  active-projects list (§1) and each invoice is matched to its job from the
+  invoice itself (§3–§4).
+- Creating a summary is `bdm-project-sandbox-setup`'s job; never create a stub.
+
 ## 1. Scope — whose projects
 
 Run only over the projects the operator is responsible for.

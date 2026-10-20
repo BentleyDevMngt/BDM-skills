@@ -77,8 +77,9 @@ happens, ask the user to drag the template into the chat — uploaded files read
 
 ### 3. Gather the project specifics (read the project folder — do NOT hard-code)
 Per BDM standing rule, read the project's own folder rather than assuming. Sources:
-- `00_ai_sandbox\Project_Summary_*.md` — parties, contract form, contract sum, retention basis,
-  prior certified/net figures, programme dates. **Start here.**
+- `00_ai_sandbox\Project_Summary_*.md` — **start here for orientation:** parties, contract form,
+  retention basis, programme dates and the project's conventions. Take the contract sum and the
+  prior certified/net figures from the contract and the prior certificate below, not the summary.
 - The **prior certificate / Payment Schedule** — previously certified to-date (per trade) and
   the previous net recommendation (drives the roll-forward).
 - The executed **contract** — retention rule and contract form (e.g. Amended AS4000-1997 vs

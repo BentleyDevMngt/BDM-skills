@@ -15,6 +15,15 @@ directly. This skill is the short form.
 Ad hoc when Andrew asks to be briefed on a meeting, and automatically at 06:00
 Brisbane on weekdays via the scheduled task "Daily Meeting Brief (6am weekdays)".
 
+## Project summary (company CLAUDE.md §8, §13) — read-only skill
+
+- **This skill never writes to `Project_Summary_*.md`.** It runs daily; a
+  change-log line each run would bury the summary. Its own record is
+  the brief email itself.
+- **Where it reads the summary,** it does so as set out below and treats it as
+  an index, not an authority: figures come from the source documents.
+- Creating a summary is `bdm-project-sandbox-setup`'s job; never create a stub.
+
 ## Steps
 
 1. **Identify the meeting(s).** `outlook_calendar_search` for the day, Brisbane

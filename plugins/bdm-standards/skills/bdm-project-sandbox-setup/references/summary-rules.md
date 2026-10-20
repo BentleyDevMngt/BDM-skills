@@ -78,3 +78,22 @@ not issuing anything.
   change-log line at the top (what this run produced, where, status), plus only
   the sections this run changed, each with its source. No summary → skip and flag.
 ```
+
+## The read-only variant
+
+Two skills run on a daily schedule and never update the summary, by Director
+ruling: `bdm-invoice-filing` (files and logs only; its sync log is the record)
+and `bdm-meeting-brief` (a locked-format email to the Director). A daily
+change-log line from either would bury the summary in noise. They carry this
+block instead, which records the rule without changing how they run:
+
+```markdown
+## Project summary (company CLAUDE.md §8, §13) — read-only skill
+
+- **This skill never writes to `Project_Summary_*.md`.** It runs daily; a
+  change-log line each run would bury the summary. Its own record is
+  {RECORD}.
+- **Where it reads the summary,** it does so as set out below and treats it as
+  an index, not an authority: figures come from the source documents.
+- Creating a summary is `bdm-project-sandbox-setup`'s job; never create a stub.
+```

@@ -38,9 +38,17 @@ Project Summary **only** — James Gill's `bdm-house-style` is not adopted.
   `monthly-cost-report`, `progress-claim-update`, `qs-initial-report`. Insertion only; nothing else
   in those files changed, except one clause in `da-conditions-matrix` so its "never write to the
   Projects folder" rule allows the summary update.
-- **Left unchanged on purpose:** `bdm-invoice-filing` (its hard rule forbids writing any project
-  summary) and `bdm-meeting-brief` (read-only, locked format). The four skills that already update
-  the summary, and `datum-markup` (not project-bound), are untouched.
+- **Read-only variant added** to `bdm-invoice-filing` and `bdm-meeting-brief`: both run daily and
+  never update the summary (existing Director rulings), and the block now says so. No change to how
+  either runs or what it produces.
+- **`progress-certificate-update`:** the summary "Start here" line reworded — the summary is for
+  orientation; contract sum and prior certified figures come from the contract and prior
+  certificate (both already in its source list).
+- **Held, not changed** (would alter where the skill writes; Director condition of 2026-10-20):
+  the DA matrix's save location (a personal working folder, against CLAUDE.md §8) and the progress
+  certificate's build folder (`00_ai_sandbox\PC 0NN`, which §8 says is not a staging area).
+- The four skills that already update the summary, and `datum-markup` (not project-bound), are
+  untouched.
 
 ### Released 2026-10-15
 

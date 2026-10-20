@@ -15,6 +15,10 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Released 2026-10-20
+
+- **bdm-standards 0.5.1** — bdm-project-sandbox-setup R2: bring an existing summary to standard; bdm-standards 0.5.0
+
 ### Changed — bdm-project-sandbox-setup R2: bring an existing summary to standard, 2026-10-20
 
 **No Change Notice for this repository change.** Director decision of 2026-08-20; see

@@ -64,6 +64,20 @@ Gather with `AskUserQuestion` anything the user hasn't given:
 
 ---
 
+## Project summary (company CLAUDE.md §8, §13)
+
+- **Before you start:** read `00_ai_sandbox\Project_Summary_*.md` (sandbox folder
+  matched case-insensitively) for parties, references, status and the project's
+  own conventions (§17). Missing → say so and work from the source documents;
+  never create a stub (that is `bdm-project-sandbox-setup`'s job). Two summaries
+  → flag it and rely on neither.
+- **Figures come from the source:** any sum, date, reference or party that goes
+  into the output is checked against the document it came from. If the summary
+  disagrees, the source wins and the summary is corrected below.
+- **Before you finish:** update the summary in the same pass — a dated
+  change-log line at the top (what this run produced, where, status), plus only
+  the sections this run changed, each with its source. No summary → skip and flag.
+
 ## The pipeline
 
 ### 1. Configuration

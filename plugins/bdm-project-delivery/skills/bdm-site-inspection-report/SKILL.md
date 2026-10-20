@@ -36,6 +36,20 @@ Trigger when a BDM PM hands over a OneNote/photo PDF from a site visit and wants
 - **Required:** the OneNote "Export to PDF" of the visit (photos + the PM's narrative).
 - **Optional:** a context email/thread (back-story, parties, dates, technical detail). Use it to enrich and cross-check — never to override what the PM saw.
 
+## Project summary (company CLAUDE.md §8, §13)
+
+- **Before you start:** read `00_ai_sandbox\Project_Summary_*.md` (sandbox folder
+  matched case-insensitively) for parties, references, status and the project's
+  own conventions (§17). Missing → say so and work from the source documents;
+  never create a stub (that is `bdm-project-sandbox-setup`'s job). Two summaries
+  → flag it and rely on neither.
+- **Figures come from the source:** any sum, date, reference or party that goes
+  into the output is checked against the document it came from. If the summary
+  disagrees, the source wins and the summary is corrected below.
+- **Before you finish:** update the summary in the same pass — a dated
+  change-log line at the top (what this run produced, where, status), plus only
+  the sections this run changed, each with its source. No summary → skip and flag.
+
 ## 4. Process
 
 1. **Identify the project & folder.** Match the project folder under `Projects - Documents`. Check `00_ai_sandbox` per `CLAUDE.md` section 8 — if missing/stale, **flag it** (don't block the report).

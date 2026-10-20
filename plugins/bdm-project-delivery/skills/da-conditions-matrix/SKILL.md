@@ -104,6 +104,20 @@ If anything is missing, ask before starting. Specifically confirm:
 
 ---
 
+## Project summary (company CLAUDE.md §8, §13)
+
+- **Before you start:** read `00_ai_sandbox\Project_Summary_*.md` (sandbox folder
+  matched case-insensitively) for parties, references, status and the project's
+  own conventions (§17). Missing → say so and work from the source documents;
+  never create a stub (that is `bdm-project-sandbox-setup`'s job). Two summaries
+  → flag it and rely on neither.
+- **Figures come from the source:** any sum, date, reference or party that goes
+  into the output is checked against the document it came from. If the summary
+  disagrees, the source wins and the summary is corrected below.
+- **Before you finish:** update the summary in the same pass — a dated
+  change-log line at the top (what this run produced, where, status), plus only
+  the sections this run changed, each with its source. No summary → skip and flag.
+
 ## Workflow Overview
 
 Four phases:
@@ -462,7 +476,9 @@ If the BDM project code is known, prefer that over the short name (e.g.
 `240-DA_Conditions_Matrix_202517_v1_2026-05.xlsx`). If unknown, use a clear
 short name and confirm the code with the user afterwards.
 
-Never write to the BDM Projects folder or the Working Copy templates folder.
+Never write to the BDM Projects folder or the Working Copy templates folder —
+except the project summary update above, which goes in that project's
+`00_ai_sandbox`.
 
 ### Brief to the user
 

@@ -15,6 +15,33 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Added — bdm-project-sandbox-setup R1; project summary steps in ten skills, 2026-10-20
+
+**No Change Notice for this repository change.** Director decision of 2026-08-20; see
+GOVERNANCE §1. Form 007 AI Skills Register is updated separately, under its own Change Notice.
+
+**MINOR version decision, set by hand per CONTRIBUTING:** `bdm-standards` 0.3.1 → 0.4.0, because
+it gains a skill. The other three plugins take the workflow's patch bump. Director ruling of
+2026-10-20: capture the company CLAUDE.md §8 / §13 requirement for `00_ai_sandbox` and the
+Project Summary **only** — James Gill's `bdm-house-style` is not adopted.
+
+- **New skill `bdm-standards/bdm-project-sandbox-setup` R1.** Creates a job's `00_ai_sandbox` and
+  backfills the 17-section `Project_Summary_*.md` from the project folder and saved emails, every
+  figure sourced, gaps as "Confirm …" actions; one job or a sweep. Read-only on project documents,
+  never overwrites an existing summary. A summary-only port of the `JamesBDM/bdm-plugins` R2 skill:
+  AI_Context build and audit, PowerShell/Node scripts, ProjectHub reads and the `bdm-house-style`
+  dependency deliberately left out. `references/summary-rules.md` holds the shared rules.
+- **"Project summary" block added to ten skills** — read the summary first, take figures from the
+  source document not the summary, update the summary before finishing: `progress-certificate-update`,
+  `bdm-consultancy-agreement`, `bdm-site-inspection-report`, `da-conditions-matrix`,
+  `meeting-minutes-update`, `monthly-report-update`, `bdm-qs-progress-valuation`,
+  `monthly-cost-report`, `progress-claim-update`, `qs-initial-report`. Insertion only; nothing else
+  in those files changed, except one clause in `da-conditions-matrix` so its "never write to the
+  Projects folder" rule allows the summary update.
+- **Left unchanged on purpose:** `bdm-invoice-filing` (its hard rule forbids writing any project
+  summary) and `bdm-meeting-brief` (read-only, locked format). The four skills that already update
+  the summary, and `datum-markup` (not project-bound), are untouched.
+
 ### Released 2026-10-15
 
 - **bdm-quantity-surveying 0.3.1** — bdm-floor-area-schedule R4 (vector + Datum); datum-markup refresh; 0.3.0

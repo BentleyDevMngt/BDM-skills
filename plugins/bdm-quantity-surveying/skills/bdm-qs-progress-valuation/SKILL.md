@@ -100,6 +100,20 @@ So §2.4/§2.5 may legitimately show a smaller figure (building only) than the d
 total in §2.2/§2.6 — the contingency table itemises each stream. The reconciliation QA checks
 above verify the contingency arithmetic ties out.
 
+## Project summary (company CLAUDE.md §8, §13)
+
+- **Before you start:** read `00_ai_sandbox\Project_Summary_*.md` (sandbox folder
+  matched case-insensitively) for parties, references, status and the project's
+  own conventions (§17). Missing → say so and work from the source documents;
+  never create a stub (that is `bdm-project-sandbox-setup`'s job). Two summaries
+  → flag it and rely on neither.
+- **Figures come from the source:** any sum, date, reference or party that goes
+  into the output is checked against the document it came from. If the summary
+  disagrees, the source wins and the summary is corrected below.
+- **Before you finish:** update the summary in the same pass — a dated
+  change-log line at the top (what this run produced, where, status), plus only
+  the sections this run changed, each with its source. No summary → skip and flag.
+
 ## Workflow
 
 1. **Confirm** project, reporting period (claim No. N, month), financier and borrower; confirm

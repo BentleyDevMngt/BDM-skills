@@ -39,7 +39,7 @@ Still outstanding, deliberately:
 
 | Plugin | Skills | Covers |
 |---|---|---|
-| [`bdm-standards`](plugins/bdm-standards/README.md) | 1 | House style, QA, PDF export, markup. **The foundation — everything depends on it.** |
+| [`bdm-standards`](plugins/bdm-standards/README.md) | 2 | House style, QA, PDF export, markup. **The foundation — everything depends on it.** |
 | [`bdm-contract-admin`](plugins/bdm-contract-admin/README.md) | 2 | AS4000 instruments — certificates, variations, EOTs, tender documents |
 | [`bdm-quantity-surveying`](plugins/bdm-quantity-surveying/README.md) | 5 | Area, cost, financier reporting, progress claims |
 | [`bdm-project-delivery`](plugins/bdm-project-delivery/README.md) | 6 | Monthly reporting, DA conditions, agreements, minutes, inspections |

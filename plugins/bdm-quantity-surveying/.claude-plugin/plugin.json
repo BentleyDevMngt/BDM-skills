@@ -1,6 +1,6 @@
 {
   "name": "bdm-quantity-surveying",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Quantity surveying and cost control - floor area schedules and take-offs (Form 405), financier initial and monthly progress valuation reports (Forms 424 / 425), head contract progress claims and the consultant fee register.",
   "author": {
     "name": "Bentley Development Management"

@@ -15,6 +15,13 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Released 2026-10-20
+
+- **bdm-contract-admin 0.2.1** — Merge pull request #5 from BentleyDevMngt/feat/project-summary-standard-2026-10-20
+- **bdm-project-delivery 0.2.4** — Merge pull request #5 from BentleyDevMngt/feat/project-summary-standard-2026-10-20
+- **bdm-quantity-surveying 0.3.2** — Merge pull request #5 from BentleyDevMngt/feat/project-summary-standard-2026-10-20
+- **bdm-standards 0.4.1** — Merge pull request #5 from BentleyDevMngt/feat/project-summary-standard-2026-10-20
+
 ### Added — bdm-project-sandbox-setup R1; project summary steps in ten skills, 2026-10-20
 
 **No Change Notice for this repository change.** Director decision of 2026-08-20; see

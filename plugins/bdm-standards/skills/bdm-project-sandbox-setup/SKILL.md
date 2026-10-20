@@ -4,15 +4,17 @@ description: >
   Set up a BDM project's AI sandbox — create the `00_ai_sandbox` folder and
   backfill the full 17-section `Project_Summary_<Project>.md` required by the
   company CLAUDE.md §13, from what is actually in the project folder and its
-  saved emails. Every figure carries its source; anything not found is marked
+  saved emails — or bring an existing summary up to that standard without
+  losing anything. Every figure carries its source; anything not found is marked
   TBC and becomes a "Confirm …" action. Use when a project has no sandbox or no
   project summary, when another skill flags "summary missing", or when the user
   says "set up the sandbox", "create the project summary", "backfill the
-  summary", "onboard this project", "which projects don't have a sandbox" or
-  "do all my projects". Works on one project or sweeps every live job folder.
-  Read-only on project documents. NOT for updating a summary that already
-  exists (every other skill does that as it works), and NOT for converting
-  project documents to markdown (AI_Context).
+  summary", "bring the summary to standard", "add §17", "onboard this
+  project", "which projects don't have a sandbox" or "do all my projects".
+  Works on one project or sweeps every live job folder. Read-only on project
+  documents. NOT for routine updates to a summary (every other skill does that
+  as it works), and NOT for converting project documents to markdown
+  (AI_Context).
 ---
 
 # BDM Project Sandbox Setup
@@ -35,15 +37,20 @@ in `references/summary-rules.md`.
 ## 1. Rules that don't bend
 
 1. **Read-only on project documents.** The only things this skill writes are the
-   `00_ai_sandbox` folder (if missing) and the `Project_Summary_*.md` inside it.
+   `00_ai_sandbox` folder (if missing), the `Project_Summary_*.md` inside it
+   and, in §4 only, the backup in `00_ai_sandbox\_SS\` and
+   `00_ai_sandbox\Summary_ChangeLog_Archive.md`.
    Never move, rename, copy or delete a project file. Flag misfiled things in
    §16 instead.
 2. **No invented facts.** Every date, dollar figure, reference number, firm and
    person comes from a document or email you opened. Put the source path on the
    line. Not found → `TBC — not found in folder`, plus a "Confirm …" action in
    §10.
-3. **Don't overwrite.** If a `Project_Summary_*.md` already exists, leave it
-   alone and report it. Updating an existing summary is every other skill's job.
+3. **Don't overwrite — except to bring a summary to standard (§4).** If a
+   `Project_Summary_*.md` already exists, set-up leaves it alone and reports
+   it; routine updates are every other skill's job. Restructuring an existing
+   summary happens only in §4, only when the user asks for it, and only with
+   a backup taken first and the completeness check passing.
 4. **One sandbox per project.** Match `00_ai_sandbox` case-insensitively
    (`00_AI_sandbox` counts). Never create a second one alongside.
 5. **No personal paths in the output.** Write paths relative to the project
@@ -89,6 +96,17 @@ sandbox or a summary.
 If they named one project, go straight to it. If they asked for "all", confirm
 the list once — "Set up these N? (y / pick)" — then go. Don't re-ask per
 project.
+
+For each job that already has a summary, grade it in the same table:
+
+| Grade | Test |
+|---|---|
+| **On standard** | `## 1.` to `## 17.` present once each, in order, and under 60 KB |
+| **§17 missing** | `## 1.` to `## 16.` in order, no §17 |
+| **Old layout** | its own numbering, sections missing, or a backfill supplement bolted on the end |
+| **Oversized** | over 60 KB, whatever its layout — usually a long change log |
+
+Offer §4 for anything not on standard. Don't start it without a yes.
 
 Also report, but don't fix:
 - retired summary names still present (`PROJECT.md`, `Project_Summary.md`,
@@ -198,8 +216,92 @@ file. Keep it short.
 
 ---
 
-## 4. Revision control
+## 4. Bring an existing summary to standard
+
+Use when the user asks, or says yes to the offer in Step 1. One job at a time
+unless they ask for a batch; a batch still runs each job through every step.
+
+This is a restructure, not a rewrite. **Every fact, figure, date, name,
+source path and note in the old summary survives** — in the new summary or,
+for old history only, in the archive. Nothing is summarised, reworded,
+corrected or dropped. Where the old summary is wrong or contradicts a
+document, leave the text as it is and flag it in §9 and §10.
+
+### Step A — Back up
+
+Copy the summary, unchanged, to
+`00_ai_sandbox\_SS\Project_Summary_<Name>_superseded_<yyyy-mm-dd>.md`
+(create `_SS` if missing; confirm today's real date). Work from the original;
+the copy is the comparison baseline and the way back.
+
+### Step B — Map the old content to the 17 sections
+
+Go through the old file top to bottom and assign every block to one section
+of `references/project_summary_template.md`:
+
+- Old numbered or named sections → the section with the same subject, whatever
+  their old number. A "backfill supplement" or "§2 / §13 / §15 (new columns)"
+  block bolted on the end goes into its proper section.
+- Two blocks on the same subject (e.g. a contacts table and a "key contacts
+  directory") → both go in that section, one after the other. Merge rows only
+  where they are identical.
+- Content that fits nowhere → §17.2 dated notes, keeping its date, or §16.
+- Agent or operator notes that are project knowledge → §17.
+
+### Step C — Move old history to the archive
+
+Change-log entries older than 90 days, and §11 / email-log entries beyond the
+most recent ~12, move **word for word**, newest first, into a working archive
+file in the same temp folder as Step E's working summary. On PASS they are
+added to the top of `00_ai_sandbox\Summary_ChangeLog_Archive.md`, above
+anything already there, so the file stays newest first (never name it to start with `Project_Summary_`). Nothing else
+goes in the archive. §16 gets a pointer line to it.
+
+### Step D — Fill the gaps
+
+A section with no old content gets its heading and is filled from the folder
+by the §3 Step 4 source order, with the same rules: every fact sourced, not
+found → `TBC — not found in folder` and a "Confirm …" action in §10. §17 gets
+the project's naming and numbering conventions as the folder shows them.
+
+### Step E — Write, then check before replacing
+
+Write the restructured summary to a working file in a temp folder outside the
+project folders (`CLAUDE.md` §8 — scratch never goes in a job folder), then run
+the skill's checker:
+
+```
+python <this skill>/scripts/check_restructure.py <_SS backup> <working summary> <working archive>
+```
+
+- **FACTS** must show 0 missing and **STRUCTURE** must pass, or the result is
+  FAIL — fix the working file and run it again. Never replace the summary on
+  a FAIL.
+- **LINES** is advisory: read every listed line and confirm it is present in
+  another form (re-ordered table cells, a merged row). Put anything genuinely
+  missing back.
+- No Python on the machine: do the three checks by hand and say so in the
+  report.
+
+On PASS — and only then — copy the working summary over
+`Project_Summary_<Name>.md`, add the working archive to the top of
+`Summary_ChangeLog_Archive.md`, clear the temp folder, and add a change-log line at the top: "Brought to the 17-section
+standard — backup `_SS\…`, n entries archived, n sections filled, n gaps,
+check PASS."
+
+### Step F — Report
+
+| Project | Grade before | Size before → after (+ archive) | Sections filled | Gaps | Check | Lines to review |
+|---|---|---|---|---|---|---|
+
+Then the "Confirm …" actions the PM should close first. The PM reviews the
+restructured summary before it is relied on for a certificate, claim or report.
+
+---
+
+## 5. Revision control
 
 | Rev | Date | Change |
 |---|---|---|
+| R2 | 2026-10-20 | Bring-to-standard mode (§4): back up to `_SS`, map every block of an existing summary to the 17 sections, archive change-log and log entries older than 90 days / beyond ~12 to `Summary_ChangeLog_Archive.md`, fill missing sections with sources or TBC, and replace only when `scripts/check_restructure.py` passes (facts, structure; lines advisory). Step 1 grades existing summaries. Rules 1 and 3 amended for §4 only (Director, 2026-10-20). |
 | R1 | 2026-10-20 | First issue in the BDM repo. Summary-only port of the sandbox setup skill (create sandbox + 17-section backfill to `CLAUDE.md` §13). AI_Context build, monthly AI_Context audit, PowerShell/Node scripts, ProjectHub reads and `bdm-house-style` dependency deliberately left out (Director, 2026-10-20). Adds `references/summary-rules.md`, the shared read-first / update-after rules carried by every project-bound skill. |

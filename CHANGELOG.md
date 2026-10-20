@@ -15,6 +15,32 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Changed — bdm-project-sandbox-setup R2: bring an existing summary to standard, 2026-10-20
+
+**No Change Notice for this repository change.** Director decision of 2026-08-20; see
+GOVERNANCE §1.
+
+**MINOR version decision, set by hand per CONTRIBUTING:** `bdm-standards` 0.4.1 → 0.5.0 — new
+capability, and the skill may now rewrite an existing summary when asked. Director ruling of
+2026-10-20, after a portfolio check found 13 of 18 existing summaries off the 17-section standard
+(6 missing only §17, 7 on older layouts) and six over 140 KB.
+
+- **New §4 "Bring an existing summary to standard".** Back up to `00_ai_sandbox\_SS\`, map every
+  block of the old summary to the 17 sections, move change-log entries older than 90 days and
+  §11/email-log entries beyond ~12 word for word to `Summary_ChangeLog_Archive.md`, fill empty
+  sections from the folder (sourced or TBC), and replace the summary only when the checker
+  passes. Work happens in a temp folder; nothing in the job folder changes on a FAIL.
+- **New `scripts/check_restructure.py`** (standard library, read-only). Hard gates: every dollar
+  figure, date, percentage and reference in the old summary present in the new summary or
+  archive; sections 1–17 once each, in order. Advisory: old lines not found word for word, with
+  the closest match.
+- **Step 1 grades existing summaries** — on standard, §17 missing, old layout, oversized (>60 KB).
+- Rules 1 and 3 amended for §4 only. Description now 976 characters.
+
+Verified: checker run read-only on two live summaries in a temp folder — identical file PASS;
+16-section summary FAIL on structure; one deleted line caught (5 facts missing); lines moved to an
+archive PASS; same move without the archive FAIL. Validator OK.
+
 ### Released 2026-10-20
 
 - **bdm-contract-admin 0.2.1** — Merge pull request #5 from BentleyDevMngt/feat/project-summary-standard-2026-10-20

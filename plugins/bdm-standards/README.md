@@ -16,7 +16,7 @@ here.
 | Skill | Does |
 | --- | --- |
 | `datum-markup` | Editable markups, measurements and priced BOQ take-offs written straight into a PDF for Datum |
-| `bdm-project-sandbox-setup` | Creates a project's `00_ai_sandbox` and backfills the 17-section Project Summary (company CLAUDE.md §13) from the folder — one project or every project missing one. Also holds the shared summary rules every project-bound skill follows |
+| `bdm-project-sandbox-setup` | Creates a project's `00_ai_sandbox` and backfills the 17-section Project Summary (company CLAUDE.md §13) from the folder — one project or every project missing one — or brings an existing summary to that standard with a backup and a no-loss check. Also holds the shared summary rules every project-bound skill follows |
 
 ## Still to arrive
 

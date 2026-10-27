@@ -1,5 +1,16 @@
 # CHANGELOG — Invoice Filing Skill
 
+## R2 / October 2026 — scanned PDFs
+
+Folded in from the Director's personal copy of the skill ahead of the move to the BDM Team
+workspace (27 October 2026), so the plugin is the single controlled copy.
+
+- **Scanned PDFs are filed, not quarantined.** A PDF with no text layer is read as an image
+  (page 1, or later pages if page 1 is a cover sheet) and filed byte-for-byte like any other
+  invoice. Multi-page scans are never split.
+- **Quarantine reason narrowed** from "no extractable text" to "unreadable even when viewed
+  as an image".
+
 ## R1 / August 2026 — first issue
 
 Built from a Director request (30 August 2026) to turn ad-hoc invoice capture into a

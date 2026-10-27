@@ -85,6 +85,13 @@ amount **and** an issuer. Subject-line keywords alone are not enough — the mai
 threads *discussing* invoices. Xero notifications (`messaging-service@post.xero.com`) are a
 reliable positive; treat them as first-class.
 
+**Scanned PDFs are invoices too.** A PDF with no text layer (empty `pdftotext` output) is not a
+reason to skip or quarantine it. Render page 1 to an image and read it visually (the `Read` tool
+on a rendered PNG, ~70-100 dpi; try later pages if page 1 is a cover sheet) and take issuer,
+invoice number, issue date and total off the face. Apply the same tests as for any other invoice.
+Scanned multi-page PDFs are common (invoice on p1, remittance/payment summary after) — file the
+whole PDF byte-for-byte, never split or re-render it.
+
 ---
 
 ## 4. Where it goes
@@ -198,7 +205,7 @@ guesswork, for:
 - Invoice date or number unreadable
 - Multi-project invoice covering several jobs on one document
 - Project has only a legacy `Invoices` folder (awaiting migration)
-- Scanned image with no extractable text
+- Scanned image that is genuinely unreadable *even when viewed as an image* (blurred, cropped, number or date not visible). A missing text layer alone is **not** a quarantine reason — read the image (§3) and file it
 
 An invoice for an **excluded** project is not quarantined — it is left alone entirely (§2).
 

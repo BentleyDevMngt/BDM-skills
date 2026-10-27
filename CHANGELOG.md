@@ -15,6 +15,10 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Released 2026-10-27
+
+- **bdm-project-delivery 0.2.5** — bdm-invoice-filing R2: file scanned PDFs by reading them as images
+
 ### Released 2026-10-20
 
 - **bdm-standards 0.5.1** — bdm-project-sandbox-setup R2: bring an existing summary to standard; bdm-standards 0.5.0

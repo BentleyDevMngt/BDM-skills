@@ -15,6 +15,10 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Released 2026-10-28
+
+- **bdm-project-delivery 0.2.6** — meeting-minutes-update R5: pre-meeting statusing pass
+
 ### Released 2026-10-27
 
 - **bdm-project-delivery 0.2.5** — bdm-invoice-filing R2: file scanned PDFs by reading them as images

@@ -15,6 +15,42 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Revision numbering — 2026-10-29
+
+Director ruling of 29 October 2026: **skill revisions carry one decimal place.** A
+scope change raises the whole number and resets the decimal (R5.1 → R6.0); a
+correction or refinement that needs no re-briefing raises the decimal (R5.0 → R5.1).
+Every existing revision Rn became Rn.0 with no change of content, and every
+`SKILL.md` now states its revision under its title. Form revisions in BDM TEMPLATES
+are unaffected.
+
+Revisions as reconciled on 29 October 2026 (this repository is the reference):
+
+| Skill | Revision |
+| --- | --- |
+| bdm-consultancy-agreement | R1.0 · 2026-08 |
+| bdm-drawing-report-filing | R1.0 · 2026-10 |
+| bdm-invoice-filing | R2.0 · 2026-10 |
+| bdm-meeting-brief | R1.0 · 2026-08 |
+| bdm-monthly-project-report | R1.0 · 2026-08 |
+| bdm-site-inspection-report | R1.0 · 2026-08 |
+| da-conditions-matrix | R2.0 · 2026-08 |
+| meeting-minutes-update | R5.0 · 2026-10 |
+| monthly-report-update | R1.0 · 2026-08 |
+| progress-certificate-update | R2.0 · 2026-08 |
+| bdm-tender-clarification | R1.0 · 2026-10 (first versioned issue) |
+| bdm-floor-area-schedule | R4.0 · 2026-10 |
+| bdm-qs-progress-valuation | R5.0 · 2026-08 |
+| monthly-cost-report | R2.0 · 2026-08 |
+| progress-claim-update | R5.0 · 2026-08 |
+| qs-initial-report | R2.0 · 2026-08 |
+| bdm-project-sandbox-setup | R2.0 · 2026-10 |
+| datum-markup | R1.0 · 2026-10 (first versioned issue) |
+
+`progress-certificate-update` R3 (Form 335 R6 remap, 15 October 2026) was released in
+`JamesBDM/bdm-plugins` only and is not in this repository; R2.0 here is the August
+skill.
+
 ### Released 2026-10-28
 
 - **bdm-project-delivery 0.2.6** — meeting-minutes-update R5: pre-meeting statusing pass

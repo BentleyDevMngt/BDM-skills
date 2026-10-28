@@ -3,7 +3,9 @@ name: progress-claim-update
 description: Rolls a Head Contract Progress Claim Excel workbook forward by one month for a construction or development project. Reads the month's accounts folder (`NN_{Month} YYYY` with 1.0 Received / 2.0 Approved / 3.0 Paid / 4.0 Remittance subfolders), reconciles the CTD Breakdown line-for-line against the Xero account-transactions export, and rebuilds CTD Breakdown, Summary, Unpaid Invoices, Detail Sheet and Progress Claim cover. Use when the user asks to update, roll forward, build, prepare, run or refresh a progress claim, head contract claim, monthly claim, PC NN, or claim NN. Also trigger when they reference an accounts month folder by name, ask to process invoices into a claim file, reconcile Xero payments to filed invoices, or refresh CTD Breakdown / Summary / Unpaid Invoices / Detail Sheet from a folder of new invoices — even if "progress claim" isn't said explicitly.
 ---
 
-# Progress Claim Update Skill — R4
+# Progress Claim Update Skill — R5.0
+
+**Revision: R5.0 · 2026-08** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
 
 Rolls a Head Contract Progress Claim workbook forward by one month and **proves the
 result against the bank** before releasing it. The user reviews and signs off the draft.

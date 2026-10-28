@@ -5,10 +5,7 @@ description: Updates an existing Meeting Minutes Word document (.docx) for const
 
 # Meeting Minutes Update Skill
 
-**Revision: R5 · 2026-10** (check this against the latest package in
-`Alfred\_Skills\meeting-minutes-update\` — filename carries the revision, e.g.
-`meeting-minutes-update_R1_2026-06.skill`. If your installed copy shows an older
-revision, reinstall the latest.)
+**Revision: R5.0 · 2026-10** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in the revision history at the end of this file and the repository CHANGELOG.
 
 Updates an existing Meeting Minutes Word document to reflect where every item
 stands, applying tracked changes and maintaining the document's existing structure
@@ -620,7 +617,7 @@ the principal/client.
 
 ## Revision history
 
-- **R5 · 2026-10** — Director ruling, 19 October 2026, on the Nera PCG No.63 worked
+- **R5.0 · 2026-10** — Director ruling, 19 October 2026, on the Nera PCG No.63 worked
   example. **The pre-meeting pass no longer uses tracked changes.** It edits the text
   directly and highlights what is new in yellow; the post-meeting pass keeps tracked
   changes and clears the highlighting as it runs. Two redline layers in one file made the
@@ -641,7 +638,7 @@ the principal/client.
   place, instead of a tracked row deletion (Director ruling, 29 October 2026); the
   post-meeting pass settles each one; and the pre-meeting file is identified by its
   highlighting, not by live tracked changes.
-- **R4 · 2026-10** — Director decisions, 18 October 2026. Added the **pre-meeting
+- **R4.0 · 2026-10** — Director decisions, 18 October 2026. Added the **pre-meeting
   statusing pass**: the next issue is pre-populated from correspondence, interim
   transcripts and the project summary before the meeting, and the redline serves as
   the meeting agenda. One rolling file carries both passes, separated by tracked-change
@@ -656,7 +653,7 @@ the principal/client.
   next-meeting number plus the .docx/PDF distinction already carry the meaning.
   Recorded the boundary with the daily meeting brief — minutes carry fact, the brief
   carries judgement.
-- **R3 · 2026-10** — Director ruling, 13 October 2026, on New Earth DDM No.05. The
+- **R3.0 · 2026-10** — Director ruling, 13 October 2026, on New Earth DDM No.05. The
   minutes are a current-status register: discussed items are rewritten to their
   current status rather than appended to; closed, superseded, duplicated and
   past-dated items are removed as tracked row deletions; the programme lives in one
@@ -667,7 +664,7 @@ the principal/client.
   `_DRAFT` filename removed to match company file §5. Added the re-read-before-overwrite
   and confirm-after-sync steps. Save location allows a flat `07_Meeting Minutes\`
   where the project uses one.
-- **R2 · 2026-09** — Director instruction, 1 September 2026. Phase 4 verification is
+- **R2.0 · 2026-09** — Director instruction, 1 September 2026. Phase 4 verification is
   now programmatic, not visual: the PDF/image render step is removed, and no render
   output or scratch file may be written into the project folder. Added the six-check
   tracked-changes audit (including the deleted-final-paragraph-mark rule that
@@ -675,7 +672,7 @@ the principal/client.
   and the paragraph diff. Added a "Where the minutes are saved" section: the project's
   `07_Meeting Minutes\<N.0_Series>\` folder, never `00_ai_sandbox`, filename ending
   `_DRAFT` until sign-off.
-- **R1 · 2026-06** — First BDM-customised revision. Added: pull attendees/invitees
+- **R1.0 · 2026-06** — First BDM-customised revision. Added: pull attendees/invitees
   (names + emails) from the Outlook calendar as the source of truth for the attendee
   block; Form 230 template-currency rule for design meetings (replaces the generic
   T218 skeleton); first-meeting fresh-build path; cover email from the chair/organiser

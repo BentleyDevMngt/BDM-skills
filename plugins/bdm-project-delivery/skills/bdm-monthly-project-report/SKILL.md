@@ -19,6 +19,8 @@ template_revision: R1
 
 # BDM Monthly Project Report
 
+**Revision: R1.0 · 2026-08** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
+
 Supersedes `bdm-project-status-report` (R3, 2026-08) — the one-page Project Summary
 Report with the trend-arrow dashboard. That format is retired.
 

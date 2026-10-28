@@ -19,6 +19,8 @@ description: >
 
 # BDM Project Sandbox Setup
 
+**Revision: R2.0 · 2026-10** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
+
 Every project-bound BDM skill starts by reading
 `<project>\00_ai_sandbox\Project_Summary_*.md` (company `CLAUDE.md` §8). A
 project without one leaves every skill working blind. This skill closes that

@@ -1,6 +1,6 @@
 # CHANGELOG — Progress Certificate Update Skill
 
-## R2 / 2026-08 — Excel integrity gate
+## R2.0 / 2026-08 — Excel integrity gate
 
 Issued 17 August 2026, alongside the same fix to the Floor Area Schedule, Monthly Cost Report,
 Progress Claim Update and DA Conditions Matrix skills.
@@ -23,7 +23,7 @@ Changes:
 
 No change to the certification logic, the AS4000 cl.37.2 basis or the tabs-01–04 PDF export.
 
-## R1 / 2026-08 — migration baseline
+## R1.0 / 2026-08 — migration baseline
 
 Filed to the controlled skills library on 16 August 2026 under the BDM naming convention;
 flattened from `_source/`, drifted Form 335 workbook removed (migration decision J3).

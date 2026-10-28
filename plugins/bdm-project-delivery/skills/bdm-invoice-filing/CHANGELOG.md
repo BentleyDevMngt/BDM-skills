@@ -1,6 +1,6 @@
 # CHANGELOG — Invoice Filing Skill
 
-## R2 / October 2026 — scanned PDFs
+## R2.0 / October 2026 — scanned PDFs
 
 Folded in from the Director's personal copy of the skill ahead of the move to the BDM Team
 workspace (27 October 2026), so the plugin is the single controlled copy.
@@ -11,7 +11,7 @@ workspace (27 October 2026), so the plugin is the single controlled copy.
 - **Quarantine reason narrowed** from "no extractable text" to "unreadable even when viewed
   as an image".
 
-## R1 / August 2026 — first issue
+## R1.0 / August 2026 — first issue
 
 Built from a Director request (30 August 2026) to turn ad-hoc invoice capture into a
 standard company procedure that could be shared across staff.

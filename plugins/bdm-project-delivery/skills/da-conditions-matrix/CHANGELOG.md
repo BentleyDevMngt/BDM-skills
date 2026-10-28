@@ -1,6 +1,6 @@
 # CHANGELOG — Da Conditions Matrix
 
-## R2 / 2026-08 — Excel integrity gate
+## R2.0 / 2026-08 — Excel integrity gate
 
 Issued 17 August 2026. First CHANGELOG for this skill; R1 was the migration baseline of
 16 August 2026.
@@ -23,6 +23,6 @@ Changes:
 
 No change to the condition parsing, the dropdown lists or the tab structure.
 
-## R1 / 2026-08 — migration baseline
+## R1.0 / 2026-08 — migration baseline
 
 Filed to the controlled skills library on 16 August 2026 under the BDM naming convention.

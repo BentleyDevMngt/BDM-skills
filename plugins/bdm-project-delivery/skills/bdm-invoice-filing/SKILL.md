@@ -5,6 +5,8 @@ description: "Sweep the mailbox for project invoices and file them into the proj
 
 # BDM Invoice Filing
 
+**Revision: R2.0 · 2026-10** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
+
 Sweep the mailbox for project invoices, file each one into its project folder under the BDM
 convention, and log every action. **File and log only.** This skill never assesses, approves,
 or registers an invoice — those stay a human judgement pass.

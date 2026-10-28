@@ -18,6 +18,8 @@ description: >
 
 # DA Conditions Matrix Skill
 
+**Revision: R2.0 · 2026-08** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
+
 Builds a populated DA Conditions Matrix Excel workbook for a project by extracting
 Assessment Manager conditions from a Council Decision Notice PDF and writing them
 into the BDM master template (240-DA_Conditions_Matrix) with one row per

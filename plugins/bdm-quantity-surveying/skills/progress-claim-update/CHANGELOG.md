@@ -1,6 +1,6 @@
 # CHANGELOG — Progress Claim Update Skill
 
-## R5 / 2026-08 — Excel integrity gate
+## R5.0 / 2026-08 — Excel integrity gate
 
 Issued 17 August 2026.
 
@@ -22,7 +22,7 @@ Changes:
 
 No change to the reconciliation gate, the extractor or the CTD logic.
 
-## R4 / v2.0 (July 2026) — reconciliation gate; extraction rebuilt
+## R4.0 / v2.0 (July 2026) — reconciliation gate; extraction rebuilt
 
 Written after the PC18 (July 2026) production run. The R3 draft passed every internal
 check and still overstated the month by **$84,476.50**. The checks proved the workbook was
@@ -97,7 +97,7 @@ recording the withdrawn JDP INV-4123.
 
 # CHANGELOG — Progress Claim Update Skill
 
-## R3 / v1.6 (June 2026) — old manual workarounds built into code
+## R3.0 / v1.6 (June 2026) — old manual workarounds built into code
 
 The conversation-history workarounds from the Everton runs are now in `build_claim.py`,
 so the monthly run no longer depends on Alfred hand-patching. Bug numbers map to the
@@ -135,7 +135,7 @@ Still open: **#9** (45s sandbox timeout on 150+ PDFs — run with `--no-cache` a
 
 # CHANGELOG — Progress Claim Update Skill
 
-## R2 / v1.5 (June 2026) — PC17 production run, 818 South Pine Road, Everton Park
+## R2.0 / v1.5 (June 2026) — PC17 production run, 818 South Pine Road, Everton Park
 
 **FIX (critical) — Summary Unpaid 'Budget Code' (col F) now populated.**
 Received/Approved invoices carry no budget code, so the prior build left col F blank;

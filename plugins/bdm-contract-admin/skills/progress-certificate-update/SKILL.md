@@ -15,6 +15,8 @@ description: >-
 
 # Progress Certificate (Form 335) — update / roll-forward
 
+**Revision: R2.0 · 2026-08** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
+
 ## What this does and why
 
 When a builder lodges a progress claim, BDM (as Superintendent) must issue a Progress

@@ -1,6 +1,6 @@
 # CHANGELOG — Drawing & Report Filing Skill
 
-## R1 / October 2026 — first issue
+## R1.0 / October 2026 — first issue
 
 Built from a Director request (14 October 2026) to extend the daily Drawing & Report Filing
 scheduled task, which already filed drawing attachments into dated issue folders and marked the

@@ -5,6 +5,8 @@ description: "Draft a BDM QS Monthly Progress Valuation Report (Form 425) - the 
 
 # QS Monthly Progress Valuation Report (Form 425) — draft for financier
 
+**Revision: R5.0 · 2026-08** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
+
 ## What this does and why
 
 Each month the building contractor submits a progress claim. BDM (as QS) inspects the site,

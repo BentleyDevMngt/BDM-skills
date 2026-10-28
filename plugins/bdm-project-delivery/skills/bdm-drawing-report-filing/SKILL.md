@@ -11,12 +11,14 @@ related_skills: bdm-invoice-filing, bdm-project-sandbox-setup
 
 # BDM Drawing & Report Filing
 
+**Revision: R1.0 · 2026-10** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
+
 Find drawings and reports that consultants have issued, file each issue into its project's
 `06_Drawings & Specifications` folder, and keep that project's **Form 207 document register**
 current. **File, register and log only.** This skill never issues a transmittal, never sends
 anything, never deletes and never overwrites.
 
-Library name: **BDM-Drawing-Report-Filing R1 · 2026-10.**
+Library name: **BDM-Drawing-Report-Filing R1.0 · 2026-10.**
 
 ---
 

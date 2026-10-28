@@ -14,6 +14,8 @@ defaults: { photos_per_page: 4, signature_block: removed }
 
 # BDM Site Inspection Report — Create (Skill)
 
+**Revision: R1.0 · 2026-08** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
+
 Turns a site visit captured in **OneNote -> Export to PDF** into a finished BDM **Site Inspection Record** (Form 331), Word + PDF.
 
 ## 1. When to use

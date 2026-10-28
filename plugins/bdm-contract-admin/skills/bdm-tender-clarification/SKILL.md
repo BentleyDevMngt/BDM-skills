@@ -14,6 +14,8 @@ defaults: { deliverables: [word, pdf, cover_email], signature: author, cc_client
 
 # BDM Tender Clarification — Create (Skill)
 
+**Revision: R1.0 · 2026-10** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
+
 Company standard for issuing a **Tender Clarification** (Form 218) during a live tender. One TC can do any combination of three things:
 
 1. **Extend the tender closing date.**

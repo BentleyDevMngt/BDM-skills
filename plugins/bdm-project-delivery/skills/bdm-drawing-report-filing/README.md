@@ -5,7 +5,7 @@ the project's `06_Drawings & Specifications` discipline folder, and keeps the pr
 **Form 207 document register** current: one row per document, latest revision in CURRENT ISSUE.
 **Files, registers and logs only** — it never issues a transmittal and never sends anything.
 
-Library name **BDM-Drawing-Report-Filing R1 · 2026-10**. Built October 2026 from a Director
+Library name **BDM-Drawing-Report-Filing R1.0 · 2026-10**. Built October 2026 from a Director
 request to extend the daily Drawing & Report Filing scheduled task so that the register is
 updated on every receipt.
 

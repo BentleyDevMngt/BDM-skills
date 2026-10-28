@@ -34,12 +34,12 @@ skill resolves the form at run time like every other, pinned to R1. No skill in
 this repository now carries a controlled artefact.
 
 **Two copies of the minutes skills exist.** The legacy `JamesBDM/bdm-plugins`
-repository holds `meeting-minutes-update` at **R3 · 2026-08-18**; the copy here is
-**R1 · 2026-06**, and JG's carries material the R1 does not — Phase 0 project
-context, the drop-closed-items rule, renumbering logic and the OOXML
-track-changes patterns. **Do not overwrite JG's with this one.** It also holds
-`bdm-site-and-adhoc-minutes`, which belongs in this plugin and has no counterpart
-here. Both resolve under the next Change Note.
+repository holds its own `meeting-minutes-update` (R3 · 2026-08-18 when last
+compared). The copy here has since moved on separately to **R5.0 · 2026-10**
+(29 October 2026), and the two lines are not interchangeable — do not copy one over
+the other. JG's also holds `bdm-site-and-adhoc-minutes`, which belongs in this
+plugin and has no counterpart here. *(Updated 29 October 2026: the copy here was
+recorded as R1 · 2026-06, which had been out of date since R2.)*
 
 **`bdm-meeting-brief` is not self-contained — open for the Director.** The skill is a
 short form that directs the reader to `Projects - Documents\Alfred\

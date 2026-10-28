@@ -1,6 +1,6 @@
 # CHANGELOG — Floor Area Schedule Skill
 
-## R4 / 2026-10 — measure from vectors; Datum replaces the HTML tool
+## R4.0 / 2026-10 — measure from vectors; Datum replaces the HTML tool
 
 Director rulings of 15 October 2026, on the assessment of 14 October 2026
 (`Projects - Documents\Alfred\BDM_Datum_Floor_Area_Skill_Assessment_2026-10-14.docx`):
@@ -58,7 +58,7 @@ moved without the GBA outline); `verify_schedule.py` CLEAN on a matching workboo
 and FAILED on the moved shape. Workbook build itself unchanged from R3 and not
 re-run in this test.
 
-## R3 / 2026-08 — the live tool made general; the PDF exporter written
+## R3.0 / 2026-08 — the live tool made general; the PDF exporter written
 
 Found on the portability audit before the skills library was packaged as a
 plugin. The skill could not have run on any machine but the one it was written
@@ -121,7 +121,7 @@ with the house layout and both authority blocks intact.
 No change to the measurement method, the standards citations, the Form 405 tab
 map, or the HTML tool's own behaviour in the browser.
 
-## R2 / 2026-08 — Excel integrity gate; library copy resynced
+## R2.0 / 2026-08 — Excel integrity gate; library copy resynced
 
 Issued 17 August 2026 after two BDM workbooks were delivered that Excel reported as
 corrupt (167 Hedges Avenue, Form 405 and Form 413).
@@ -152,7 +152,7 @@ Changes:
 
 No change to the measurement method, the standards citations or the Form 405 tab map.
 
-## R1 / July 2026 — first issue
+## R1.0 / July 2026 — first issue
 
 Built from the pilot project feasibility
 take-off, July 2026. That job measured GBA, GFA and NSA across a mid-rise apartment building from a DA set carrying **no** architect's

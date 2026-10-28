@@ -1,6 +1,6 @@
 # CHANGELOG — Consultancy Agreement Skill
 
-## R1 / August 2026 — first issue
+## R1.0 / August 2026 — first issue
 
 Built from a structural engineering appointment, August 2026 — a fixed fee plus rates and per-inspection units, arriving as a fee
 *variation* letter under the consultant's existing contract rather than as

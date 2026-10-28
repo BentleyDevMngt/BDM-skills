@@ -5,6 +5,8 @@ description: "Build Andrew's pre-meeting brief for a project meeting — closed 
 
 # BDM Meeting Brief
 
+**Revision: R1.0 · 2026-08** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
+
 The full procedure, including the worked reference example Andrew approved, is
 at `Projects - Documents\Alfred\BDM_Meeting_Brief_Procedure_2026-08-30.md`.
 **Read that file first** — it is the source of truth and Andrew edits it

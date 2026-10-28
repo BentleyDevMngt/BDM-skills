@@ -3,7 +3,9 @@ name: "bdm-floor-area-schedule"
 description: "Measure a floor area schedule from architectural drawings and produce two deliverables — the BDM Form 405 workbook and the 405a A3 markup PDF, which is also a live Datum file (every polygon editable, quantities worked by Datum). Measures from the drawing's own vector linework, not a picture of it. Trigger on 'floor area schedule', 'area schedule for [project]', 'area take-off', 'measure the areas off the plans', 'GBA / GFA / NSA', \"what's the GFA\", 'net sellable area', 'NSA by unit', 'unit mix and areas', 'how many m2 is the building', 'site cover and plot ratio', or whenever DA / design-development plans are handed over to work out areas for a feasibility, a $/m2 rate, a revenue line or a plot-ratio check. Also when the Director has corrected a 405a in Datum and the schedule needs rebuilding. Held for Director sign-off. NOT for cost estimates (Forms 410-413), QS lender reports (Forms 424 / 425) or progress certificates (Form 335)."
 ---
 
-# Floor Area Schedule — BDM Form 405 (R4)
+# Floor Area Schedule — BDM Form 405 (R4.0)
+
+**Revision: R4.0 · 2026-10** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
 
 ## What this does and why
 

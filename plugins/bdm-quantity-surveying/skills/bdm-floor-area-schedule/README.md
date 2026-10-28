@@ -1,4 +1,4 @@
-# bdm-floor-area-schedule (R4 · 2026-10)
+# bdm-floor-area-schedule (R4.0 · 2026-10)
 
 Measures a floor area schedule off architectural drawings — from the PDF's own
 vector linework — and produces the BDM **Form 405** workbook plus the **405a** A3

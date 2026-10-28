@@ -1,6 +1,6 @@
 # CHANGELOG — BDM Monthly Project Report
 
-## R1 / 2026-08 — packaging fix, 19 August 2026 (no revision bump)
+## R1.0 / 2026-08 — packaging fix, 19 August 2026 (no revision bump)
 
 The `description:` field measured **1,037 characters against the platform's 1,024 limit**, so
 the package could not be installed at all — `field 'description' in SKILL.md must be at most
@@ -19,7 +19,7 @@ original R1 package. Packaging-only, so the revision is unchanged per migration 
 Outgoing package archived to `_SS\bdm-monthly-project-report_R1_2026-08_superseded-2026-08-19.skill`.
 
 
-## R1 / 2026-08 — first issue, replacing bdm-project-status-report
+## R1.0 / 2026-08 — first issue, replacing bdm-project-status-report
 
 Renamed from `bdm-project-status-report` so the skill is unmistakably associated with the
 Monthly Project Report template. `bdm-project-status-report` R3 is superseded and retired;

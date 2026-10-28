@@ -1,6 +1,6 @@
 # CHANGELOG — BDM Monthly Cost Report
 
-## R2 / 2026-08 — packaging fix, 19 August 2026 (no revision bump)
+## R2.0 / 2026-08 — packaging fix, 19 August 2026 (no revision bump)
 
 Preventative. The `description:` field measured **1,021 characters against the platform's 1,024
 limit** — three characters of headroom, so any later edit to the description would have made the
@@ -20,7 +20,7 @@ to the original R2 package. Packaging-only, so the revision is unchanged per mig
 Outgoing package archived to `_SS\monthly-cost-report_R2_2026-08_superseded-2026-08-19.skill`.
 
 
-## R2 / 2026-08 — Excel integrity gate
+## R2.0 / 2026-08 — Excel integrity gate
 
 Issued 17 August 2026. Same root cause as the Floor Area Schedule R2 issue: a stale
 `xl/calcChain.xml` makes Excel report a rolled-forward register as corrupt, and neither
@@ -38,7 +38,7 @@ Changes:
 
 No change to the audit logic, the register mechanics or the Form 201 layout.
 
-## R1 / 2026-08 — first issue
+## R1.0 / 2026-08 — first issue
 
 Authored by Andrew Bentley, August 2026. Filed to the controlled skills library on
 16 August 2026 under the BDM naming convention.

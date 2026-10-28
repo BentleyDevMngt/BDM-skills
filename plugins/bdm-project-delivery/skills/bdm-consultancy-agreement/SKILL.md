@@ -5,6 +5,8 @@ description: "Draft a BDM Consultancy Agreement (Form 105) appointing a consulta
 
 # BDM Consultancy Agreement (Form 105)
 
+**Revision: R1.0 · 2026-08** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
+
 Formalises a consultant appointment on **BDM's terms**, not the consultant's. The whole
 point of the form is Annexure 1 Items 13 and 14: the Agreement takes precedence over the
 consultant's proposal and over the standard conditions inside it.

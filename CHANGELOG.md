@@ -15,6 +15,13 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Released 2026-10-28
+
+- **bdm-contract-admin 0.2.2** — Skill revisions to one decimal place; reconcile every SKILL.md
+- **bdm-project-delivery 0.2.7** — Skill revisions to one decimal place; reconcile every SKILL.md
+- **bdm-quantity-surveying 0.3.3** — Skill revisions to one decimal place; reconcile every SKILL.md
+- **bdm-standards 0.5.2** — Skill revisions to one decimal place; reconcile every SKILL.md
+
 ### Revision numbering — 2026-10-29
 
 Director ruling of 29 October 2026: **skill revisions carry one decimal place.** A

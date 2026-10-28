@@ -1,6 +1,6 @@
 {
   "name": "bdm-contract-admin",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Contract administration under AS4000 - variations and CSAs, extensions of time, the Contract Admin Register, progress certificates as Superintendent, tender clarifications and addenda.",
   "author": {
     "name": "Bentley Development Management"

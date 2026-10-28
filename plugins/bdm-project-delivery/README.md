@@ -18,7 +18,7 @@ See [GOVERNANCE.md](../../GOVERNANCE.md) §4.
 | `monthly-report-update` | Financier's / lender's monthly report, tracked changes | — |
 | `da-conditions-matrix` | DA conditions matrix from a Council decision notice | 240 |
 | `bdm-consultancy-agreement` | Consultancy agreement from a consultant's fee proposal | 105 |
-| `meeting-minutes-update` | Meeting minutes rolled forward with tracked changes | — |
+| `meeting-minutes-update` | Meeting minutes: a pre-meeting statusing pass (new text highlighted) and a post-meeting tracked-changes update | — |
 | `bdm-site-inspection-report` | Site inspection record from a OneNote export | 331 |
 | `bdm-invoice-filing` | Project invoices swept from the mailbox and filed to the job folder, with a sync log | — |
 | `bdm-drawing-report-filing` | Drawings, specifications and consultant reports swept from the mailbox, filed to `06_Drawings & Specifications`, and the project's Form 207 document register updated — one row per document, current revision kept up to date | 207 |

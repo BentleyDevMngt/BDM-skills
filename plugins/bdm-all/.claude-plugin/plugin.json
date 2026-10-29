@@ -1,7 +1,7 @@
 {
   "name": "bdm-all",
   "description": "The complete BDM skills suite in one install - standards, contract administration, quantity surveying and project delivery. Installing this pulls all four BDM plugins and keeps them together on every update. BDM staff: install this one and nothing else.",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "author": {
     "name": "Bentley Development Management"
   },
@@ -14,7 +14,7 @@
     },
     {
       "name": "bdm-contract-admin",
-      "version": ">=0.2.2"
+      "version": ">=0.2.3"
     },
     {
       "name": "bdm-quantity-surveying",

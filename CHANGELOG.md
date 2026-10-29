@@ -15,6 +15,10 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Released 2026-10-29
+
+- **bdm-contract-admin 0.2.3** — progress-certificate-update R3.0: port R3 from JamesBDM, PDF opt-in
+
 ### progress-certificate-update R3.0 — 2026-10-29
 
 R3 ported from `JamesBDM/bdm-plugins` (`956ab65`) on Director instruction, closing the gap

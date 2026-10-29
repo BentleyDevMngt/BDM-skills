@@ -15,6 +15,16 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### progress-certificate-update R3.0 — 2026-10-29
+
+R3 ported from `JamesBDM/bdm-plugins` (`956ab65`) on Director instruction, closing the gap
+recorded in the revision table below. R3.0 = R3 (Form 335 R6 cell map, contract-type branch to
+Form 335a, Excel COM builder `build_certificate.ps1`) plus the JamesBDM R2 content this repository
+never received (CAR cross-check, mandatory `contract_form`, embedded-image check) plus this
+repository's own additions (revision line, project summary block, `validate_xlsx.py`). One change
+to R3: the builders write no PDF unless passed `-Pdf` / `--pdf`, for a certificate already
+signed off. Excel COM builder tested against Form 335 R6 (2026-09); the Python builder is unrun.
+
 ### Released 2026-10-28
 
 - **bdm-contract-admin 0.2.2** — Skill revisions to one decimal place; reconcile every SKILL.md

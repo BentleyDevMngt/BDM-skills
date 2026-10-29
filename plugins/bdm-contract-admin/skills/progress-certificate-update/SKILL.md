@@ -1,42 +1,51 @@
 ---
 name: progress-certificate-update
 description: >-
-  Build a BDM Progress Certificate (Form 335) in response to a builder's progress claim —
-  BDM's certifying instrument as Superintendent under AS4000 cl.37.2. Use this skill whenever
-  someone asks to "do/produce/draft the progress certificate", "certify claim NN", "Form 335
-  for [project]", "progress certificate for [project]", or drags a builder's claim schedule +
-  tax invoice + statutory declaration into the session and asks to certify or assess the claim.
-  Also trigger on "assess the claim", "roll the certificate forward", "next progress
-  certificate", or any mention of certifying a head-contract progress claim. This produces the
-  CERTIFICATE (BDM → builder); it is the companion to progress-claim-update, which produces the
-  builder's CLAIM. Trigger even if the word "Form 335" isn't used — a council/builder claim plus
-  "certify" or "progress payment" is enough.
+  Build a BDM Progress Certificate (Form 335 fixed price; Form 335a cost plus once released) in
+  response to a builder's progress claim — BDM's certifying instrument as Superintendent under
+  AS4000 cl.37.2. Use this skill whenever someone asks to "do/produce/draft the progress
+  certificate", "certify claim NN", "Form 335 for [project]", "progress certificate for
+  [project]", or drags a builder's claim schedule + tax invoice + statutory declaration into the
+  session and asks to certify or assess the claim. Also trigger on "assess the claim", "roll the
+  certificate forward", "next progress certificate", or any mention of certifying a
+  head-contract progress claim. This produces the CERTIFICATE (BDM → builder); it is the
+  companion to progress-claim-update, which produces the builder's CLAIM. Trigger even if the
+  word "Form 335" isn't used — a builder claim plus "certify" or "progress payment" is enough.
 ---
 
-# Progress Certificate (Form 335) — update / roll-forward
+# Progress Certificate (Form 335 / 335a) — update / roll-forward
 
-**Revision: R2.0 · 2026-08** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
+**Revision: R3.0 · 2026-10** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
+
+R3.0 maps Form 335 R6 (CN-2026-049), branches on contract type and adds an Excel COM builder for Windows PCs. It was written on 15 October 2026 and ported into this repository on 29 October 2026.
 
 ## What this does and why
 
 When a builder lodges a progress claim, BDM (as Superintendent) must issue a Progress
 Certificate under AS4000 cl.37.2 stating the amount BDM recommends for payment. This skill
-rolls the previous certificate forward onto the new claim, populates the BDM Form 335
-template, verifies the numbers tie to the builder's tax invoice, and produces a DRAFT
-certificate (Excel + PDF) for the Senior QS or Director to review, sign and issue.
+rolls the previous certificate forward onto the new claim, populates the controlled form,
+verifies the numbers tie to the builder's tax invoice, and produces the certificate (Excel) for
+the Senior QS or Director to review, sign and issue. The PDF follows sign-off, not the build.
 
 You (Claude) do the judgement — reading the project folder and the claim documents, mapping
-trades, deciding the certified position. The bundled `scripts/build_certificate.py` does the
-deterministic build, the macro-free cashflow, the verification, and the tabs-01–04 PDF. Keep
-that division: think and confirm, then let the script build.
+trades, checking variations against the CAR, deciding the certified position. The bundled
+builder does the deterministic build, the verification and, after sign-off, the PDF. Keep that
+division: think and confirm, then let the builder build.
 
 ## Authority boundary (read first)
 
 BDM **drafts and recommends**; the Senior QS or Director **certifies and issues**. So:
-- Every output stays **DRAFT**; the signatory line is left as a placeholder.
+- Every output is held for sign-off, never issued. Do **not** write "DRAFT" on the certificate —
+  no DRAFT revision, status, header, footer or `_DRAFT` filename suffix (`bdm-house-style` § 13.6).
+  The signatory line follows the user's own standing rule (some users sign at preparation);
+  absent one, leave it as a placeholder.
+- **No PDF of a certificate awaiting sign-off.** A PDF reads as an issued instrument. The
+  builders write the `.xlsm` only; the tabs-01–04 PDF is produced with `-Pdf` / `--pdf` once
+  the Senior QS or Director has signed off and asked for it (company CLAUDE.md §10).
 - Default the certified amounts to the **claimed** amounts, then flag any line where you
   believe the Superintendent should certify less — but never reduce a claim yourself without
-  being asked. The reviewer adjusts.
+  being asked. The reviewer adjusts. **Variations are the exception** — they certify at the
+  CAR position (step 4a).
 - Never invent figures, dates, retention rates or contract references. If a number isn't in
   the documents or the project folder, ask one sharp question or flag it — don't guess.
 
@@ -64,129 +73,229 @@ If the prior certificate or Payment Schedule isn't already in the project folder
 
 ## Workflow
 
-### 1. Identify the project and claim number
+### 1. Identify the project, claim number and contract type
 Resolve the project from the request and the claim schedule. Read the claim schedule to get
 the claim number, "work completed to" date, contract sum, and the this-claim / to-date totals.
-Confirm the claim number and project with the user before building. The folder convention for
-the claim is `PC 0NN (Month YYYY)`.
+Read the **contract type** off the executed contract (Project Summary §1 first): **fixed price**
+(lump sum) or **cost plus**. Confirm the claim number, project and contract type with the user
+before building.
 
-### 2. Reconcile the template
-Pull the **latest** `335-Progress_Certificate_R*.xlsm` from
-`…\BDM TEMPLATES\Working Copy\300 Project Management - Contract Delivery\` (highest revision
-wins; ignore `_Superseded`). **Cloud-only trap:** newly-revised templates often arrive as
-OneDrive placeholders that won't open from the sandbox (BadZipFile / wrong size). If that
-happens, ask the user to drag the template into the chat — uploaded files read cleanly.
+### 2. Pick the form by contract type
+
+| Contract type | Form | Template |
+|---|---|---|
+| Fixed price | **Form 335**, R6 or later | latest `335-Progress_Certificate_R*.xlsm` in `…\BDM TEMPLATES\Working Copy\300 Project Management - Contract Delivery\` |
+| Cost plus | **Form 335a** once released | `335a-Progress_Certificate_Cost_Plus_R*.xlsm` in the same Working Copy folder |
+
+**Cost plus — there is no controlled form yet.** As at 15 October 2026, Form 335a (Cost Plus R1)
+sits in `BDM TEMPLATES\Drafts for Review\CN-2026-049\v2_fixed_price_and_cost_plus\`, held for
+Andrew Bentley's sign-off on the form number. Until it appears in Working Copy:
+- **Stop and flag it**: "There is no controlled cost-plus progress certificate form. Form 335a is
+  drafted under CN-2026-049 and awaiting Andrew Bentley's sign-off on the form number."
+- Do **not** certify a cost-plus claim on Form 335 R6. R6 has no VARIANCE or CURRENT BUDGET
+  columns and no variance-adjustment row, so the budget movement has nowhere to go.
+- Do **not** build from the Drafts for Review copy. Both builders refuse a template under
+  `Drafts for Review\`. Ask the user how they want to proceed.
+
+Highest revision wins; ignore `_Superseded`. Form 335 earlier than R6 is refused — the cell map
+below is R6's. **Cloud-only trap:** a newly revised template can arrive as a OneDrive
+placeholder that won't open (BadZipFile / wrong size). If so, ask the user to open it once in
+Excel, or drag it into the chat.
 
 ### 3. Gather the project specifics (read the project folder — do NOT hard-code)
 Per BDM standing rule, read the project's own folder rather than assuming. Sources:
-- `00_ai_sandbox\Project_Summary_*.md` — **start here for orientation:** parties, contract form,
-  retention basis, programme dates and the project's conventions. Take the contract sum and the
-  prior certified/net figures from the contract and the prior certificate below, not the summary.
-- The **prior certificate / Payment Schedule** — previously certified to-date (per trade) and
+- `00_ai_sandbox\Project_Summary_*.md` — **start here for orientation:** parties, contract form
+  and type, retention basis, programme dates and **§17 Project conventions & gotchas**. Take the
+  contract sum and the prior certified/net figures from the contract and the prior certificate
+  below, not the summary.
+- The **prior certificate / Payment Schedule** — previously certified to-date (per line) and
   the previous net recommendation (drives the roll-forward).
-- The executed **contract** — retention rule and contract form (e.g. Amended AS4000-1997 vs
-  AS4000-2024). Confirm the clause/timeframe if the contract is amended.
+- The executed **contract** — retention rule, contract form (e.g. Amended AS4000-1997 vs
+  AS4000-2024) and contract type. Confirm the clause/timeframe if the contract is amended.
 
-Review what you find with the user, especially the **retention basis** (e.g. 10% of value to
-date capped at 5% of the contract sum is common for BDM head contracts — the template default
-of flat 5% is often wrong) and the **contract form** wording.
+Review what you find with the user, especially the **retention basis** (R6's default is 10% of
+value to date capped at 5% of the Contract Sum — confirm it against the contract, don't assume
+it) and the **contract form** wording.
 
 ### 4. Assemble the config
-Write a JSON config (schema in `references/config_schema.md`) capturing project details, the
-trade lines `[desc, original, prev, todate]`, retention rule, certificate number, valuation
-and issue dates, the previous net recommendation, contract form, invoice total, and cashflow
-params/actuals. This is where the roll-forward lives:
+Write a JSON config (schema in `references/config_schema.md`) capturing `contract_type`,
+`contract_form`, project details, the trade / provisional-sum / variation lines, retention rule,
+certificate number, valuation and issue dates, the previous net recommendation, invoice total,
+and cashflow dates and actuals.
 
-**Roll-forward rule (the heart of it):** each trade's **prev claimed** = the *prior
-certificate's certified-to-date*; the new **certified-to-date** comes from the new claim. The
-certificate's **previous net recommendation** = the prior certificate's net (ex GST). The
-script computes this-claim = to-date − prev automatically.
+**Roll-forward rule — Form 335 R6 columns** (full map in `references/template_map.md`):
+
+| Column | Heading | Set to |
+|---|---|---|
+| C | CONTRACT PRICE / PS ALLOWANCE / APPROVED VALUE | trade price; PS allowance; **CAR approved value** for a variation |
+| E | PREV CLAIMED | the **prior certificate's claimed to date** for that line |
+| G | CLAIMED TO DATE | this claim's certified-to-date |
+| H | THIS CLAIM | computes `=G−E` |
+| I | TO COMPLETE | computes `=C−G` |
+
+Read the prior certificate's to-date from the right column: **G** on an R6 certificate, **I**
+on R5 or earlier. The certificate's **previous net recommendation** (`02 Certificate!F27`) = the
+prior certificate's net ex GST.
 
 **First certificate on an existing project (bootstrap):** if there is no prior Form 335 (e.g.
 the previous claim was certified via a QS report / Payment Schedule), reconstruct "previously
 certified" from the prior builder claim schedule's previous-claim column plus the Payment
 Schedule net. Flag that the prior figure is reconstructed.
 
-### 5. Build (stage in the project's sandbox)
-All working/intermediate files go in the **active project's `00_ai_sandbox`** folder — every
-BDM project has one, and it's the standing location for in-progress work (operator-agnostic;
-do **not** stage in any personal "working" folder). Create the claim sub-folder there using
-the standing convention, `00_ai_sandbox\PC 0NN (Month YYYY)\`, and point the engine at it:
+**Builder's margin.** R6 has no margin row (R5's `I56` is now a provisional-sum row). Carry the
+margin as a trade line exactly as the builder claims it. The builders refuse a `builders_margin`
+key, because writing it would overwrite a provisional-sum formula.
+
+### 4a. Cross-check every variation line against the CAR (mandatory)
+
+**Do not certify a variation line off the builder's claim.** The builder's claim states the
+builder's view of each variation's status; the **Contract Admin Register (CAR)** states BDM's
+determination. Where they differ, the CAR governs.
+
+For every variation line in the claim:
+
+1. Open the project's CAR (`bdm-contract-admin-register`) and find the matching VO number.
+2. Compare **status** (Approved / Rejected / Pending / Superseded) and **approved value**.
+3. Certify the **CAR** position: column C = the CAR approved value, `car_status` = the CAR status.
+4. List every mismatch in the hand-back, with both figures.
+
+A pending or rejected variation certifies at **$0** regardless of what the claim shows. The
+builders abort if a non-approved line carries a value. A superseding CSA carries the
+**restated** value, not a delta. Pending variations paid on account go in `02!F22` by hand,
+only on the reviewer's instruction.
+
+> This is not a theoretical control. On one certificate **5 of 17 variation lines** carried
+> the wrong status straight off the builder's claim — including one claimed at **$50,589
+> approved** that the register showed as **REJECTED, $0**.
+
+If the project has no CAR, or the CAR is stale, **say so and stop**. Do not certify variations
+against an unverified register.
+
+### 5. Build — straight into the claim folder
+
+Save the certificate **directly in its regular project folder** (CLAUDE.md §8, locked 1/9/26),
+not in `00_ai_sandbox`: `13_Contract Admin\01_Main Contract\03_Payment Claims\PC to Builder\<claim folder>\`.
+**Follow the claim-folder naming the project already uses** (e.g. `30_August EOM`,
+`PC010 - September 2026`) — don't create a parallel `PC 0NN (Month YYYY)` folder. Saving there is
+not issuing; the certificate stays held under §10 until signed and sent.
+
+> The old `13_Contract\04_Progress Claims\` path was retired in May 2026. Never overwrite
+> existing project files — the builders refuse to overwrite an existing output.
+
+**On a Windows PC with Excel and no Python: use the PowerShell / Excel COM builder.** Without
+Python, `pdftoppm` or LibreOffice, `build_certificate.py` cannot run.
 ```
-python scripts/build_certificate.py \
-  --template <latest 335 .xlsm> --config <config.json> \
-  --outdir "<project>\00_ai_sandbox\PC 0NN (Month YYYY)" --rev "R4 2026-06"
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build_certificate.ps1 `
+  -Template "<latest 335 .xlsm>" -Config "<config.json>" -OutDir "<claim folder>"
 ```
-It applies the template guards (idempotent — see below), populates tabs 00–04, ports the
-cashflow macro to native formulas, saves a macro-free `.xlsm` (Excel recalculates on open),
-verifies the math, and exports a DRAFT PDF of **tabs 01–04 only**. It prints a JSON report;
-require `"PASS": true` (ties to the invoice, zero formula errors). Copy the source claim
-schedule, invoice and stat dec into the same sandbox sub-folder.
+- Excel opens the template with macros force-disabled, calculation set to manual while writing,
+  then recalculates once and saves. Excel writes its own calcChain, so the stale-calcChain trap
+  (`_Skills_Index.md`, workbook rule) does not arise. A build takes about 30 seconds.
+- **Keep every `.ps1` ASCII-only.** Windows PowerShell 5.1 reads a BOM-less script as ANSI, so
+  an em dash, curly quote or `·` in a string literal arrives corrupted.
+- All cell writes go through the `SetV` / `SetF` helpers in the script. A plain
+  `$range.Value2 = $x` inside a loop fails once it has seen a string and then a number — PowerShell
+  caches the COM binding per line.
+- Put the config in a temp folder, not the project folder.
 
-### 6. Review the rendered PDF
-Open the PDF pages and eyeball them. Confirm the certificate summary equals the invoice, the
-trade subtotals tie, the cashflow chart plots actuals only for claimed months, and the
-contract-form references are right. Never report done before looking (BDM verify-before-done).
-
-**Then run the Excel integrity check.** Form 335 is an `.xlsm` and the build preserves the
-template's branding, cashflow chart and macro parts, which means the original
-`xl/calcChain.xml` survives into the deliverable. calcChain is a precomputed index naming every
-formula cell; static-ising the cashflow and writing certified values turns formula cells into
-values, and the index still names them. Excel walks it on open and reports the file as corrupt.
-
-```bash
+**With Python, openpyxl and LibreOffice (e.g. a cloud sandbox):**
+```
+python scripts/build_certificate.py --template <latest 335 .xlsm> --config <config.json> --outdir "<claim folder>"
+```
+This path re-saves through openpyxl, so it carries the embedded-image check below. **Then run
+the Excel integrity check** — openpyxl ignores calcChain and LibreOffice rebuilds it silently, so
+neither proves the certificate opens in Excel:
+```
 python3 scripts/validate_xlsx.py --repair  <certificate>.xlsm
 python3 scripts/validate_xlsx.py --check   <certificate>.xlsm     # must print CLEAN
 ```
 
-**openpyxl ignores calcChain and LibreOffice rebuilds it silently**, so neither an openpyxl
-reload nor the LibreOffice recalc proves the certificate opens in Excel. (A plain openpyxl
-`wb.save()` drops calcChain altogether and is safe from this — but it also strips the branding,
-which is why the branded parts are preserved. Preserving the parts is what carries the risk.)
-`--check` must return CLEAN before the certificate is filed or presented.
+Both builders check the template's column headings against the map before writing, populate
+tabs 00–04, write the THIS CLAIM / TO COMPLETE formulas on every line, verify the math, and print
+a JSON report. They write **no PDF** unless passed `-Pdf` / `--pdf` (tabs 01–04 only), which is
+for a certificate already signed off. Require `"PASS": true` (ties to the invoice,
+sheet agrees with the independent calculation, zero formula errors in the print areas). Then
+copy the source claim schedule, invoice and stat dec into the same claim folder if they aren't
+already there.
 
-### 7. File the final deliverables to the contract admin folder
-Once the certificate is finalised and ties out, copy the **final `.xlsm` + DRAFT PDF** (and the
-three source docs) to the project's contract-admin folder for progress claims — e.g.
-`13_Contract\04_Progress Claims\PC to Builder\PC 0NN (Month YYYY)\` (use the project's actual
-numbering). **Never overwrite existing source project files**; only add the new claim folder.
+### 6. Review the rendered output
+Look at the pages before reporting done (BDM verify-before-done). Render each tab's print area
+to PNG in a temp folder — through Excel COM on Windows (`Range.CopyPicture` into a temporary
+chart, `Chart.Export`), or from a temp LibreOffice conversion on the Python path — read the
+images, then remove them. No preview PDF is left beside the held certificate. Confirm the certificate summary equals the
+invoice, the trade sub-totals tie, THIS CLAIM is populated, the cashflow chart plots actuals
+only for claimed months, and the contract-form references are right.
+
+### 7. Log it and hold it
+Update the project's CAR if any variation status was found out of line (`bdm-contract-admin-register`).
+Record the held certificate where the user's own layer says held work is recorded. Never send.
 
 ### 8. Clean up the skill's own working files
-After the build, verification, PDF export and filing are done, delete the **scratch /
-intermediate artefacts the skill created** — temp build files, render-preview images, any
-recalc/static-ize intermediates — leaving only the final deliverables (the `.xlsm`, the DRAFT
-PDF and the source docs) in the sandbox sub-folder. Only ever delete files **the skill
-created**; never touch project documents or the source claim files. (The engine already
-removes its own temp dir automatically; this step sweeps anything created outside it.)
+Delete the scratch artefacts the skill created — the config JSON, render previews, any
+intermediates — leaving only the deliverables (`.xlsm` and source docs) in the claim folder.
+Only ever delete files **the skill created**; never project documents or the source claim
+files. (Both builders remove their own temp folders.)
 
 ### 9. Present
-Present the final PDF and `.xlsm` and list every judgement call and flag.
+Give clickable links to the `.xlsm` and the claim folder and list every judgement call and flag.
+State that the PDF is held until the certificate is signed off.
 
-## Template guards (idempotent — kept as a safety net)
+## Template defects the builders correct (Form 335 R6)
 
-The corrected master is `335-Progress_Certificate_R4_2026-06.xlsm`. If an older template is
-ever used, the script auto-repairs these known defects (and no-ops on the clean R4):
-- Stale print header/footer revision stamps → current rev.
-- Cover letter reading the certificate number from the title cell `02!A4` → `02!F6`.
-- The `scurve()` VBA cashflow macro → native Excel formulas (helper x/y columns) so the
-  workbook is macro-free and prints correctly with no enable-macros prompt.
-- "Actual Cumulative" total summing instead of taking the last value.
-- The yellow "INPUT DATES" highlight on the cashflow note cells.
+- **THIS CLAIM hard-coded `0`.** R6 ships `=G−E` only on rows 14, 51 and 63; the other 46 input
+  rows hold a literal `0`, so THIS CLAIM and its sub-totals under-report. Both builders write
+  `=G−E` and `=C−G` on every input row.
+- **Valuation date `=TODAY()`.** `02!F5` (and the signature date `F47`, which follows it) would
+  roll forward every time the file is opened. The builders write the valuation date as a value.
+- **Provisional sums don't reach the certificate.** Sub-total row 75 and `02!F12/F20/F21` take
+  trades + variations only. The builders warn when a PS carries a claimed-to-date. Raise it with
+  the reviewer — don't patch it in the form.
+
+Report all three to the template owner for the next Form 335 revision. They are template
+defects, not certificate judgements.
+
+**Retired with R6.** The R3/R4 guards — cover-letter cert no. from `02!A4`, `scurve()` macro
+port, cashflow cumulative SUM, "INPUT DATES" highlight, and the unfixed-materials `02!F28` rewrite —
+acted on cells R6 no longer has. The unfixed-materials lesson stands for any revision that brings
+that row back: prior unfixed materials must be added back. Left unfixed, that defect
+over-certified one draft by **$1,533,071.32 ex GST**.
+
+## Writing the workbook safely
+
+**Excel COM path:** Excel saves the file, so branding, drawings and calcChain survive. Nothing
+extra to check.
+
+**openpyxl path:** run `validate_xlsx.py --check` (step 5) and **never let openpyxl re-save a branded BDM workbook without checking what
+survived.** An openpyxl round-trip can silently drop embedded images — seven logos and roughly
+19 KB were lost from one register this way. `build_certificate.py` compares `xl/media/` before
+and after and **fails the build** if anything was dropped. When it fails, do not re-run and hope:
+rebuild by editing the XML directly and re-zipping (`[Content_Types].xml` first in the archive;
+`pageSetup` after `pageMargins`).
 
 ## Cashflow tab notes
 
-The forecast S-curve is `total · (x − 0.016x² + 0.016x − (1/3.021)(6x³ − 9x² + 3x))`, floored
-to $1,000 (x = elapsed fraction of start→finish). Actual monthly/cumulative are populated for
-claimed months **only**; unclaimed cells are blanked so the chart plots gaps, not zeros. The
-template's month rows span a fixed window (Feb-26 → Feb-27); for a programme outside that
-window, extend the month rows (a template enhancement) and flag it.
+R6's `04 Cashflow Forecast` takes inputs straight on the tab — there is no `CashflowInput` tab and
+no macro. The builders fill the month column from `cashflow.start`, the forecast monthly from the
+BDM S-curve `total · (x − 0.016x² + 0.016x − (1/3.021)(6x³ − 9x² + 3x))` with the cumulative
+floored to $1,000 (x = month i of n), the actual monthly for claimed months **only**, and the
+re-forecast monthly where supplied. Unclaimed months stay blank so the chart breaks the line
+rather than dropping to zero. The tab holds 21 months; a longer programme needs the template
+extended — the builders abort and say so.
 
 ## Flags to raise every time
 
-Retention basis used; contract form / clause confirmed against the executed contract; any
-certified-vs-claimed delta; any source that was OneDrive cloud-only and couldn't be read; and
-the DRAFT/signatory status. Scope of v1 is **head-contract** progress certificates.
+Contract type and the form used (and, for cost plus, that no controlled form exists yet);
+retention basis used; **contract form / edition confirmed against the executed contract**
+(mandatory — the builders abort without it); **every CAR mismatch, with both figures**; how the
+builder's margin is carried; any certified-vs-claimed delta; any PS carrying a claimed amount;
+any source that was OneDrive cloud-only and couldn't be read; and the held-for-signature status,
+with the PDF held until sign-off.
+Scope is **head-contract** progress certificates.
 
 ## Reference files
+- `references/template_map.md` — Form 335 R6 and Form 335a cell maps, roll-forward columns, cashflow layout.
 - `references/config_schema.md` — the JSON config schema with a worked example.
-- `references/template_map.md` — Form 335 tab/cell map and the roll-forward column logic.
+- `scripts/build_certificate.ps1` — Excel COM builder (Windows, no Python).
+- `scripts/build_certificate.py` — Python + LibreOffice builder.
+- `scripts/validate_xlsx.py` — Excel-strict calcChain check and repair (Python path).
+- `CHANGELOG.md` — revision history.

@@ -1,65 +1,52 @@
-# progress-certificate-update
+# progress-certificate-update — R3.0 · 2026-10
 
-Builds a BDM Progress Certificate (Form 335) from a builder's progress claim — BDM's
-certifying instrument as Superintendent under AS4000 cl.37.2. Companion to
-`progress-claim-update` (which builds the builder's claim).
+Builds a BDM Progress Certificate from a builder's progress claim — BDM's certifying instrument
+as Superintendent under AS4000 cl.37.2. Fixed price uses **Form 335 R6**; cost plus uses
+**Form 335a** once it is released (until then the skill stops and flags that there is no
+controlled cost-plus form). Companion to `progress-claim-update`, which builds the builder's claim.
 
 ## What you get
-- A populated, **macro-free** `.xlsm` (Excel recalculates on open).
-- A **DRAFT PDF of tabs 01–04 only** (Cover, Certificate, Trade Breakdown, Cashflow).
-- A verification that the net-this-claim incl GST equals the builder's tax invoice.
+- The populated `.xlsm`, saved straight into the project's existing claim folder.
+- No PDF while the certificate is held. Once it is signed off, `-Pdf` / `--pdf` produces a PDF of
+  **tabs 01–04 only** (Cover, Certificate, Trade Breakdown, Cashflow).
+- A check that the net incl GST equals the builder's tax invoice and the sheet agrees with an
+  independent calculation.
 
 ## How it works
-`SKILL.md` is the workflow Claude follows: identify project & claim no., reconcile the latest
-335 template, read the project folder for specifics (parties, retention basis, contract form,
-prior net), assemble a JSON config, then run the engine. The engine is deterministic:
+`SKILL.md` is the workflow: identify the project, claim no. and contract type; pick the form;
+read the project folder (parties, retention basis, contract form, prior net); cross-check every
+variation against the CAR; assemble a JSON config; run a builder.
 
+Windows PC with Excel, no Python:
 ```
-python scripts/build_certificate.py \
-  --template "<…/Working Copy/300 …/335-Progress_Certificate_R4_2026-06.xlsm>" \
-  --config   "<config.json>" \
-  --outdir   "<project>\00_ai_sandbox\PC 0NN (Month YYYY)" \
-  --rev      "R4 2026-06"
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build_certificate.ps1 `
+  -Template "<Working Copy\300 ...\335-Progress_Certificate_R6_2026-09.xlsm>" `
+  -Config "<config.json>" -OutDir "<claim folder>"
 ```
-Requires `python3`, `openpyxl`, and LibreOffice (`soffice`) on PATH. Output JSON must show
-`"PASS": true`.
+Python + openpyxl + LibreOffice:
+```
+python scripts/build_certificate.py --template <335 R6 .xlsm> --config <config.json> --outdir <claim folder>
+python3 scripts/validate_xlsx.py --repair <certificate>.xlsm && python3 scripts/validate_xlsx.py --check <certificate>.xlsm
+```
+Both print a JSON report; it must show `"PASS": true`. On the Python path `--check` must also print
+CLEAN. Add `-Pdf` / `--pdf` only for a certificate already signed off.
 
-## Where files go (operator-agnostic)
-- **Working / intermediate:** the active project's `00_ai_sandbox\PC 0NN (Month YYYY)\`. Every
-  BDM project has a `00_ai_sandbox`; it's the standing location for in-progress work, so the
-  skill never depends on any one person's personal folder.
-- **Final deliverables:** the `.xlsm` + DRAFT PDF (and the source claim schedule, invoice,
-  stat dec) are filed to the project's contract-admin folder, e.g.
-  `13_Contract\04_Progress Claims\PC to Builder\PC 0NN (Month YYYY)\`.
-- Source project folders are never overwritten — the skill only adds the new claim folder.
-
-## Cleanup
-The skill removes its own scratch/intermediate artefacts when it finishes (the engine deletes
-its temp dir automatically; the workflow sweeps any render previews or build intermediates),
-leaving only the final deliverables. It only ever deletes files it created — never project
-documents or source claim files.
+## Roll-forward in one line (Form 335 R6)
+Column E (prev claimed) := the prior certificate's claimed to date (G on R6, I on R5 and earlier);
+column G := this claim's certified-to-date; H = G − E. Variations: column C = the CAR approved
+value. The certificate's previous net (`02!F27`) = the prior certificate's net ex GST.
 
 ## Files
-- `SKILL.md` — triggers + workflow + guardrails.
-- `scripts/build_certificate.py` — the build/verify/PDF engine (idempotent template guards).
-- `references/config_schema.md` — JSON config fields + worked example.
-- `references/template_map.md` — tab/cell map + roll-forward column logic.
+- `SKILL.md` — triggers, workflow, guardrails.
+- `scripts/build_certificate.ps1` — Excel COM builder (ASCII-only).
+- `scripts/build_certificate.py` — Python builder.
+- `scripts/validate_xlsx.py` — Excel-strict calcChain check and repair (Python path).
+- `references/template_map.md` — Form 335 R6 and 335a cell maps.
+- `references/config_schema.md` — config fields and worked example.
+- `CHANGELOG.md` — revision history.
 
-## Roll-forward in one line
-Each trade's **prev certified** := prior certificate's **certified-to-date**; new
-**certified-to-date** comes from the new claim; **this-claim = to-date − prev**. The
-certificate's **previous net recommendation** = the prior certificate's net (ex GST).
-
-## Per-project config
-Read from the project folder each run (Project_Summary in `00_ai_sandbox`, prior certificate,
-contract) — not a static file. Review the retention basis and contract form with the user;
-the template's flat-5% retention default is often wrong (BDM head contracts commonly use 10%
-to a 5% cap).
-
-## Scope / limits (v1)
+## Scope / limits
 - Head-contract progress certificates.
-- Certificate is **DRAFT** for Senior QS / Director sign-off; never issued by the skill.
-- Cashflow month rows span a fixed window; extend for longer programmes.
-
-## Pilot
-The pilot project PC 02 ties to its invoice. The test config is held with the project, not in this skill.
+- Held for Senior QS / Director sign-off; never issued by the skill. No DRAFT marking.
+- Up to 32 trade lines, 7 provisional sums, 8 variations and 21 cashflow months — beyond that the
+  template needs extending, and the builders abort and say so.

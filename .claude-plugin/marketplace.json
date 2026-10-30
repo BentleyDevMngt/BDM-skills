@@ -10,7 +10,7 @@
       "name": "bdm-all",
       "source": "./plugins/bdm-all",
       "description": "Install this one. The complete BDM skills suite - standards, contract administration, quantity surveying and project delivery - in a single install that keeps all four plugins on the same revision.",
-      "version": "0.2.10",
+      "version": "0.2.11",
       "category": "standards",
       "author": {
         "name": "Bentley Development Management"
@@ -30,7 +30,7 @@
       "name": "bdm-contract-admin",
       "source": "./plugins/bdm-contract-admin",
       "description": "Contract administration under AS4000 - variations and CSAs, extensions of time, the Contract Admin Register, progress certificates as Superintendent, tender clarifications and addenda.",
-      "version": "0.2.3",
+      "version": "0.2.4",
       "category": "contract administration",
       "author": {
         "name": "Bentley Development Management"

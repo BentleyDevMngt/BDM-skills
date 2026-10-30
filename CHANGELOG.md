@@ -15,6 +15,10 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### Released 2026-10-30
+
+- **bdm-contract-admin 0.2.4** — progress-certificate-update R3.1: cost plus on released Form 335a
+
 ### progress-certificate-update R3.1 — 2026-10-30
 
 Cost-plus certificates now build on Form 335a R1, released to the Working Copy on 30 October

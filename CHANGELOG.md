@@ -15,6 +15,16 @@ Fixed / Retired. Until then, dated entries under `## Unreleased`.
 
 ## Unreleased
 
+### progress-certificate-update R3.1 — 2026-10-30
+
+Cost-plus certificates now build on Form 335a R1, released to the Working Copy on 30 October
+2026 under CN-2026-055 after the Director approved the form number. R3.0 stopped and flagged
+every cost-plus claim. The 335a cell map carried since R3 was re-verified against the released
+file and is unchanged; SKILL.md step 2, the flags list, the references and the builders' refusal
+message are reworded, and config_schema.md gains a cost-plus worked example. The Excel COM
+builder was tested on 335a R1 (PASS, ties to $69,300) and still refuses a Drafts for Review copy
+and a cost-plus claim on Form 335. The Python builder is unrun.
+
 ### Released 2026-10-29
 
 - **bdm-contract-admin 0.2.3** — progress-certificate-update R3.0: port R3 from JamesBDM, PDF opt-in

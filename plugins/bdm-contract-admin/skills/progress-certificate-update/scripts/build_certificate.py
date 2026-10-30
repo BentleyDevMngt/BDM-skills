@@ -14,7 +14,7 @@ and verifies the net-this-claim incl GST equals the builder's tax invoice.
 
 Layouts (see references/template_map.md):
   fixed_price -> Form 335 R6+   (335-Progress_Certificate_R6_2026-09.xlsm)
-  cost_plus   -> Form 335a R1+  (refused while the form sits in Drafts for Review)
+  cost_plus   -> Form 335a R1+  (335a-Progress_Certificate_Cost_Plus_R1_2026-10.xlsm)
 
 Pre-R6 Form 335 templates are refused: the R3/R4 guards (cover cert-no, scurve() port,
 unfixed-materials G88, builder's margin I56) wrote to cells that no longer exist or now
@@ -91,8 +91,8 @@ def preflight(template, cfg):
         abort("Form %s R%s is older than the R%d layout this builder maps. Use the latest Working Copy revision."
               % (L['form'], m.group(1), L['min_rev']))
     if re.search(r'[\\/]Drafts for Review[\\/]', template):
-        abort("Form %s at this path is an unreleased draft (Drafts for Review). There is no controlled "
-              "cost-plus form until it is released to Working Copy. Hold the certificate and tell the user." % L['form'])
+        abort("Form %s at this path is an unreleased draft (Drafts for Review). Build from the "
+              "released form in Working Copy. Hold the certificate and tell the user." % L['form'])
     if cfg.get('builders_margin') is not None:
         abort("'builders_margin' is not supported from R6: the template has no margin row (old I56 is now a "
               "provisional-sum row). Carry margin as a trade line exactly as the builder claims it.")

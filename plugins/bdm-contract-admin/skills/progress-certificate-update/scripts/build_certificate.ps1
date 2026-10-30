@@ -9,7 +9,7 @@ and verifies the net incl GST equals the builder's tax invoice.
 
 Layouts supported (see references/template_map.md):
   fixed_price -> Form 335 R6+   (335-Progress_Certificate_R6_2026-09.xlsm)
-  cost_plus   -> Form 335a R1+  (refused while the form sits in Drafts for Review)
+  cost_plus   -> Form 335a R1+  (335a-Progress_Certificate_Cost_Plus_R1_2026-10.xlsm)
 
 Keep this file ASCII-only. Windows PowerShell 5.1 reads a BOM-less script as
 ANSI, so an em dash or curly quote in a string literal arrives corrupted.
@@ -99,8 +99,8 @@ if ([int]$m.Groups[1].Value -lt $L.minRev) {
   Fail "Form $($L.form) R$($m.Groups[1].Value) is older than the R$($L.minRev) layout this builder maps. Use the latest Working Copy revision."
 }
 if ($Template -match '\\Drafts for Review\\') {
-  Fail ("Form $($L.form) at this path is an unreleased draft (Drafts for Review). There is no controlled " +
-        "cost-plus form until it is released to Working Copy. Hold the certificate and tell the user.")
+  Fail ("Form $($L.form) at this path is an unreleased draft (Drafts for Review). Build from the " +
+        "released form in Working Copy. Hold the certificate and tell the user.")
 }
 if ($null -ne $cfg.builders_margin) {
   Fail ("'builders_margin' is not supported from R6: the template has no margin row (old I56 is now a " +

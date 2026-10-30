@@ -1,5 +1,19 @@
 # progress-certificate-update — changelog
 
+## R3.1 · 2026-10 — cost plus on Form 335a (30 October 2026)
+
+Form 335a R1 (Cost Plus) was released on 30 October 2026 under CN-2026-055, after the Director
+approved the form number the same day. R3.0 stopped and flagged every cost-plus claim because
+there was no controlled cost-plus form; R3.1 builds it on 335a. The 335a cell map written in R3
+was re-verified against the released file and needed no change. Only the wording moved: SKILL.md
+step 2 and the flags list, template_map.md, config_schema.md (a cost-plus worked example) and the
+builders' Drafts-for-Review refusal message. Both builders still refuse a template in
+`Drafts for Review\`, and refuse a cost-plus claim on Form 335.
+
+Tested on 30 October 2026: the Excel COM builder on Form 335a R1 2026-10 with a cost-plus claim
+(PASS, ties to $69,300, variance adjustments 3,000, adjusted contract sum 363,000). The Python
+builder is still unrun.
+
 ## R3.0 · 2026-10 — ported into BentleyDevMngt/BDM-skills (29 October 2026)
 
 R3 was written in JamesBDM/bdm-plugins (`956ab65`, bdm-contract-admin 2.1.0) and never reached

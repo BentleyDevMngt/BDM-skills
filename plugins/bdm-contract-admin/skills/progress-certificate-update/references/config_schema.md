@@ -8,7 +8,7 @@ and the CAR. Both builders take the same config. Save it as UTF-8.
 | Field | Type | Notes |
 |---|---|---|
 | `output_basename` | string | Filename stem (no extension), following the project's existing claim-file naming. Never `_DRAFT`. The builders refuse to overwrite an existing file. |
-| `contract_type` | `"fixed_price"` \| `"cost_plus"` | **MANDATORY — no default.** Read it off the executed contract. Selects the form: fixed price → Form 335 R6+; cost plus → Form 335a (refused until released — see SKILL.md step 2). |
+| `contract_type` | `"fixed_price"` \| `"cost_plus"` | **MANDATORY — no default.** Read it off the executed contract. Selects the form: fixed price → Form 335 R6+; cost plus → Form 335a R1+ (SKILL.md step 2). |
 | `contract_form` | string | **MANDATORY — no default.** e.g. "Amended AS4000-1997". Read it off the executed contract. Drives the cl.37.2 wording in the cover letter, strapline, footnote and certificate footer. A silent `AS4000-2024` default once put the wrong edition on two issued certificates. |
 | `project.name` / `address` / `principal` / `contractor` | string | Parties and site. |
 | `project.client` | string | Defaults to principal. |
@@ -74,3 +74,9 @@ the builders abort if it isn't. A superseding CSA carries the restated value, no
 Trades to date 80,000 + VO-01 10,000 = 90,000; retention 9,000 (under the 17,500 cap);
 net to date 81,000; less previous 18,000 = 63,000 ex GST = **$69,300 incl GST**. Built and
 checked on Form 335 R6 through Excel COM on 15 October 2026.
+
+**Cost plus.** The same claim on Form 335a, with `"contract_type": "cost_plus"` and a
+`"variance"` on each trade (Preliminaries +5,000, Earthworks 0, Concrete −2,000), still ties to
+**$69,300**: variance moves the budget, not the value of work done. The certificate shows variance
+adjustments of 3,000 and an adjusted contract sum of 363,000 (350,000 + VO-01 10,000 + 3,000).
+Built and checked on Form 335a R1 through Excel COM on 30 October 2026.

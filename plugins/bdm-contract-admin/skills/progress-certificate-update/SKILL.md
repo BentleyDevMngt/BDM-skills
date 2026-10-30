@@ -1,7 +1,7 @@
 ---
 name: progress-certificate-update
 description: >-
-  Build a BDM Progress Certificate (Form 335 fixed price; Form 335a cost plus once released) in
+  Build a BDM Progress Certificate (Form 335 fixed price; Form 335a cost plus) in
   response to a builder's progress claim — BDM's certifying instrument as Superintendent under
   AS4000 cl.37.2. Use this skill whenever someone asks to "do/produce/draft the progress
   certificate", "certify claim NN", "Form 335 for [project]", "progress certificate for
@@ -15,9 +15,11 @@ description: >-
 
 # Progress Certificate (Form 335 / 335a) — update / roll-forward
 
-**Revision: R3.0 · 2026-10** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
+**Revision: R3.1 · 2026-10** — skill revisions carry one decimal place: a scope change raises the whole number, a correction or refinement raises the decimal. The release history is in this skill's CHANGELOG (where it has one) and the repository CHANGELOG.
 
 R3.0 maps Form 335 R6 (CN-2026-049), branches on contract type and adds an Excel COM builder for Windows PCs. It was written on 15 October 2026 and ported into this repository on 29 October 2026.
+
+R3.1 builds cost-plus certificates on Form 335a R1, released on 30 October 2026 under CN-2026-055. R3.0 stopped and flagged a cost-plus claim because 335a had not been released.
 
 ## What this does and why
 
@@ -85,17 +87,16 @@ before building.
 | Contract type | Form | Template |
 |---|---|---|
 | Fixed price | **Form 335**, R6 or later | latest `335-Progress_Certificate_R*.xlsm` in `…\BDM TEMPLATES\Working Copy\300 Project Management - Contract Delivery\` |
-| Cost plus | **Form 335a** once released | `335a-Progress_Certificate_Cost_Plus_R*.xlsm` in the same Working Copy folder |
+| Cost plus | **Form 335a**, R1 or later | `335a-Progress_Certificate_Cost_Plus_R*.xlsm` in the same Working Copy folder |
 
-**Cost plus — there is no controlled form yet.** As at 15 October 2026, Form 335a (Cost Plus R1)
-sits in `BDM TEMPLATES\Drafts for Review\CN-2026-049\v2_fixed_price_and_cost_plus\`, held for
-Andrew Bentley's sign-off on the form number. Until it appears in Working Copy:
-- **Stop and flag it**: "There is no controlled cost-plus progress certificate form. Form 335a is
-  drafted under CN-2026-049 and awaiting Andrew Bentley's sign-off on the form number."
+**Cost plus — Form 335a.** Form 335a R1 (Cost Plus) was released on 30 October 2026 under
+CN-2026-055 and sits beside Form 335 in the same Working Copy folder. It keeps ORIGINAL BUDGET,
+VARIANCE and CURRENT BUDGET on '03 Trade Breakdown' and the "Plus: Variance Adjustments
+(cost-plus)" line on '02 Certificate'. Give each trade line its `variance` (config_schema.md).
 - Do **not** certify a cost-plus claim on Form 335 R6. R6 has no VARIANCE or CURRENT BUDGET
-  columns and no variance-adjustment row, so the budget movement has nowhere to go.
-- Do **not** build from the Drafts for Review copy. Both builders refuse a template under
-  `Drafts for Review\`. Ask the user how they want to proceed.
+  columns and no variance-adjustment row, so the budget movement has nowhere to go. The builders
+  refuse the pairing either way.
+- Do **not** build from a copy in `Drafts for Review\`. Both builders refuse a template there.
 
 Highest revision wins; ignore `_Superseded`. Form 335 earlier than R6 is refused — the cell map
 below is R6's. **Cloud-only trap:** a newly revised template can arrive as a OneDrive
@@ -284,7 +285,7 @@ extended — the builders abort and say so.
 
 ## Flags to raise every time
 
-Contract type and the form used (and, for cost plus, that no controlled form exists yet);
+Contract type and the form and revision used;
 retention basis used; **contract form / edition confirmed against the executed contract**
 (mandatory — the builders abort without it); **every CAR mismatch, with both figures**; how the
 builder's margin is carried; any certified-vs-claimed delta; any PS carrying a claimed amount;

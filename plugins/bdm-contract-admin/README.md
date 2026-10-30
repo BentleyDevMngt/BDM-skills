@@ -15,7 +15,7 @@ None issues, and none signs. See [GOVERNANCE.md](../../GOVERNANCE.md) §4.
 | Skill | Produces | Form |
 | --- | --- | --- |
 | `bdm-tender-clarification` | Tender clarifications — close date extensions, tenderer RFIs, supplementary drawings | 218 |
-| `progress-certificate-update` | Progress certificate, certifying a builder's claim under AS4000 cl.37.2 | 335 (335a once released) |
+| `progress-certificate-update` | Progress certificate, certifying a builder's claim under AS4000 cl.37.2 | 335 (fixed price), 335a (cost plus) |
 
 ## Still to arrive
 

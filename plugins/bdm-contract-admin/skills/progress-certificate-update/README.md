@@ -1,9 +1,8 @@
-# progress-certificate-update — R3.0 · 2026-10
+# progress-certificate-update — R3.1 · 2026-10
 
 Builds a BDM Progress Certificate from a builder's progress claim — BDM's certifying instrument
 as Superintendent under AS4000 cl.37.2. Fixed price uses **Form 335 R6**; cost plus uses
-**Form 335a** once it is released (until then the skill stops and flags that there is no
-controlled cost-plus form). Companion to `progress-claim-update`, which builds the builder's claim.
+**Form 335a R1** (released 30 October 2026, CN-2026-055). Companion to `progress-claim-update`, which builds the builder's claim.
 
 ## What you get
 - The populated `.xlsm`, saved straight into the project's existing claim folder.
@@ -41,7 +40,7 @@ value. The certificate's previous net (`02!F27`) = the prior certificate's net e
 - `scripts/build_certificate.ps1` — Excel COM builder (ASCII-only).
 - `scripts/build_certificate.py` — Python builder.
 - `scripts/validate_xlsx.py` — Excel-strict calcChain check and repair (Python path).
-- `references/template_map.md` — Form 335 R6 and 335a cell maps.
+- `references/template_map.md` — Form 335 R6 and 335a R1 cell maps.
 - `references/config_schema.md` — config fields and worked example.
 - `CHANGELOG.md` — revision history.
 

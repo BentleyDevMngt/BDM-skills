@@ -1,13 +1,13 @@
 # Form 335 / 335a template map and roll-forward logic
 
-Verified cell by cell against the workbooks on 15 October 2026. Both builders check the
+Verified cell by cell against the workbooks on 15 October 2026, and Form 335a again on its release on 30 October 2026. Both builders check the
 column headings and certificate labels below before writing and abort on any mismatch. When a
 new revision is released, re-verify this map before building on it.
 
 | Contract type | Form | Controlled file | Status |
 |---|---|---|---|
 | Fixed price (lump sum) | **335 R6** | `Working Copy\300 Project Management - Contract Delivery\335-Progress_Certificate_R6_2026-09.xlsm` | Released 25/9/26 under CN-2026-049 |
-| Cost plus | **335a R1** | `Drafts for Review\CN-2026-049\v2_fixed_price_and_cost_plus\335a-Progress_Certificate_Cost_Plus_R1_2026-09.xlsm` | **Not released.** Held for Andrew Bentley's sign-off on the form number. There is no controlled cost-plus form until it reaches Working Copy |
+| Cost plus | **335a R1** | `Working Copy\300 Project Management - Contract Delivery\335a-Progress_Certificate_Cost_Plus_R1_2026-10.xlsm` | Released 30/10/26 under CN-2026-055 (form number approved by the Director the same day) |
 
 Tabs, the same in both (the issued PDF is **01, 02, 03 and 04 only**):
 
@@ -102,7 +102,7 @@ row 13 moved up one.
 
 ---
 
-## Form 335a R1 — cost plus (draft — re-verify on release)
+## Form 335a R1 — cost plus
 
 The R5 column layout, kept for cost plus:
 ```
@@ -118,7 +118,7 @@ claim's certified-to-date.
 `F28` previous net, `F29` net ex GST, `F40` GST, `F41` net incl GST, `F48` signature date,
 `B51` footer. Cover letter summary reads `02!F39:F41`.
 
-The builders map 335a, but refuse to build from it while the file sits in `Drafts for Review\`.
+Re-verified against the released file on 30 October 2026; the Excel COM builder was tested on it the same day. `01!C1` carries "Form 335a · R1 · 2026-10".
 
 ---
 
